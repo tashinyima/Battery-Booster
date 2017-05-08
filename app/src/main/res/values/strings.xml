@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Battery Buddy</string>
+    <string name="welcome">Battery Buddy Optimizer</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home">Home</string>
+    <string name="rank">Rank</string>
+    <string name="charge">Charge</string>
+    <string name="hometext">Home Fragment</string>
+    <string name="rankText">Rank Fragment</string>
+    <string name="chargetext">Charge Fragment</string>
+    <string name="batterybuddy">Battery Buddy</string>
+    <string name="problemText">PROBLEMS DETECTED</string>
+    <string name="issuetext">30+ issues</string>
+    <string name="availableText">Available:</string>
+    <string name="hourText">12 H 54 MIN</string>
+    <string name="batteryChargeLevel">50%</string>
+    <string name="estimatedchargeText">Estimated Charge Remaining</string>
+    <string name="remainingHourText">1h 30 m</string>
+    <string name="optimize">OPTIMIZE</string>
+    <string name="brightnessPercentage">50%</string>
+    <string name="soundText">Sound</string>
+    <string name="bluetoothOffText">Off</string>
+    <string name="lockscreenText">5min</string>
+    <string name="batteryStatus">BATTERY STATUS</string>
+    <string name="temperatureText">Temperature</string>
+    <string name="technologyText">Technology</string>
+    <string name="voltageText">Voltage</string>
+</resources>
