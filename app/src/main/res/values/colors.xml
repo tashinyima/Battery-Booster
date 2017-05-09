@@ -7,4 +7,7 @@
     <color name="bgcolor">#3B3C4E</color>
     <color name="buttonColor">#DD6264</color>
     <color name="unfinishedColor">#505169</color>
+    <color name="bgcolormain">#2b2b36</color>
+    <color name="lightbgcolor">#565773</color>
+    <color name="colorCheckButtonBg">#485ccf</color>
 </resources>

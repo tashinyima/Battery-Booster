@@ -27,4 +27,19 @@
     <string name="temperatureText">Temperature</string>
     <string name="technologyText">Technology</string>
     <string name="voltageText">Voltage</string>
+    <string name="temperatureValue">35.9C</string>
+    <string name="voltageValue">3.7 V</string>
+    <string name="technologyValue">Li-poly</string>
+    <string name="availableBatteryUsage">AVAILABLE BATTERY USAGE</string>
+    <string name="voicecallText">Voice Call</string>
+    <string name="voicecallValueText">0h 56min</string>
+    <string name="watchingvideotext">Watching Videos</string>
+    <string name="watchingvideoValueText">0h 40min</string>
+    <string name="usingwifiText">Using WiFi</string>
+    <string name="usingwifiValueText">0h 59min</string>
+    <string name="packageNameText">Google Plus</string>
+    <string name="powerconsumedValueText">44%</string>
+    <string name="rankpowerText">Power</string>
+    <string name="checkButton">Check</string>
+    <string name="closeButton">CLOSE</string>
 </resources>

@@ -4,13 +4,13 @@
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:background="@color/colorPrimary"
+    android:background="@color/bgcolor"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     app:theme="@style/AppTheme.AppBarOverlay"
     app:titleTextAppearance="@style/Toolbar.TitleText">
 
     <LinearLayout
-        android:gravity="center"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/bgcolormain"
     tools:context="com.receptix.batterybuddy.home.HomeFragment">
 
     <ScrollView
@@ -36,8 +37,10 @@
                         android:weightSum="150">
 
                         <LinearLayout
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="100"
                             android:orientation="vertical">
 
@@ -46,11 +49,12 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="@string/problemText"
-                                android:textColor="@color/colorAccent"
+                                android:textColor="@color/buttonColor"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
 
                             <TextView
+                                android:layout_marginTop="2dp"
                                 android:id="@+id/isssueTextView"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -58,6 +62,7 @@
                                 android:textColor="@color/white" />
 
                             <LinearLayout
+                                android:layout_marginTop="2dp"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal">
@@ -90,6 +95,7 @@
                             android:gravity="center">
 
                             <com.github.lzyzsd.circleprogress.DonutProgress
+                                android:id="@+id/homebatteryProgress"
                                 android:layout_width="100dp"
                                 android:layout_height="100dp"
                                 apps:donut_finished_color="@color/buttonColor"
@@ -114,7 +120,7 @@
                         <Button
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/buttonColor"
+                            android:background="@drawable/optimizerbuttonbgcolor"
                             android:text="@string/optimize"
                             android:textColor="@color/white" />
                     </LinearLayout>
@@ -251,7 +257,7 @@
                     android:paddingTop="5dp"
                     android:text="@string/batteryStatus"
                     android:textColor="@color/white"
-                    android:textSize="18dp" />
+                    android:textSize="16sp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -259,7 +265,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/white" />
+                    android:background="@color/lightbgcolor" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -270,45 +276,85 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
+                        android:layout_gravity="center"
                         android:layout_weight="100"
+                        android:gravity="center"
                         android:orientation="vertical">
-                       <TextView
-                           android:gravity="center"
-                           android:textColor="@color/white"
-                           android:text="@string/temperatureText"
-                           android:id="@+id/temperatureTextView"
-                           android:layout_width="match_parent"
-                           android:layout_height="match_parent" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/thermometer_24" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/temperatureText"
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            android:id="@+id/temperatureTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/temperatureValue"
+                            android:textColor="@color/white" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
+                        android:layout_gravity="center"
                         android:layout_weight="100"
+                        android:gravity="center"
                         android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/thermometer_24" />
+
                         <TextView
-                            android:gravity="center"
-                            android:textColor="@color/white"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:text="@string/voltageText"
+                            android:textColor="@color/white" />
+
+                        <TextView
                             android:id="@+id/voltageTextView"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/voltageValue"
+                            android:textColor="@color/white" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
+                        android:layout_gravity="center"
                         android:layout_weight="100"
+                        android:gravity="center"
                         android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/thermometer_24" />
+
                         <TextView
-                            android:gravity="center"
-                            android:textColor="@color/white"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:text="@string/technologyText"
+                            android:textColor="@color/white" />
+
+                        <TextView
                             android:id="@+id/technologyTextView"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/technologyValue"
+                            android:textColor="@color/white" />
 
                     </LinearLayout>
 
@@ -316,6 +362,129 @@
                 </LinearLayout>
 
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/backgroundcolor"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="5dp"
+                    android:text="@string/availableBatteryUsage"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/lightbgcolor" />
+
+                <LinearLayout
+                    android:layout_marginTop="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:src="@drawable/thermometer_24" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/voicecallText"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:text="@string/voicecallValueText"
+                        android:textColor="@color/white" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:src="@drawable/thermometer_24" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/watchingvideotext"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:text="@string/watchingvideoValueText"
+                        android:textColor="@color/white" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingRight="5dp"
+                        android:src="@drawable/thermometer_24" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/usingwifiText"
+                        android:textColor="@color/white" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:text="@string/usingwifiValueText"
+                        android:textColor="@color/white" />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"/>
             </LinearLayout>
 
 
