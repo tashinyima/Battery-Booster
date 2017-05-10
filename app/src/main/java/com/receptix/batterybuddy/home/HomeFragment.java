@@ -14,17 +14,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.lzyzsd.circleprogress.CircleProgress;
 import com.github.lzyzsd.circleprogress.DonutProgress;
 import com.receptix.batterybuddy.R;
+import com.receptix.batterybuddy.optimizeractivity.OptimizerActivity;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements View.OnClickListener {
     private static final String TAG ="BatteryBuddy";
     View view;
     Context context;
@@ -34,6 +36,7 @@ public class HomeFragment extends Fragment {
     int voltage,temperature,level,scale;
     DonutProgress batteryProgress;
     private int mProgressStatus = 0;
+    Button optimzerButton;
 
 
 
@@ -76,6 +79,8 @@ public class HomeFragment extends Fragment {
         temperaturTextView = (TextView) view.findViewById(R.id.temperatureTextView);
         volatageTextView = (TextView) view.findViewById(R.id.voltageTextView);
         batteryProgress = (DonutProgress) view.findViewById(R.id.homebatteryProgress);
+        optimzerButton = (Button) view.findViewById(R.id.optimizerButton);
+        optimzerButton.setOnClickListener(this);
 
 
     }
@@ -131,5 +136,15 @@ public class HomeFragment extends Fragment {
         super.onDestroy();
 
         context.unregisterReceiver(battery_info_receiver);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId()==R.id.optimizerButton){
+
+            Intent optintent = new Intent(context, OptimizerActivity.class);
+            context.startActivity(optintent);
+
+        }
     }
 }

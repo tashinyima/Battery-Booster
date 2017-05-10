@@ -118,6 +118,7 @@
                         android:layout_marginRight="15dp">
 
                         <Button
+                            android:id="@+id/optimizerButton"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/optimizerbuttonbgcolor"
