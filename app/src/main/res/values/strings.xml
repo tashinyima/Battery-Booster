@@ -14,7 +14,7 @@
     <string name="problemText">PROBLEMS DETECTED</string>
     <string name="issuetext">30+ issues</string>
     <string name="availableText">Available:</string>
-    <string name="hourText">12 H 54 MIN</string>
+    <string name="hourText">12</string>
     <string name="batteryChargeLevel">50%</string>
     <string name="estimatedchargeText">Estimated Charge Remaining</string>
     <string name="remainingHourText">1h 30 m</string>
@@ -42,4 +42,22 @@
     <string name="rankpowerText">Power</string>
     <string name="checkButton">Check</string>
     <string name="closeButton">CLOSE</string>
+    <string name="hourSymbolText">H</string>
+    <string name="minutesText">45</string>
+    <string name="minutesSymbolText">MIN</string>
+    <string name="bluetoothtitle">Bluetooth</string>
+    <string name="choose">Choose</string>
+    <string name="cancel">Cancel</string>
+    <string name="lockScreenTimeouttitle">Automatically Lock</string>
+    <string-array name="sreenlocktimer">
+        <item>Immediately</item>
+        <item>5 second </item>
+        <item>15 seconds</item>
+        <item>30 seconds</item>
+        <item>1 minute</item>
+        <item>2 minutes</item>
+        <item>5 minutes</item>
+        <item>10 minutes</item>
+        <item>30 minutes</item>
+    </string-array>
 </resources>

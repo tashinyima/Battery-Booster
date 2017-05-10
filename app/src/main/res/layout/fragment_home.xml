@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/bgcolormain"
+    android:orientation="vertical"
     tools:context="com.receptix.batterybuddy.home.HomeFragment">
 
     <ScrollView
@@ -37,11 +37,11 @@
                         android:weightSum="150">
 
                         <LinearLayout
-                            android:layout_gravity="center_vertical"
-                            android:gravity="center_vertical"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
                             android:layout_weight="100"
+                            android:gravity="center_vertical"
                             android:orientation="vertical">
 
                             <TextView
@@ -54,17 +54,17 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:layout_marginTop="2dp"
+
                                 android:id="@+id/isssueTextView"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
                                 android:text="@string/issuetext"
-                                android:textColor="@color/white" />
-
+                                android:textColor="@color/buttonColor" />
                             <LinearLayout
-                                android:layout_marginTop="2dp"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
                                 android:orientation="horizontal">
 
                                 <TextView
@@ -73,15 +73,42 @@
                                     android:layout_height="wrap_content"
                                     android:text="@string/availableText"
                                     android:textColor="@color/white"
-                                    android:textSize="18dp" />
+                                    android:textSize="15sp" />
 
                                 <TextView
+                                    android:textStyle="bold"
                                     android:id="@+id/hourTextView"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:paddingLeft="3sp"
                                     android:text="@string/hourText"
                                     android:textColor="@color/white"
-                                    android:textSize="18dp" />
+                                    android:textSize="20sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="3sp"
+                                    android:text="@string/hourSymbolText"
+                                    android:textColor="@color/white"
+                                    android:textSize="15sp" />
+                                <TextView
+                                    android:textStyle="bold"
+                                    android:id="@+id/minutesTextView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="3sp"
+                                    android:text="@string/minutesText"
+                                    android:textColor="@color/white"
+                                    android:textSize="20sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="3sp"
+                                    android:text="@string/minutesSymbolText"
+                                    android:textColor="@color/white"
+                                    android:textSize="15sp" />
 
                             </LinearLayout>
 
@@ -143,6 +170,7 @@
                     android:id="@+id/brightnessLinearLayout"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     android:layout_marginRight="5dp"
                     android:layout_weight="100"
                     android:background="@drawable/backgroundcolor"
@@ -150,17 +178,19 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/flowar" />
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/brightness" />
 
                     <TextView
                         android:id="@+id/brightnessTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:paddingTop="2dp"
                         android:text="@string/brightnessPercentage"
                         android:textColor="@color/white"
-                        android:textSize="18dp" />
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 
@@ -168,6 +198,7 @@
                     android:id="@+id/lockscreenLinearLayout"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     android:layout_marginRight="5dp"
                     android:layout_weight="100"
                     android:background="@drawable/backgroundcolor"
@@ -175,17 +206,18 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/flowar" />
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/lock" />
 
                     <TextView
                         android:id="@+id/lockscreenTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:paddingTop="2dp"
                         android:text="@string/lockscreenText"
                         android:textColor="@color/white"
-                        android:textSize="18dp" />
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 
@@ -193,6 +225,7 @@
                     android:id="@+id/bluetoothLinearLayout"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     android:layout_marginRight="5dp"
                     android:layout_weight="100"
                     android:background="@drawable/backgroundcolor"
@@ -200,17 +233,18 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/flowar" />
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/bluetooth" />
 
                     <TextView
                         android:id="@+id/bluetoothTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:paddingTop="2dp"
                         android:text="@string/bluetoothOffText"
                         android:textColor="@color/white"
-                        android:textSize="18dp" />
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 
@@ -218,23 +252,25 @@
                     android:id="@+id/soundLinearLayout"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     android:layout_weight="100"
                     android:background="@drawable/backgroundcolor"
                     android:gravity="center"
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/flowar" />
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/sound" />
 
                     <TextView
                         android:id="@+id/soundTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:paddingTop="2dp"
                         android:text="@string/soundText"
                         android:textColor="@color/white"
-                        android:textSize="18dp" />
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 
@@ -283,14 +319,16 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/thermometer_24" />
+                            android:id="@+id/imageView"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/temperature" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
+                            android:paddingTop="5dp"
                             android:text="@string/temperatureText"
                             android:textColor="@color/white" />
 
@@ -298,6 +336,7 @@
                             android:id="@+id/temperatureTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:paddingTop="4dp"
                             android:text="@string/temperatureValue"
                             android:textColor="@color/white" />
 
@@ -312,13 +351,14 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/thermometer_24" />
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/voltage" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:paddingTop="5dp"
                             android:text="@string/voltageText"
                             android:textColor="@color/white" />
 
@@ -326,6 +366,7 @@
                             android:id="@+id/voltageTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:paddingTop="4dp"
                             android:text="@string/voltageValue"
                             android:textColor="@color/white" />
 
@@ -340,13 +381,14 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/thermometer_24" />
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/technology" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:paddingTop="5dp"
                             android:text="@string/technologyText"
                             android:textColor="@color/white" />
 
@@ -354,6 +396,7 @@
                             android:id="@+id/technologyTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:paddingTop="4dp"
                             android:text="@string/technologyValue"
                             android:textColor="@color/white" />
 
@@ -393,9 +436,9 @@
                     android:background="@color/lightbgcolor" />
 
                 <LinearLayout
-                    android:layout_marginTop="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -479,13 +522,14 @@
 
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="400dp"/>
+                    android:layout_height="400dp" />
             </LinearLayout>
 
 

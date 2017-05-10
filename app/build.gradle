@@ -35,5 +35,6 @@ dependencies {
     compile 'com.android.support:support-v4:25.1.0'
     compile 'com.github.lzyzsd:circleprogress:1.1.0'
     compile 'me.itangqi.waveloadingview:library:0.3.5'
+    compile 'com.afollestad.material-dialogs:commons:0.9.0.0'
     testCompile 'junit:junit:4.12'
 }
