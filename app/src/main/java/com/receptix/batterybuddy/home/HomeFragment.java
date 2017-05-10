@@ -144,6 +144,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
             Intent optintent = new Intent(context, OptimizerActivity.class);
             context.startActivity(optintent);
+            // thanks
 
         }
     }
