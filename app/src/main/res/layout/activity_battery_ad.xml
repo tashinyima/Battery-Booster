@@ -1,52 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_battery_ad"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bgcolormain"
+    android:orientation="vertical"
     tools:context="com.receptix.batterybuddy.BatteryAdActivity">
 
+
     <LinearLayout
-        android:layout_gravity="center"
-        android:orientation="vertical"
+        android:padding="10dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:orientation="horizontal"
+        android:weightSum="300">
+
         <LinearLayout
-            android:layout_marginTop="30dp"
-            android:background="@color/colorAccent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:padding="10dp"
-                android:layout_marginTop="15dp"
-                android:gravity="center"
-                android:textStyle="bold"
-                android:textSize="24dp"
-                android:text="@string/welcome"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="100">
+
+            <com.github.lzyzsd.circleprogress.ArcProgress
+
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:arc_bottom_text="@string/ramtext"
+                app:arc_bottom_text_size="20sp"
+                app:arc_progress="50" />
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="100">
 
+            <com.github.lzyzsd.circleprogress.ArcProgress
+
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:arc_bottom_text="@string/cputext"
+                app:arc_bottom_text_size="20dp"
+                app:arc_progress="30" />
+
+        </LinearLayout>
 
         <LinearLayout
-            android:background="@color/colorPrimary"
-            android:layout_marginTop="90dp"
-            android:id="@+id/adsLinearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="100">
 
-            <ImageView
-                android:src="@drawable/flowar"
-                android:id="@+id/adsImageView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            <com.github.lzyzsd.circleprogress.ArcProgress
+
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:arc_bottom_text="@string/memorytext"
+                app:arc_bottom_text_size="20dp"
+                app:arc_progress="70" />
 
         </LinearLayout>
 
     </LinearLayout>
 
+    <!--Ads will be shown below layout-->
+
+    <LinearLayout
+        android:id="@+id/adsLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="90dp"
+        android:background="@color/colorPrimary">
+
+        <ImageView
+            android:id="@+id/adsImageView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:src="@drawable/fb_ads_sample" />
+
+    </LinearLayout>
+
+    <LinearLayout
+
+        android:id="@+id/swipeLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/slideImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/swipeplaceholder" />
+
+
+    </LinearLayout>
 
 
 </LinearLayout>

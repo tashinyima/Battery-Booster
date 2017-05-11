@@ -4,22 +4,22 @@
     <item
         android:id="@+id/action_home"
         android:enabled="true"
-        android:icon="@drawable/home"
+        android:icon="@drawable/home_active"
         android:title="@string/home"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_charge"
         android:enabled="true"
-        android:icon="@drawable/power_plug_24"
+        android:icon="@drawable/power_active_24"
         android:title="@string/charge"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_rank"
         android:enabled="true"
         android:icon="@drawable/signal_24"
         android:title="@string/rank"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
 </menu>

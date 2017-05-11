@@ -10,4 +10,5 @@
     <color name="bgcolormain">#2b2b36</color>
     <color name="lightbgcolor">#565773</color>
     <color name="colorCheckButtonBg">#485ccf</color>
+    <color name="colorGreen">#2cd90e</color>
 </resources>

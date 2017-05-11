@@ -49,6 +49,32 @@
     <string name="choose">Choose</string>
     <string name="cancel">Cancel</string>
     <string name="lockScreenTimeouttitle">Automatically Lock</string>
+    <string name="brightnesstitle">Brightness Level</string>
+    <string name="zerobright">10%</string>
+    <string name="onebright">20%</string>
+    <string name="twobright">30%</string>
+    <string name="threebright">40%</string>
+    <string name="fourbright">50%</string>
+    <string name="fivebright">60%</string>
+    <string name="sixbright">70%</string>
+    <string name="sevenbright">80%</string>
+    <string name="eightbright">90%</string>
+    <string name="ninebright">100%</string>
+    <string name="autolock">0s</string>
+    <string name="fivesecond">5s</string>
+    <string name="fiveteensecond">15s</string>
+    <string name="thirtysecond">30s</string>
+    <string name="oneminute">1m</string>
+    <string name="twominute">2m</string>
+    <string name="fiveminute">5m</string>
+    <string name="tenminute">10m</string>
+    <string name="thirtyminute">30m</string>
+    <string name="silentsound">Silent</string>
+    <string name="soundvibrate">Vibrate</string>
+    <string name="soundtitle">Sound Mode</string>
+    <string name="ramtext">RAM</string>
+    <string name="cputext">CPU</string>
+    <string name="memorytext">SIZE</string>
     <string-array name="sreenlocktimer">
         <item>Immediately</item>
         <item>5 second </item>
@@ -59,5 +85,24 @@
         <item>5 minutes</item>
         <item>10 minutes</item>
         <item>30 minutes</item>
+    </string-array>
+    <string-array name="brightness">
+
+        <item>10%</item>
+        <item>20%</item>
+        <item>30%</item>
+        <item>40%</item>
+        <item>50%</item>
+        <item>60%</item>
+        <item>70%</item>
+        <item>80%</item>
+        <item>90%</item>
+        <item>100%</item>
+
+    </string-array>
+    <string-array name="soundarray">
+        <item>Silence</item>
+        <item>Sound</item>
+        <item>Vibrate</item>
     </string-array>
 </resources>

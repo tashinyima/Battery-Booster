@@ -259,6 +259,7 @@
                     android:orientation="vertical">
 
                     <ImageView
+                        android:id="@+id/soundImageView"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:src="@drawable/sound" />
@@ -443,10 +444,10 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:paddingRight="5dp"
-                        android:src="@drawable/thermometer_24" />
+                        android:src="@drawable/voice_call_ic" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -471,10 +472,10 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:paddingRight="5dp"
-                        android:src="@drawable/thermometer_24" />
+                        android:src="@drawable/film_reel_48_48" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -499,10 +500,10 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
                         android:paddingRight="5dp"
-                        android:src="@drawable/thermometer_24" />
+                        android:src="@drawable/wifi_ic" />
 
                     <TextView
                         android:layout_width="wrap_content"
