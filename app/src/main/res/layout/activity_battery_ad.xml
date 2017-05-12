@@ -9,59 +9,79 @@
     android:orientation="vertical"
     tools:context="com.receptix.batterybuddy.BatteryAdActivity">
 
-
     <LinearLayout
-        android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="4dp">
+
+        <TextView
+            android:id="@+id/datetv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:padding="10dp"
+            android:text="@string/systemDate"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal"
-        android:weightSum="300">
+        android:padding="10dp"
+        android:weightSum="250">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="100">
+            android:layout_weight="150"
+            android:gravity="center">
 
             <com.github.lzyzsd.circleprogress.ArcProgress
 
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                app:arc_bottom_text="@string/storagetext"
+                app:arc_bottom_text_size="18dp"
+                app:arc_finished_color="@color/colorGreen"
+                app:arc_progress="30"
+                app:arc_text_color="@color/white"
+                app:arc_unfinished_color="@color/white" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="100"
+            android:gravity="left">
+
+            <com.github.lzyzsd.circleprogress.ArcProgress
+                android:id="@+id/ramArcProgress"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 app:arc_bottom_text="@string/ramtext"
-                app:arc_bottom_text_size="20sp"
-                app:arc_progress="50" />
+                app:arc_bottom_text_size="18sp"
+                app:arc_finished_color="@color/colorGreen"
+                app:arc_progress="50"
+                app:arc_text_color="@color/white"
+                app:arc_unfinished_color="@color/white" />
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="100">
-
-            <com.github.lzyzsd.circleprogress.ArcProgress
-
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                app:arc_bottom_text="@string/cputext"
-                app:arc_bottom_text_size="20dp"
-                app:arc_progress="30" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="100">
-
-            <com.github.lzyzsd.circleprogress.ArcProgress
-
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                app:arc_bottom_text="@string/memorytext"
-                app:arc_bottom_text_size="20dp"
-                app:arc_progress="70" />
-
-        </LinearLayout>
 
     </LinearLayout>
 
@@ -71,7 +91,7 @@
         android:id="@+id/adsLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="90dp"
+        android:layout_marginTop="30dp"
         android:background="@color/colorPrimary">
 
         <ImageView

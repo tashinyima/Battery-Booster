@@ -11,4 +11,5 @@
     <color name="lightbgcolor">#565773</color>
     <color name="colorCheckButtonBg">#485ccf</color>
     <color name="colorGreen">#2cd90e</color>
+    <color name="red">#cc1f1f</color>
 </resources>

@@ -75,6 +75,9 @@
     <string name="ramtext">RAM</string>
     <string name="cputext">CPU</string>
     <string name="memorytext">SIZE</string>
+    <string name="batterytext">Battery</string>
+    <string name="systemDate">Date shows here</string>
+    <string name="storagetext">Storage</string>
     <string-array name="sreenlocktimer">
         <item>Immediately</item>
         <item>5 second </item>
