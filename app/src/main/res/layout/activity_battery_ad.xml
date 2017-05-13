@@ -27,9 +27,64 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:weightSum="100">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="50">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ProgressBar
+                    android:id="@+id/batteryProgressBar"
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="50dp"
+                    android:minWidth="140dp"
+                    android:progress="40" />
+
+                <TextView
+                    android:id="@+id/batteryLevelTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="@string/batteryLevelTextView"
+                    android:textColor="@color/white" />
+            </RelativeLayout>
 
 
+        </LinearLayout>
+
+        <LinearLayout
+
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="50">
+
+            <TextView
+                android:id="@+id/batteryChargingStatusTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="15dp"
+                android:gravity="center_vertical"
+                android:text="chargeStatus"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:visibility="invisible" />
+        </LinearLayout>
 
 
     </LinearLayout>
@@ -41,24 +96,31 @@
         android:layout_marginTop="20dp"
         android:orientation="horizontal"
         android:padding="10dp"
-        android:weightSum="250">
+        android:weightSum="300">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="150"
-            android:gravity="center">
+            android:layout_weight="100"
+            android:gravity="center"
+            android:orientation="vertical">
 
             <com.github.lzyzsd.circleprogress.ArcProgress
-
-                android:layout_width="140dp"
-                android:layout_height="140dp"
-                app:arc_bottom_text="@string/storagetext"
-                app:arc_bottom_text_size="18dp"
+                android:id="@+id/batteryArcProgress"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 app:arc_finished_color="@color/colorGreen"
                 app:arc_progress="30"
                 app:arc_text_color="@color/white"
                 app:arc_unfinished_color="@color/white" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="5dp"
+                android:text="@string/batterytext"
+                android:textColor="@color/white" />
 
         </LinearLayout>
 
@@ -67,18 +129,52 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_weight="100"
-            android:gravity="left">
+            android:gravity="center"
+            android:orientation="vertical">
 
             <com.github.lzyzsd.circleprogress.ArcProgress
                 android:id="@+id/ramArcProgress"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                app:arc_bottom_text="@string/ramtext"
-                app:arc_bottom_text_size="18sp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 app:arc_finished_color="@color/colorGreen"
                 app:arc_progress="50"
                 app:arc_text_color="@color/white"
                 app:arc_unfinished_color="@color/white" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="5dp"
+                android:text="@string/ramtext"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="100"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.github.lzyzsd.circleprogress.ArcProgress
+                android:id="@+id/cpuArcProgress"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                app:arc_finished_color="@color/colorGreen"
+                app:arc_progress="51"
+                app:arc_text_color="@color/white"
+                app:arc_unfinished_color="@color/white" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="5dp"
+                android:text="@string/cputext"
+                android:textColor="@color/white" />
 
         </LinearLayout>
 
@@ -104,15 +200,17 @@
 
     <LinearLayout
 
+android:layout_marginTop="20dp"
         android:id="@+id/swipeLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center">
 
         <ImageView
+
             android:id="@+id/slideImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:src="@drawable/swipeplaceholder" />
 
 

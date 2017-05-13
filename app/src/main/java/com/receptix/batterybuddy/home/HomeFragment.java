@@ -358,13 +358,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
 
             case R.id.optimizerButton:
-//                Intent optintent = new Intent(context, OptimizerActivity.class);
-//                context.startActivity(optintent);
+                Intent optintent = new Intent(context, OptimizerActivity.class);
+                context.startActivity(optintent);
 
 //                Intent BatteryAdsActivity for testing purpose
-
-                Intent bintent = new Intent(context, BatteryAdActivity.class);
-                context.startActivity(bintent);
+//
+//                Intent bintent = new Intent(context, BatteryAdActivity.class);
+//                context.startActivity(bintent);
                 break;
             case R.id.brightnessLinearLayout:
                 showMessage("I am brightness");

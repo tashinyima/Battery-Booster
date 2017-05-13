@@ -78,6 +78,8 @@
     <string name="batterytext">Battery</string>
     <string name="systemDate">Date shows here</string>
     <string name="storagetext">Storage</string>
+    <string name="storageSuffixtext">Storage</string>
+    <string name="batteryLevelTextView">20%</string>
     <string-array name="sreenlocktimer">
         <item>Immediately</item>
         <item>5 second </item>
