@@ -1,9 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bgcolormain"
     tools:context="com.receptix.batterybuddy.optimizeractivity.AfterOptimizerActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/app_bar"
+            />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/backgroundcolor"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:paddingBottom="10dp"
+            android:layout_marginLeft="15dp"
+            android:src="@drawable/prize"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+
+        <TextView
+            android:textSize="18dp"
+            android:padding="10dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            android:text="@string/extentedhoursAfter"
+            android:id="@+id/extentedTextViewAfter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+
+
+
+
+
+</LinearLayout>

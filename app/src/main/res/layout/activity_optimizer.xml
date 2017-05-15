@@ -4,26 +4,106 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bgcolormain"
     android:orientation="vertical"
     tools:context="com.receptix.batterybuddy.optimizeractivity.OptimizerActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <include
             android:id="@+id/toolbar"
-            layout="@layout/app_bar"/>
+            layout="@layout/app_bar" />
 
     </android.support.design.widget.AppBarLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/lightbgcolor">
 
+    </View>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:background="@color/bgcolor"
+        android:weightSum="150">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="50">
+
+            <ImageView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/battery_half" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="100"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/optimizerBatteryConsumptionTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/Consumptionchecktext"
+                android:textColor="@color/buttonColor"
+                android:textSize="16dp" />
+
+
+            <ListView
+
+                android:id="@+id/myListView"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginTop="5dp">
+
+            </ListView>
+
+            <TextView
+                android:id="@+id/estimatedextensionTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/estimatedextensiontext"
+                android:textColor="@color/white" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
 
     <TextView
-        android:textStyle="bold"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:text="@string/app_name"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/powerconsumingapptext"
+        android:textColor="@color/darklighttextcolor"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+
+            android:id="@+id/optimizerecycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+
 
 </LinearLayout>

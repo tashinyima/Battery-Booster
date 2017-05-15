@@ -1,53 +1,202 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_lock_ads"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bgcolormain"
+    android:orientation="vertical"
     tools:context="com.receptix.batterybuddy.LockAdsActivity">
 
     <LinearLayout
-
-        android:id="@+id/lockLinearLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true">
-        <LinearLayout
-            android:layout_gravity="center"
-            android:layout_marginTop="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp">
+
+        <TextView
+            android:id="@+id/lockdatetv"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:padding="10dp"
+            android:text="@string/systemDate"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:weightSum="100">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="50">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ProgressBar
+                    android:id="@+id/lockProgressBar"
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="50dp"
+                    android:minWidth="140dp"
+                    android:progress="40" />
+
+                <TextView
+                    android:id="@+id/lockBatteryLevelTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="@string/batteryLevelTextView"
+                    android:textColor="@color/white" />
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="50">
+
             <TextView
-                android:padding="15dp"
-                android:background="@color/colorAccent"
-                android:textStyle="bold"
-                android:textColor="@color/colorPrimary"
+                android:id="@+id/lockbatteryChargingStatusTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="15dp"
+                android:gravity="center_vertical"
+                android:text="chargeStatus"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:visibility="invisible" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:weightSum="300">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="100"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.github.lzyzsd.circleprogress.ArcProgress
+                android:id="@+id/lockbatteryArcProgress"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                app:arc_finished_color="@color/colorGreen"
+                app:arc_progress="30"
+                app:arc_text_color="@color/white"
+                app:arc_unfinished_color="@color/white" />
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@string/app_name"
-                android:textSize="24sp" />
+                android:paddingTop="5dp"
+                android:text="@string/batterytext"
+                android:textColor="@color/white" />
 
         </LinearLayout>
-
 
         <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="100"
             android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:orientation="vertical">
 
-            <ImageView
-                android:layout_gravity="center"
-                android:src="@drawable/lockscreenimg"
-                android:id="@+id/lockImageView"
-                android:layout_width="200dp"
-                android:layout_height="200dp" />
+            <com.github.lzyzsd.circleprogress.ArcProgress
+                android:id="@+id/lockramArcProgress"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                app:arc_finished_color="@color/colorGreen"
+                app:arc_progress="50"
+                app:arc_text_color="@color/white"
+                app:arc_unfinished_color="@color/white" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="5dp"
+                android:text="@string/ramtext"
+                android:textColor="@color/white" />
+
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="100"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.github.lzyzsd.circleprogress.ArcProgress
+                android:id="@+id/lockcpuArcProgress"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                app:arc_finished_color="@color/colorGreen"
+                app:arc_progress="51"
+                app:arc_text_color="@color/white"
+                app:arc_unfinished_color="@color/white" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="5dp"
+                android:text="@string/cputext"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:gravity="center"
+        android:layout_marginTop="140dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/kickmeImageView"
+
+            android:src="@drawable/ic_launcher"
+            android:baselineAlignBottom="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
 
 
     </LinearLayout>
 
-</RelativeLayout>
+
+
+</LinearLayout>
