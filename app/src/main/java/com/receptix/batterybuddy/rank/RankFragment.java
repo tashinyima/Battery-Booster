@@ -2,14 +2,17 @@ package com.receptix.batterybuddy.rank;
 
 
 import android.app.ActivityManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Debug;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -66,33 +69,9 @@ public class RankFragment extends Fragment {
         packageManager = context.getPackageManager();
         initView(view);
 
-
-        // get total memory
-        ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
-
-        ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
-        activityManager.getMemoryInfo(memoryInfo);
-        Log.i(" Total Memory ", memoryInfo.totalMem/(1024*1024) + "MB\n" );
-        Log.i(" Available Memory ", memoryInfo.availMem/(1024*1024) + "MB\n" );
-        totalMemoryInMb = (int) (memoryInfo.totalMem/(1024*1024));
-        Log.e("Total Device memory", String.valueOf(totalMemoryInMb));
-
-        getAllProcessesMemoryInfo();
-
-        LoadSystemApps(view);
-
-        ApplicationList();
-
-
-
-
+        new LoadRankData().execute();
 
         return view;
-    }
-
-    private void ApplicationList() {
-
-
     }
 
     private void LoadSystemApps(View view) {
@@ -100,36 +79,6 @@ public class RankFragment extends Fragment {
 
         int si = list.size();
         Log.d(TAG, "Total App=" + si);
-//        FLagSystem == 1
-        //Downloaded apps FLAG==0;
-
-
-   /*     for (int i = 0; i < list.size(); i++) {
-
-            if ((list.get(i).flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
-
-                String myPackage = context.getApplicationContext().getPackageName();
-                if (list.get(i).packageName.equals(myPackage)) continue;
-
-                String packageLabel = list.get(i).loadLabel(packageManager).toString();
-                String packageName = list.get(i).packageName;
-                // hello
-                // print Contents of Hashmap (Maximum RAM Usage First)
-                int percentage = getPercentageFromPackage(packageName);
-                appicon = list.get(i).loadIcon(packageManager);
-                try {
-                    appicon = packageManager.getApplicationIcon(packageName);
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-
-
-        }*/
-
-
         // print Contents of Hashmap (Maximum RAM Usage First)
         for (Map.Entry<String, Integer> entry : hashMap_packageRamUsage.entrySet()) {
 
@@ -273,4 +222,41 @@ public class RankFragment extends Fragment {
 
     }
 
+    private class LoadRankData extends AsyncTask<Void, Void,Void> {
+        ProgressDialog progressDialog;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(context);
+            progressDialog.setMessage("Loading");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            if(progressDialog!=null)
+                progressDialog.dismiss();
+
+            LoadSystemApps(view);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            // get total memory
+            ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
+
+            ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
+            activityManager.getMemoryInfo(memoryInfo);
+            Log.i(" Total Memory ", memoryInfo.totalMem/(1024*1024) + "MB\n" );
+            Log.i(" Available Memory ", memoryInfo.availMem/(1024*1024) + "MB\n" );
+            totalMemoryInMb = (int) (memoryInfo.totalMem/(1024*1024));
+            Log.e("Total Device memory", String.valueOf(totalMemoryInMb));
+
+            getAllProcessesMemoryInfo();
+            return null;
+        }
+    }
 }
