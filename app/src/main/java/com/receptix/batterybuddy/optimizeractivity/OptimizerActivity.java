@@ -1,5 +1,6 @@
 package com.receptix.batterybuddy.optimizeractivity;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -82,14 +83,33 @@ public class OptimizerActivity extends AppCompatActivity {
                 // Do something after 5s = 5000ms
                 myOptimizerAdapter.clearApplications();
 
+                KillAllProcess();
+
                 Intent intent = new Intent(OptimizerActivity.this, SuccessOptimizerActivity.class);
 
 //                requestcode=9000
                 startActivity(intent);
+                finish();
             }
         }, 2000);
 
 
+    }
+
+    private void KillAllProcess() {
+
+        List<ApplicationInfo> packages;
+
+        //get a list of installed apps.
+        packages = packageManager.getInstalledApplications(0);
+
+        ActivityManager mActivityManager = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
+        String myPackage = getApplicationContext().getPackageName();
+        for (ApplicationInfo packageInfo : packages) {
+            if((packageInfo.flags & ApplicationInfo.FLAG_SYSTEM)==1)continue;
+            if(packageInfo.packageName.equals(myPackage)) continue;
+            mActivityManager.killBackgroundProcesses(packageInfo.packageName);
+        }
     }
 
     private void ListPackageData() {

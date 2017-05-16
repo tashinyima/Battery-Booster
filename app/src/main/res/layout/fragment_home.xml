@@ -456,6 +456,7 @@
                         android:textColor="@color/white" />
 
                     <TextView
+                        android:id="@+id/voiceCallTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="right"
@@ -484,6 +485,7 @@
                         android:textColor="@color/white" />
 
                     <TextView
+                        android:id="@+id/videoCallTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="right"
@@ -512,6 +514,7 @@
                         android:textColor="@color/white" />
 
                     <TextView
+                        android:id="@+id/wifiCallTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="right"

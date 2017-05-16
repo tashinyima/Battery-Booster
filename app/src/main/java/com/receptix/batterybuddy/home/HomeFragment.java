@@ -31,6 +31,7 @@ import com.github.lzyzsd.circleprogress.CircleProgress;
 import com.github.lzyzsd.circleprogress.DonutProgress;
 import com.receptix.batterybuddy.BatteryAdActivity;
 import com.receptix.batterybuddy.R;
+import com.receptix.batterybuddy.helper.CounterHandler;
 import com.receptix.batterybuddy.optimizeractivity.OptimizerActivity;
 
 import java.util.Set;
@@ -64,6 +65,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     int inWhichSoundIndex;
     BatteryManager myBatteryManger;
     ImageView soundImageView;
+    TextView hourTextView, minutesTextView;
+    TextView voiceCallTextView, videoCallTextView, wifiCallTextView;
 
 
     public HomeFragment() {
@@ -296,6 +299,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         lockscreenTextView = (TextView) view.findViewById(R.id.lockscreenTextView);
         soundImageView = (ImageView) view.findViewById(R.id.soundImageView);
 
+        hourTextView = (TextView) view.findViewById(R.id.hourTextView);
+        minutesTextView = (TextView) view.findViewById(R.id.minutesTextView);
+        voiceCallTextView = (TextView) view.findViewById(R.id.voiceCallTextView);
+        wifiCallTextView = (TextView) view.findViewById(R.id.wifiCallTextView);
+        videoCallTextView = (TextView) view.findViewById(R.id.videoCallTextView);
+
 
     }
 
@@ -315,8 +324,47 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 double doublevolt = voltage * 0.001;
                 double doubletemp = temperature * 0.1;
 
+
                 // Calculate the battery charged percentage
                 float percentage = level / (float) scale;
+
+                int totalCapacityInMAh = (int) getBatteryCapacity();
+                int remainingBatteryInMah = level * totalCapacityInMAh / 100;
+                int radioPowerConsumption = getVoiceCallCapacity(); //milli-amps
+                int remainingBatteryCallsHours = remainingBatteryInMah / radioPowerConsumption; // milliAmpHour / millAmp = hour
+                Log.d("call talktime", String.valueOf(remainingBatteryCallsHours));
+
+                double screenPowerConsumption = getTotalRemainingTime();
+
+                double remainingScreenTime = remainingBatteryInMah / screenPowerConsumption;
+
+                getValueInHoursMinutes(remainingScreenTime, 0);
+
+                Log.d("Total Stand", String.valueOf(remainingScreenTime));
+
+                double wifiPowerConsumption = getWifiRemainingTime();
+
+                double wifiRemaingTime = remainingBatteryInMah / wifiPowerConsumption;
+                getValueInHoursMinutes(wifiRemaingTime,3);
+
+                Log.d("Wifi", String.valueOf(wifiRemaingTime));
+
+                double voiceCallConsumption = getVoiceRemainingTime();
+                double voiceCallTimeRemaing =remainingBatteryInMah/voiceCallConsumption;
+                getValueInHoursMinutes(voiceCallTimeRemaing,1);
+
+                double videoCallConsumption = getVideoRemainingTime();
+                double videoCallTimeRemaing = remainingBatteryInMah/videoCallConsumption;
+                getValueInHoursMinutes(videoCallTimeRemaing,2);
+
+
+                // voice calll...
+
+//                remainingBatteryInMah /
+
+
+                Log.e("remaining", remainingBatteryInMah + " mAH");
+
                 // Update the progress bar to display current battery charged percentage
                 mProgressStatus = (int) ((percentage) * 100);
 
@@ -339,6 +387,140 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         }
     };
+
+    private void getValueInHoursMinutes(double remainingScreenTime, int type) {
+
+        if (type == 0) {
+
+            // 0 stands for the over alll battery life ...
+
+            if (remainingScreenTime > 0.9) {
+                int hours = (int) remainingScreenTime;
+                String stringminutes = String.valueOf(String.format("%.2f", remainingScreenTime));
+
+                String lasttwo = stringminutes.substring(stringminutes.length() - 2);
+                int minute = Integer.parseInt(lasttwo);
+
+                int realminutes = (minute * 60) / 100;
+                hourTextView.setText(String.valueOf(hours));
+                minutesTextView.setText(String.valueOf(realminutes));
+
+                Log.d("Asadf", String.valueOf(realminutes));
+            } else {
+
+
+                String stringminutes = String.valueOf(String.format("%.2f", remainingScreenTime));
+
+                String lasttwo = stringminutes.substring(stringminutes.length() - 2);
+                int minute = Integer.parseInt(lasttwo);
+
+                int realminutes = (minute * 60) / 100;
+                hourTextView.setText("0");
+                minutesTextView.setText(String.valueOf(realminutes));
+
+                Log.d("Asadf", String.valueOf(realminutes));
+            }
+        } else if (type == 1) {
+            // 1 for voice call
+
+            // 0 stands for the over alll battery life ...
+
+            if (remainingScreenTime > 0.9) {
+                int hours = (int) remainingScreenTime;
+                String stringminutes = String.valueOf(String.format("%.2f", remainingScreenTime));
+
+                String lasttwo = stringminutes.substring(stringminutes.length() - 2);
+                int minute = Integer.parseInt(lasttwo);
+
+                int realminutes = (minute * 60) / 100;
+
+                voiceCallTextView.setText(String.valueOf(hours) + "h" + String.valueOf(realminutes) + "min");
+
+
+                Log.d("Asadf", String.valueOf(realminutes));
+            } else {
+
+
+                String stringminutes = String.valueOf(String.format("%.2f", remainingScreenTime));
+
+                String lasttwo = stringminutes.substring(stringminutes.length() - 2);
+                int minute = Integer.parseInt(lasttwo);
+
+                int realminutes = (minute * 60) / 100;
+                voiceCallTextView.setText(String.valueOf(0) + "h" + String.valueOf(realminutes) + "min");
+
+                Log.d("Asadf", String.valueOf(realminutes));
+            }
+
+
+        } else if (type == 2) {
+            // 2 for video
+            // 0 stands for the over alll battery life ...
+
+            if (remainingScreenTime > 0.9) {
+                int hours = (int) remainingScreenTime;
+                String stringminutes = String.valueOf(String.format("%.2f", remainingScreenTime));
+
+                String lasttwo = stringminutes.substring(stringminutes.length() - 2);
+                int minute = Integer.parseInt(lasttwo);
+
+                int realminutes = (minute * 60) / 100;
+                videoCallTextView.setText(String.valueOf(hours) + "h" + String.valueOf(realminutes) + "min");
+
+
+                Log.d("Asadf", String.valueOf(realminutes));
+            } else {
+
+
+                String stringminutes = String.valueOf(String.format("%.2f", remainingScreenTime));
+
+                String lasttwo = stringminutes.substring(stringminutes.length() - 2);
+                int minute = Integer.parseInt(lasttwo);
+
+                int realminutes = (minute * 60) / 100;
+                voiceCallTextView.setText(String.valueOf(0) + "h" + String.valueOf(realminutes) + "min");
+
+
+                Log.d("Asadf", String.valueOf(realminutes));
+            }
+
+
+        } else if (type == 3) {
+
+            //3 for the wifi ...
+            // 0 stands for the over alll battery life ...
+
+            if (remainingScreenTime > 0.9) {
+                int hours = (int) remainingScreenTime;
+                String stringminutes = String.valueOf(String.format("%.2f", remainingScreenTime));
+
+                String lasttwo = stringminutes.substring(stringminutes.length() - 2);
+                int minute = Integer.parseInt(lasttwo);
+
+                int realminutes = (minute * 60) / 100;
+                wifiCallTextView.setText(String.valueOf(hours) + "h" + String.valueOf(realminutes) + "min");
+
+
+                Log.d("Asadf", String.valueOf(realminutes));
+            } else {
+
+
+                String stringminutes = String.valueOf(String.format("%.2f", remainingScreenTime));
+
+                String lasttwo = stringminutes.substring(stringminutes.length() - 2);
+                int minute = Integer.parseInt(lasttwo);
+
+                int realminutes = (minute * 60) / 100;
+                voiceCallTextView.setText(String.valueOf(0) + "h" + String.valueOf(realminutes) + "min");
+
+                Log.d("Asadf", String.valueOf(realminutes));
+            }
+
+
+        }
+
+
+    }
 
     private void showMessage(String s) {
 
@@ -676,4 +858,290 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 .positiveText(R.string.choose)
                 .show();
     }
+
+    public double getBatteryCapacity() {
+        Object mPowerProfile = null;
+        final String POWER_PROFILE_CLASS = "com.android.internal.os.PowerProfile";
+
+        try {
+            mPowerProfile = Class.forName(POWER_PROFILE_CLASS)
+                    .getConstructor(Context.class)
+                    .newInstance(getContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            //Total battery capacity in mAh.
+            double batteryCapacity = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "battery.capacity");
+            return batteryCapacity;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0.0;
+    }
+
+
+    // ends here
+
+    public int getVoiceCallCapacity() {
+
+        Object mPowerProfile = null;
+        final String POWER_PROFILE_CLASS = "com.android.internal.os.PowerProfile";
+
+        try {
+            mPowerProfile = Class.forName(POWER_PROFILE_CLASS)
+                    .getConstructor(Context.class)
+                    .newInstance(getContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+
+            double radioActive = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "radio.active");
+
+            double radioScanning = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "radio.scanning");
+
+            double radioOn = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "radio.on");
+
+            int powerRadio = (int) radioActive + (int) radioScanning + (int) radioOn;
+
+            return powerRadio;
+
+
+        } catch (Exception ex) {
+
+            ex.printStackTrace();
+        }
+
+        return 0;
+
+    }
+
+
+    public double getTotalRemainingTime() {
+
+        Object mPowerProfile = null;
+        final String POWER_PROFILE_CLASS = "com.android.internal.os.PowerProfile";
+
+        try {
+            mPowerProfile = Class.forName(POWER_PROFILE_CLASS)
+                    .getConstructor(Context.class)
+                    .newInstance(getContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+
+            double cpuAwake = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "cpu.awake");
+            double wifiOn = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "wifi.on");
+
+            double screenOn = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "screen.on");
+            double gpsOn = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "gps.on");
+            double cpuActive = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "cpu.active");
+
+            double cputotal = (cpuActive + cpuAwake) / 2;
+
+
+            double totalConsumption = (cputotal + wifiOn + screenOn);
+
+
+            return totalConsumption;
+
+
+        } catch (Exception ex) {
+
+            ex.printStackTrace();
+        }
+
+        return 0.0;
+
+
+    }
+
+    public double getWifiRemainingTime() {
+
+        Object mPowerProfile = null;
+        final String POWER_PROFILE_CLASS = "com.android.internal.os.PowerProfile";
+
+        try {
+            mPowerProfile = Class.forName(POWER_PROFILE_CLASS)
+                    .getConstructor(Context.class)
+                    .newInstance(getContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+
+
+            double wifiOn = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "wifi.on");
+            double wifiActive = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "wifi.active");
+            double wifiScan = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "wifi.scan");
+
+            double screenOn = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "screen.on");
+            double cpuAwake = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "cpu.awake");
+            double cpuIdle = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "cpu.idle");
+            double cpuActive = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "cpu.active");
+
+            double cpuaverage = (cpuActive + cpuAwake + cpuIdle) / 3;
+
+
+            double wifiTotal = (wifiActive + wifiOn + wifiScan) / 3;
+
+
+            double totalConsumption = (wifiTotal + cpuaverage + screenOn);
+
+
+            return totalConsumption;
+
+
+        } catch (Exception ex) {
+
+            ex.printStackTrace();
+        }
+
+        return 0.0;
+
+
+    }
+
+    public double getVideoRemainingTime() {
+
+        Object mPowerProfile = null;
+        final String POWER_PROFILE_CLASS = "com.android.internal.os.PowerProfile";
+
+        try {
+            mPowerProfile = Class.forName(POWER_PROFILE_CLASS)
+                    .getConstructor(Context.class)
+                    .newInstance(getContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+
+            double cpuAwake = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "cpu.awake");
+            double wifiOn = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "wifi.on");
+
+            double screenOn = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "screen.on");
+            double dspAudio = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "dsp.audio");
+            double cpuActive = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "cpu.active");
+            double dspVideo = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "dsp.video");
+
+
+
+
+            double cputotal = (cpuActive + cpuAwake) / 2;
+
+
+            double totalConsumption = (cputotal + wifiOn + screenOn+dspAudio+dspVideo);
+
+
+            return totalConsumption;
+
+
+        } catch (Exception ex) {
+
+            ex.printStackTrace();
+        }
+
+        return 0.0;
+
+
+    }
+
+    public double getVoiceRemainingTime() {
+
+        Object mPowerProfile = null;
+        final String POWER_PROFILE_CLASS = "com.android.internal.os.PowerProfile";
+
+        try {
+            mPowerProfile = Class.forName(POWER_PROFILE_CLASS)
+                    .getConstructor(Context.class)
+                    .newInstance(getContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+
+            double cpuAwake = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "cpu.awake");
+            double wifiOn = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "wifi.on");
+
+            double screenOn = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "screen.on");
+            double dspAudio = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "dsp.audio");
+            double cpuActive = (Double) Class.forName(POWER_PROFILE_CLASS)
+                    .getMethod("getAveragePower", String.class)
+                    .invoke(mPowerProfile, "cpu.active");
+
+            double cputotal = (cpuActive + cpuAwake) / 2;
+
+
+            double totalConsumption = (cputotal + wifiOn + screenOn+dspAudio);
+
+
+            return totalConsumption;
+
+
+        } catch (Exception ex) {
+
+            ex.printStackTrace();
+        }
+
+        return 0.0;
+
+
+    }
+
+
 }

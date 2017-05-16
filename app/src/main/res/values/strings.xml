@@ -84,13 +84,14 @@
     <string name="Consumptionchecktext">Consumption Check...</string>
     <string name="estimatedextensiontext">Estimated Extension: 1H5MIN</string>
     <string name="powerconsumingapptext">POWER CONSUMING APPS</string>
-    <string name="extentedhours">1 H 30 Min</string>
+    <string name="extentedhours">0 H 40 Min</string>
     <string name="extentedTimeTextView">Extended Times</string>
     <string name="extentedhoursAfter">Extented 1H52Min</string>
     <string name="powerconsumptionToolbar">Power Consumption</string>
     <string name="poweroptimization">Power Optimization</string>
     <string name="nav_about_us">About us</string>
     <string name="privacy_policy">Privacy Policy</string>
+    <string name="uninstallButton">Uninstall</string>
     <string-array name="sreenlocktimer">
         <item>Immediately</item>
         <item>5 second </item>

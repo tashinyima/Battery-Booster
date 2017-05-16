@@ -127,7 +127,10 @@ public class RankAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     @Override
                     public void onClick(View v) {
 
-                        Intent intent = new Intent();
+                        Intent intent = new Intent(Intent.ACTION_DELETE);
+                        intent.setData(Uri.parse("package:"+rankData.getPackageName()));
+                        context.startActivity(intent);
+
                         showMessage("Non_System");
 
                     }

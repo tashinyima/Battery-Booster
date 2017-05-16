@@ -111,7 +111,9 @@
                 android:layout_height="70dp"
                 app:arc_finished_color="@color/colorGreen"
                 app:arc_progress="30"
+                app:arc_suffix_text_size="10dp"
                 app:arc_text_color="@color/white"
+                app:arc_text_size="24dp"
                 app:arc_unfinished_color="@color/white" />
 
             <TextView
@@ -138,7 +140,9 @@
                 android:layout_height="70dp"
                 app:arc_finished_color="@color/colorGreen"
                 app:arc_progress="50"
+                app:arc_suffix_text_size="10dp"
                 app:arc_text_color="@color/white"
+                app:arc_text_size="24dp"
                 app:arc_unfinished_color="@color/white" />
 
             <TextView
@@ -165,7 +169,9 @@
                 android:layout_height="70dp"
                 app:arc_finished_color="@color/colorGreen"
                 app:arc_progress="51"
+                app:arc_suffix_text_size="10dp"
                 app:arc_text_color="@color/white"
+                app:arc_text_size="24dp"
                 app:arc_unfinished_color="@color/white" />
 
             <TextView
@@ -178,25 +184,24 @@
 
         </LinearLayout>
 
-
     </LinearLayout>
+
     <LinearLayout
-        android:gravity="center"
-        android:layout_marginTop="140dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="140dp"
+        android:gravity="center">
+
         <ImageView
             android:id="@+id/kickmeImageView"
 
-            android:src="@drawable/ic_launcher"
-            android:baselineAlignBottom="true"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
+            android:layout_height="wrap_content"
+            android:baselineAlignBottom="true"
+            android:src="@drawable/ic_launcher" />
 
 
     </LinearLayout>
-
 
 
 </LinearLayout>

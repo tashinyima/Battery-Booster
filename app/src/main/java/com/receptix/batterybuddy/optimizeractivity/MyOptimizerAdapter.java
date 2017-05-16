@@ -1,6 +1,9 @@
 package com.receptix.batterybuddy.optimizeractivity;
 
+import android.app.ActivityManager;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +13,7 @@ import android.widget.ImageView;
 import com.receptix.batterybuddy.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by hello on 5/15/2017.
@@ -20,6 +24,9 @@ public class MyOptimizerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     ArrayList<OptimizerData> optimizerDatas;
     Context context;
+
+
+
 
    public static class GridListViewHolder extends RecyclerView.ViewHolder {
 
@@ -77,5 +84,9 @@ public class MyOptimizerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             this.notifyItemRangeRemoved(0, size);
         }
+
+
     }
+
+
 }
