@@ -109,6 +109,7 @@ public class OptimizerActivity extends AppCompatActivity {
             if((packageInfo.flags & ApplicationInfo.FLAG_SYSTEM)==1)continue;
             if(packageInfo.packageName.equals(myPackage)) continue;
             mActivityManager.killBackgroundProcesses(packageInfo.packageName);
+            // ok nothing is done
         }
     }
 
