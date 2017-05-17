@@ -18,7 +18,7 @@
             android:id="@+id/datetv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginEnd="10dp"
             android:padding="10dp"
             android:text="@string/systemDate"
             android:textColor="@color/white"
@@ -200,19 +200,17 @@
 
     <LinearLayout
 
-android:layout_marginTop="20dp"
         android:id="@+id/swipeLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:gravity="center">
 
         <ImageView
-
             android:id="@+id/slideImageView"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/swipeplaceholder" />
-
 
     </LinearLayout>
 

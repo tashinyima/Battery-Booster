@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/bgcolormain"
+    android:orientation="vertical"
     tools:context="com.receptix.batterybuddy.optimizeractivity.AfterOptimizerActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -14,8 +13,7 @@
 
         <include
             android:id="@+id/toolbar"
-            layout="@layout/app_bar"
-            />
+            layout="@layout/app_bar" />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -23,35 +21,36 @@
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
         android:background="@drawable/backgroundcolor"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="@dimen/small_padding">
 
+        <!-- SIMPLE IMAGE SHOWING SUCCESSFUL OPTIMIZATION -->
         <ImageView
-            android:paddingBottom="10dp"
-            android:layout_marginLeft="15dp"
-            android:src="@drawable/prize"
             android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:contentDescription="@string/successful_optimization"
+            android:src="@drawable/prize" />
 
-        <TextView
-            android:textSize="18dp"
-            android:padding="10dp"
-            android:gravity="center_vertical"
-            android:textColor="@color/white"
-            android:text="@string/extentedhoursAfter"
-            android:id="@+id/extentedTextViewAfter"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- EXTENDED BY (static) -->
+            <TextView
+                style="@style/TextViewResultScreen"
+                android:text="@string/extentedhoursAfter" />
+
+            <!-- VALUE BY WHICH BATTERY TIME HAS BEEN EXTENDED -->
+            <TextView
+                android:id="@+id/extentedTextViewAfter"
+                style="@style/TextViewResultScreen"
+                android:text="@string/dummy_time_value" />
+
+        </LinearLayout>
 
     </LinearLayout>
-
-
-
-
-
 
 
 </LinearLayout>

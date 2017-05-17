@@ -1,60 +1,50 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:background="@color/bgcolor"
+    android:orientation="vertical"
     tools:context="com.receptix.batterybuddy.charge.ChargeFragment">
 
     <LinearLayout
-        android:orientation="vertical"
         android:id="@+id/containerLinearLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <LinearLayout
-        android:layout_marginTop="50dp"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="230dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <me.itangqi.waveloadingview.WaveLoadingView
-            android:id="@+id/waveLoadingView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:wlv_borderColor="@color/bgcolormain"
-            app:wlv_borderWidth="10dp"
-            app:wlv_progressValue="30"
-            app:wlv_shapeType="circle"
-            app:wlv_titleCenter="@string/batteryChargeLevel"
-            app:wlv_titleCenterColor="@android:color/white"
-            app:wlv_titleCenterSize="28sp"
-            app:wlv_waveAmplitude="70"
-            app:wlv_waveColor="@color/colorGreen"/>
-
-
-    </LinearLayout>
-
-        <TextView
-            android:layout_marginTop="20dp"
-            android:textSize="20dp"
-            android:textColor="@color/white"
-            android:gravity="center"
-            android:text="@string/estimatedchargeText"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:layout_marginTop="20dp"
-            android:gravity="center"
+            android:layout_height="230dp"
             android:layout_gravity="center"
-            android:text="@string/remainingHourText"
-            android:textSize="20dp"
-            android:textColor="@color/white"
+            android:layout_marginTop="50dp"
+            android:gravity="center">
+
+            <me.itangqi.waveloadingview.WaveLoadingView
+                android:id="@+id/waveLoadingView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:wlv_borderColor="@color/bgcolormain"
+                app:wlv_borderWidth="10dp"
+                app:wlv_progressValue="30"
+                app:wlv_shapeType="circle"
+                app:wlv_titleCenter="@string/batteryChargeLevel"
+                app:wlv_titleCenterColor="@android:color/white"
+                app:wlv_titleCenterSize="28sp"
+                app:wlv_waveAmplitude="70"
+                app:wlv_waveColor="@color/colorGreen" />
+
+
+        </LinearLayout>
+
+        <TextView
+            style="@style/TextViewChargingHeader"
+            android:text="@string/estimatedchargeText" />
+
+        <TextView
             android:id="@+id/chargeRemainingTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            style="@style/TextViewChargingValue"
+            android:text="@string/remainingHourText" />
 
     </LinearLayout>
 

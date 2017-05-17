@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,25 +24,26 @@
         android:orientation="vertical">
 
         <ImageView
+            android:id="@+id/imageview_successful_optimization"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/optimal_state_ic_150" />
+            android:src="@drawable/check_mark_100" />
         <TextView
-            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:layout_gravity="center"
-            android:textColor="@color/white"
             android:text="@string/extentedTimeTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:textColor="@color/white"
+            android:textStyle="bold" />
 
 
         <TextView
-            android:layout_marginTop="10dp"
             android:id="@+id/extendedTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:text="@string/extentedhours"
             android:textColor="@color/white" />

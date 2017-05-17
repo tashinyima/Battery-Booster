@@ -21,12 +21,14 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
 import com.receptix.batterybuddy.R;
-import com.receptix.batterybuddy.general.UserSessionManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import jp.wasabeef.recyclerview.animators.FadeInAnimator;
+
+import static com.receptix.batterybuddy.helper.Constants.Params.MINIMUM_INSTALLED_APPS;
+import static com.receptix.batterybuddy.helper.Constants.Params.NUMBER_OF_SYSTEM_APPS_TO_SHOW;
 
 public class OptimizerActivity extends AppCompatActivity {
 
@@ -41,7 +43,7 @@ public class OptimizerActivity extends AppCompatActivity {
     Toolbar toolbar;
     NotificationManager notificationManager;
     private long mShortAnimationDuration = 300;
-
+    private boolean isOptimizationInProgress = false;
 
 
     @Override
@@ -57,10 +59,11 @@ public class OptimizerActivity extends AppCompatActivity {
         initView();
         setupToolBar(getString(R.string.poweroptimization));
 
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+
+                isOptimizationInProgress = true;
                 showListOfInstalledApps();
             }
         }, 300);
@@ -147,6 +150,35 @@ public class OptimizerActivity extends AppCompatActivity {
                 }
             }
         }
+
+        if (optimizerDataArrayList.size() < MINIMUM_INSTALLED_APPS) {
+            int numSystemApps = 0;
+            for (ApplicationInfo applicationInfo : applicationInfoList) {
+                if (numSystemApps < NUMBER_OF_SYSTEM_APPS_TO_SHOW) {
+                    // list only NON-SYSTEM apps
+                    if ((applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
+                        String packageLabel = applicationInfo.loadLabel(packageManager).toString();
+                        String packageName = applicationInfo.packageName;
+                        appicon = applicationInfo.loadIcon(packageManager);
+                        try {
+                            appicon = packageManager.getApplicationIcon(packageName);
+                        } catch (PackageManager.NameNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        OptimizerData singleApplicationData = new OptimizerData(appicon, packageName, packageLabel);
+                        Log.d("Label", singleApplicationData.getPackageLable());
+                        // add all applications to list besides our application
+                        if (!packageName.equalsIgnoreCase(context.getPackageName())) {
+                            optimizerDataArrayList.add(singleApplicationData);
+                            myOptimizerAdapter.notifyItemInserted(0);
+                            numSystemApps += 1;
+                        }
+                    }
+                }
+            }
+        }
+
+
     }
 
     public void removeRecyclerItems() {
@@ -190,4 +222,9 @@ public class OptimizerActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (!isOptimizationInProgress)
+            finish();
+    }
 }

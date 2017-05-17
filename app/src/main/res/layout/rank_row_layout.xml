@@ -8,9 +8,8 @@
     android:orientation="vertical"
     android:paddingBottom="10dp"
     android:paddingLeft="16dp"
-    android:paddingRight="16dp"
+    android:paddingRight="5dp"
     android:paddingTop="10dp">
-
 
 
     <ImageView
@@ -22,49 +21,54 @@
         android:src="@drawable/googleplus32" />
 
     <TextView
-        android:textColor="@color/white"
         android:id="@+id/packageNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/packageIconImageView"
-        android:text="@string/packageNameText" />
+        android:layout_toEndOf="@+id/packageIconImageView"
+        android:ellipsize="end"
+        android:ems="9"
+        android:maxEms="9"
+        android:maxLines="1"
+        android:text="@string/packageNameText"
+        android:textColor="@color/white" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_marginEnd="5dp"
         android:layout_toStartOf="@+id/checkbutton"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
         <TextView
-            android:textColor="@color/white"
             android:id="@+id/powerConsumedTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/powerconsumedValueText" />
+            android:text="@string/powerconsumedValueText"
+            android:textColor="@color/white" />
 
         <TextView
-            android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/rankpowerText" />
+            android:text="@string/rankpowerText"
+            android:textColor="@color/white" />
 
 
     </LinearLayout>
 
     <Button
-        android:textColor="@color/white"
-        android:layout_marginLeft="3dp"
-        android:minHeight="32dp"
-        android:background="@drawable/closebuttonbgcolor"
         android:id="@+id/checkbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:text="@string/uninstallButton" />
+        android:layout_marginStart="5dp"
+        android:background="@drawable/closebuttonbgcolor"
+        android:minHeight="32dp"
+        android:text="@string/uninstallButton"
+        android:textColor="@color/white" />
 
 
 </RelativeLayout>

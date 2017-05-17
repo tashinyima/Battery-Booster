@@ -61,6 +61,7 @@
                                 android:layout_marginTop="5dp"
                                 android:text="@string/issuetext"
                                 android:textColor="@color/buttonColor" />
+
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -76,14 +77,14 @@
                                     android:textSize="15sp" />
 
                                 <TextView
-                                    android:textStyle="bold"
                                     android:id="@+id/hourTextView"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:paddingLeft="3sp"
                                     android:text="@string/hourText"
                                     android:textColor="@color/white"
-                                    android:textSize="20sp" />
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -92,15 +93,16 @@
                                     android:text="@string/hourSymbolText"
                                     android:textColor="@color/white"
                                     android:textSize="15sp" />
+
                                 <TextView
-                                    android:textStyle="bold"
                                     android:id="@+id/minutesTextView"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:paddingLeft="3sp"
                                     android:text="@string/minutesText"
                                     android:textColor="@color/white"
-                                    android:textSize="20sp" />
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
 
                                 <TextView
                                     android:layout_width="wrap_content"

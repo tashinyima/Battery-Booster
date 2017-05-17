@@ -1,11 +1,9 @@
 package com.receptix.batterybuddy.optimizeractivity;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.ImageView;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.receptix.batterybuddy.R;
@@ -21,10 +19,6 @@ public class AfterOptimizerActivity extends AppCompatActivity {
 
         initView();
         setupToolBar(getString(R.string.powerconsumptionToolbar));
-
-
-
-
     }
 
     private void setupToolBar(String title) {
@@ -40,5 +34,16 @@ public class AfterOptimizerActivity extends AppCompatActivity {
     private void initView() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

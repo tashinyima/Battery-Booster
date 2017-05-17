@@ -3,44 +3,44 @@
     android:layout_width="match_parent"
     android:layout_height="64dp"
     android:background="@color/bgcolormain"
-    android:padding="10dp" >
+    android:padding="10dp">
+
     <ImageView
-        android:src="@mipmap/ic_launcher"
         android:id="@+id/image"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
-        android:layout_marginRight="10dp" />
+        android:layout_marginRight="10dp"
+        android:src="@mipmap/ic_launcher" />
+
     <TextView
-        android:textSize="13dp"
-        android:textColor="@color/white"
-        android:text="Testing"
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/image"
-        />
+        android:text="Testing"
+        android:textColor="@color/white"
+        android:textSize="13dp" />
+
     <TextView
 
-        android:textSize="13dp"
-        android:textColor="@color/white"
-        android:text="Testing is awecome"
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/image"
         android:layout_below="@id/title"
-        />
+        android:layout_toRightOf="@id/image"
+        android:text="Testing is awecome"
+        android:textColor="@color/white"
+        android:textSize="13dp" />
 
     <Button
         android:id="@+id/notificationOptimizerBtn"
-        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
         android:background="@drawable/optimizerbuttonbgcolor"
         android:text="@string/optimize"
-        android:layout_alignParentRight="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:textColor="@color/white" />
 
 
-
-    </RelativeLayout>
+</RelativeLayout>

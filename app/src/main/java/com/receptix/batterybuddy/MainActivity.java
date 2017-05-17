@@ -9,31 +9,25 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.RemoteViews;
-import android.widget.TextView;
 
-import com.receptix.batterybuddy.adapter.HomePagersAdapter;
 import com.receptix.batterybuddy.charge.ChargeFragment;
 import com.receptix.batterybuddy.home.HomeFragment;
-import com.receptix.batterybuddy.optimizeractivity.AfterOptimizerActivity;
 import com.receptix.batterybuddy.optimizeractivity.OptimizerActivity;
 import com.receptix.batterybuddy.rank.RankFragment;
 
@@ -49,11 +43,20 @@ public class MainActivity extends AppCompatActivity {
     NotificationManager nmanager;
     KeyguardManager keyguard;
     Toolbar toolbar;
-
-
+    int NotificationId = 999;
     private Fragment fragment;
     private FragmentManager fragmentManager;
-    int NotificationId =999;
+
+    public static boolean hasPermissions(Context context, String... permissions) {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+            for (String permission : permissions) {
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -189,8 +192,6 @@ public class MainActivity extends AppCompatActivity {
 
         Notification notification = mBuilder.build();
         notification.flags |= Notification.FLAG_NO_CLEAR;
-        notification.defaults |= Notification.DEFAULT_SOUND;
-        notification.defaults |= Notification.DEFAULT_VIBRATE;
         nmanager.notify(NotificationId,notification);
     }
 
@@ -216,16 +217,5 @@ public class MainActivity extends AppCompatActivity {
         if (!hasPermissions(this, PERMISSIONS)) {
             ActivityCompat.requestPermissions(this, PERMISSIONS, REQUEST_CODE_SOME_FEATURES_PERMISSIONS);
         }
-    }
-
-    public static boolean hasPermissions(Context context, String... permissions) {
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
-            for (String permission : permissions) {
-                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 }

@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.receptix.batterybuddy.R;
 
 import java.util.ArrayList;
@@ -27,42 +26,6 @@ public class RankAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     Context context;
     ArrayList<RankData> rankDatas;
     int total_type;
-
-    public static class InstalledTypeViewHolder extends RecyclerView.ViewHolder {
-
-        ImageView packageImage;
-        TextView packageName, batteryUsage;
-        Button closebutton;
-
-        public InstalledTypeViewHolder(View itemView) {
-            super(itemView);
-            packageImage = (ImageView) itemView.findViewById(R.id.packageIconImageView);
-            packageName = (TextView) itemView.findViewById(R.id.packageNameTextView);
-            batteryUsage = (TextView) itemView.findViewById(R.id.powerConsumedTextView);
-            closebutton = (Button) itemView.findViewById(R.id.checkbutton);
-
-
-        }
-    }
-
-    public static class SystemTypeViewHolder extends RecyclerView.ViewHolder {
-
-        TextView spackageName,sbatteyUsage;
-        ImageView spackageImage;
-        Button checkbutton;
-
-
-        public SystemTypeViewHolder(View itemView) {
-            super(itemView);
-            sbatteyUsage = (TextView) itemView.findViewById(R.id.spowerConsumedTextView);
-            spackageImage = (ImageView) itemView.findViewById(R.id.spackageIconImageView);
-            spackageName = (TextView) itemView.findViewById(R.id.spackageNameTextView);
-            checkbutton = (Button) itemView.findViewById(R.id.scheckbutton);
-
-
-        }
-    }
-
 
     public RankAdapter(Context context, ArrayList<RankData> rankDatas) {
 
@@ -86,7 +49,6 @@ public class RankAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
         return null;
     }
-
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
@@ -170,6 +132,43 @@ public class RankAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 return RankData.INSTALL_TYPE;
             default:
                 return -1;
+        }
+    }
+
+    public static class InstalledTypeViewHolder extends RecyclerView.ViewHolder {
+
+        ImageView packageImage;
+        TextView packageName, batteryUsage;
+        Button closebutton;
+
+        public InstalledTypeViewHolder(View itemView) {
+            super(itemView);
+            packageImage = (ImageView) itemView.findViewById(R.id.packageIconImageView);
+            packageName = (TextView) itemView.findViewById(R.id.packageNameTextView);
+            packageName.setEms(9);
+            batteryUsage = (TextView) itemView.findViewById(R.id.powerConsumedTextView);
+            closebutton = (Button) itemView.findViewById(R.id.checkbutton);
+
+
+        }
+    }
+
+    public static class SystemTypeViewHolder extends RecyclerView.ViewHolder {
+
+        TextView spackageName, sbatteyUsage;
+        ImageView spackageImage;
+        Button checkbutton;
+
+
+        public SystemTypeViewHolder(View itemView) {
+            super(itemView);
+            sbatteyUsage = (TextView) itemView.findViewById(R.id.spowerConsumedTextView);
+            spackageImage = (ImageView) itemView.findViewById(R.id.spackageIconImageView);
+            spackageName = (TextView) itemView.findViewById(R.id.spackageNameTextView);
+            spackageName.setEms(9);
+            checkbutton = (Button) itemView.findViewById(R.id.scheckbutton);
+
+
         }
     }
 }

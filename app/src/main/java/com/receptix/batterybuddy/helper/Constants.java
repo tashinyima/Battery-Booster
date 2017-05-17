@@ -117,5 +117,7 @@ public class Constants {
 
     public static class Params {
         public static final int INVALID_POSITION = -1;
+        public static final int MINIMUM_INSTALLED_APPS = 10;
+        public static final int NUMBER_OF_SYSTEM_APPS_TO_SHOW = 12;
     }
 }
