@@ -12,30 +12,29 @@ import java.util.ArrayList;
 
 public class HomePagersAdapter extends FragmentPagerAdapter {
 
-    ArrayList<Fragment> fragments = new ArrayList<>();
-    ArrayList<String> tabtitles = new ArrayList<>();
+    private ArrayList<Fragment> fragmentList = new ArrayList<>();
+    private ArrayList<String> tabTitleList = new ArrayList<>();
 
     public HomePagersAdapter(FragmentManager fm) {
         super(fm);
     }
 
     public void addFragments(Fragment fragments,String titles){
-
-        this.fragments.add(fragments);
-        this.tabtitles.add(titles);
+        this.fragmentList.add(fragments);
+        this.tabTitleList.add(titles);
     }
 
     @Override
     public Fragment getItem(int position) {
-        return fragments.get(position);
+        return fragmentList.get(position);
     }
 
     @Override
     public int getCount() {
-        return fragments.size();
+        return fragmentList.size();
     }
     @Override
     public CharSequence getPageTitle(int position) {
-        return tabtitles.get(position);
+        return tabTitleList.get(position);
     }
 }

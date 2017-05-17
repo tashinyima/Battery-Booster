@@ -1,20 +1,19 @@
 package com.receptix.batterybuddy.home;
 
 
+import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.icu.text.DecimalFormat;
 import android.media.AudioManager;
 import android.os.BatteryManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContentResolverCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,35 +26,94 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.github.lzyzsd.circleprogress.CircleProgress;
 import com.github.lzyzsd.circleprogress.DonutProgress;
-import com.receptix.batterybuddy.BatteryAdActivity;
 import com.receptix.batterybuddy.R;
-import com.receptix.batterybuddy.helper.CounterHandler;
 import com.receptix.batterybuddy.optimizeractivity.OptimizerActivity;
 
-import java.util.Set;
+import java.lang.reflect.Method;
+
+import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_LEVEL;
+import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_SCALE;
+import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_TECHNOLOGY;
+import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_TEMPERATURE;
+import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_TEMPERATURE_CONVERSION_UNIT;
+import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_VOLTAGE;
+import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_VOLTAGE_CONVERSION_UNIT;
+import static com.receptix.batterybuddy.helper.Constants.BatteryParams.IS_BATTERY_PRESENT;
+import static com.receptix.batterybuddy.helper.Constants.BrightnessLevel.BRIGHTNESS_LEVEL_0;
+import static com.receptix.batterybuddy.helper.Constants.BrightnessLevel.BRIGHTNESS_LEVEL_1;
+import static com.receptix.batterybuddy.helper.Constants.BrightnessLevel.BRIGHTNESS_LEVEL_2;
+import static com.receptix.batterybuddy.helper.Constants.BrightnessLevel.BRIGHTNESS_LEVEL_3;
+import static com.receptix.batterybuddy.helper.Constants.BrightnessLevel.BRIGHTNESS_LEVEL_4;
+import static com.receptix.batterybuddy.helper.Constants.BrightnessLevel.BRIGHTNESS_LEVEL_5;
+import static com.receptix.batterybuddy.helper.Constants.BrightnessLevel.BRIGHTNESS_LEVEL_6;
+import static com.receptix.batterybuddy.helper.Constants.BrightnessLevel.BRIGHTNESS_LEVEL_7;
+import static com.receptix.batterybuddy.helper.Constants.BrightnessLevel.BRIGHTNESS_LEVEL_8;
+import static com.receptix.batterybuddy.helper.Constants.BrightnessLevel.BRIGHTNESS_LEVEL_9;
+import static com.receptix.batterybuddy.helper.Constants.BrightnessLevelValues.BRIGHTNESS_DEFAULT_VALUE;
+import static com.receptix.batterybuddy.helper.Constants.BrightnessLevelValues.BRIGHTNESS_LEVEL_0_UPPER_LIMIT;
+import static com.receptix.batterybuddy.helper.Constants.BrightnessLevelValues.BRIGHTNESS_LEVEL_1_UPPER_LIMIT;
+import static com.receptix.batterybuddy.helper.Constants.BrightnessLevelValues.BRIGHTNESS_LEVEL_2_UPPER_LIMIT;
+import static com.receptix.batterybuddy.helper.Constants.BrightnessLevelValues.BRIGHTNESS_LEVEL_3_UPPER_LIMIT;
+import static com.receptix.batterybuddy.helper.Constants.BrightnessLevelValues.BRIGHTNESS_LEVEL_4_UPPER_LIMIT;
+import static com.receptix.batterybuddy.helper.Constants.BrightnessLevelValues.BRIGHTNESS_LEVEL_5_UPPER_LIMIT;
+import static com.receptix.batterybuddy.helper.Constants.BrightnessLevelValues.BRIGHTNESS_LEVEL_6_UPPER_LIMIT;
+import static com.receptix.batterybuddy.helper.Constants.BrightnessLevelValues.BRIGHTNESS_LEVEL_7_UPPER_LIMIT;
+import static com.receptix.batterybuddy.helper.Constants.BrightnessLevelValues.BRIGHTNESS_LEVEL_8_UPPER_LIMIT;
+import static com.receptix.batterybuddy.helper.Constants.BrightnessLevelValues.BRIGHTNESS_LEVEL_9_UPPER_LIMIT;
+import static com.receptix.batterybuddy.helper.Constants.LockScreenTimeout.TIMEOUT_10_MINUTES;
+import static com.receptix.batterybuddy.helper.Constants.LockScreenTimeout.TIMEOUT_15_SECONDS;
+import static com.receptix.batterybuddy.helper.Constants.LockScreenTimeout.TIMEOUT_1_MINUTE;
+import static com.receptix.batterybuddy.helper.Constants.LockScreenTimeout.TIMEOUT_2_MINUTE;
+import static com.receptix.batterybuddy.helper.Constants.LockScreenTimeout.TIMEOUT_30_MINUTES;
+import static com.receptix.batterybuddy.helper.Constants.LockScreenTimeout.TIMEOUT_30_SECONDS;
+import static com.receptix.batterybuddy.helper.Constants.LockScreenTimeout.TIMEOUT_5_MINUTES;
+import static com.receptix.batterybuddy.helper.Constants.LockScreenTimeout.TIMEOUT_5_SECONDS;
+import static com.receptix.batterybuddy.helper.Constants.LockScreenTimeout.TIMEOUT_AUTO_LOCK;
+import static com.receptix.batterybuddy.helper.Constants.PowerProfileParams.BATTERY_CAPACITY;
+import static com.receptix.batterybuddy.helper.Constants.PowerProfileParams.CPU_ACTIVE;
+import static com.receptix.batterybuddy.helper.Constants.PowerProfileParams.CPU_AWAKE;
+import static com.receptix.batterybuddy.helper.Constants.PowerProfileParams.CPU_IDLE;
+import static com.receptix.batterybuddy.helper.Constants.PowerProfileParams.DSP_AUDIO;
+import static com.receptix.batterybuddy.helper.Constants.PowerProfileParams.DSP_VIDEO;
+import static com.receptix.batterybuddy.helper.Constants.PowerProfileParams.GPS_ON;
+import static com.receptix.batterybuddy.helper.Constants.PowerProfileParams.METHOD_GET_AVERAGE_POWER;
+import static com.receptix.batterybuddy.helper.Constants.PowerProfileParams.POWER_PROFILE_CLASS;
+import static com.receptix.batterybuddy.helper.Constants.PowerProfileParams.RADIO_ACTIVE;
+import static com.receptix.batterybuddy.helper.Constants.PowerProfileParams.RADIO_ON;
+import static com.receptix.batterybuddy.helper.Constants.PowerProfileParams.RADIO_SCANNING;
+import static com.receptix.batterybuddy.helper.Constants.PowerProfileParams.SCREEN_ON;
+import static com.receptix.batterybuddy.helper.Constants.PowerProfileParams.WIFI_ACTIVE;
+import static com.receptix.batterybuddy.helper.Constants.PowerProfileParams.WIFI_ON;
+import static com.receptix.batterybuddy.helper.Constants.PowerProfileParams.WIFI_SCANNING;
+import static com.receptix.batterybuddy.helper.Constants.ShortHandNotations.HOURS;
+import static com.receptix.batterybuddy.helper.Constants.ShortHandNotations.MINUTES;
+import static com.receptix.batterybuddy.helper.Constants.SoundModes.RINGTONE_MODE;
+import static com.receptix.batterybuddy.helper.Constants.SoundModes.SILENT_MODE;
+import static com.receptix.batterybuddy.helper.Constants.SoundModes.VIBRATE_MODE;
+import static com.receptix.batterybuddy.helper.Constants.StatisticTypes.OVERALL_BATTERY;
+import static com.receptix.batterybuddy.helper.Constants.StatisticTypes.VIDEO;
+import static com.receptix.batterybuddy.helper.Constants.StatisticTypes.VOICE_CALL;
+import static com.receptix.batterybuddy.helper.Constants.StatisticTypes.WIFI;
+import static com.receptix.batterybuddy.helper.Constants.Tags.TAG_HOME_FRAGMENT;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment implements View.OnClickListener {
-    private static final String TAG = "BatteryBuddy";
+    private static final int DELAY = 3000;
     View view;
     Context context;
     Toolbar toolbar;
-    TextView temperaturTextView, volatageTextView, technologyTextView;
-    String technology;
-    int voltage, temperature, level, scale;
+    TextView textView_batteryTemperature, textView_batteryVoltage, textView_batteryTechnology;
+    String batteryTechnology;
+    int batteryVoltage, batteryTemperature, batteryLevel, batteryScale;
     DonutProgress batteryProgress;
-    private int mProgressStatus = 0;
     Button optimzerButton;
     TextView bluetoothTextView, brightnessTextView, lockscreenTextView, soundTextView;
 
     LinearLayout brightnessLinearLayout, lockscreenLinearLayout, soundLinearLayout, bluetoothLinearLayout;
-    private static final int DELAY = 3000;
     int lockScreenTimeOut = 0;
-    private int brightess = 0;
     int inWhichBrightness = 0;
     int WhatisLockScreenTimeOut = 0;
     int isBluetoothOn = 1; // 1 = bluetooth is off by default....
@@ -65,9 +123,67 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     int inWhichSoundIndex;
     BatteryManager myBatteryManger;
     ImageView soundImageView;
-    TextView hourTextView, minutesTextView;
-    TextView voiceCallTextView, videoCallTextView, wifiCallTextView;
+    TextView textView_availableBattery_Hours, textView_availableBattery_Minutes;
+    TextView textView_timeLeft_VoiceCall, textview_timeLeft_Video, textview_timeLeft_Wifi;
+    private int mProgressStatus = 0;
+    private int screenBrightness = 0;
+    private BroadcastReceiver battery_info_receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean isBatteryPresent = intent.getBooleanExtra(IS_BATTERY_PRESENT, false);
+            if (isBatteryPresent) {
+                batteryTechnology = intent.getStringExtra(BATTERY_TECHNOLOGY);
+                batteryVoltage = intent.getIntExtra(BATTERY_VOLTAGE, 0);
+                batteryTemperature = intent.getIntExtra(BATTERY_TEMPERATURE, 0);
+                batteryLevel = intent.getIntExtra(BATTERY_LEVEL, 0);
+                batteryScale = intent.getIntExtra(BATTERY_SCALE, 0);
 
+                double voltageValueInDouble = batteryVoltage * BATTERY_VOLTAGE_CONVERSION_UNIT;
+                double temperatureValueInDouble = batteryTemperature * BATTERY_TEMPERATURE_CONVERSION_UNIT;
+
+                // Calculate the battery charged percentage
+                float batteryChargedPercentage = batteryLevel / (float) batteryScale;
+
+                int totalBatteryCapacityInMAh = (int) getBatteryCapacity();
+                int remainingBatteryCapacityInMah = batteryLevel * totalBatteryCapacityInMAh / 100;
+
+                // ETA FOR SCREEN ON
+                double screenPowerConsumption = getPowerConsumption_Total();
+                double timeLeft_ScreenOn = remainingBatteryCapacityInMah / screenPowerConsumption;
+                getValueInHoursMinutes(timeLeft_ScreenOn, OVERALL_BATTERY);
+
+                // ETA FOR WIFI CONSUMPTION
+                double wifiPowerConsumption = getPowerConsumption_Wifi();
+                double timeLeft_Wifi = remainingBatteryCapacityInMah / wifiPowerConsumption;
+                getValueInHoursMinutes(timeLeft_Wifi, WIFI);
+
+                // ETA FOR VOICE CALLS
+                double voiceCallConsumption = getPowerConsumption_VoiceCalls();
+                double timeLeft_VoiceCall = remainingBatteryCapacityInMah / voiceCallConsumption;
+                getValueInHoursMinutes(timeLeft_VoiceCall, VOICE_CALL);
+
+                // ETA FOR VIDEO WATCHING
+                double videoPowerConsumption = getPowerConsumption_Videos();
+                double timeLeft_Video = remainingBatteryCapacityInMah / videoPowerConsumption;
+                getValueInHoursMinutes(timeLeft_Video, VIDEO);
+
+                // Update the progress bar to display current battery charged percentage
+                mProgressStatus = (int) ((batteryChargedPercentage) * 100);
+
+                batteryProgress.setProgress(mProgressStatus);
+
+                textView_batteryVoltage.setText(String.format("%.1f", voltageValueInDouble) + "V");
+                textView_batteryTemperature.setText(String.format("%.1f", temperatureValueInDouble) + (char) 0x00b0 + "C");
+                textView_batteryTechnology.setText(batteryTechnology);
+                Bundle bundle = intent.getExtras();
+                Log.d(TAG_HOME_FRAGMENT, bundle.toString());
+                Log.d(TAG_HOME_FRAGMENT, "Technology=" + batteryTechnology + "batteryVoltage=" + batteryVoltage + "Temperature=" + batteryTemperature);
+            } else {
+                showMessage(getString(R.string.no_battery_present));
+            }
+
+        }
+    };
 
     public HomeFragment() {
         // Required empty public constructor
@@ -77,8 +193,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-
-
     }
 
     @Override
@@ -90,197 +204,187 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         audioManagerMode = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
         initView(view);
-        registerBatteryInfoReceiver();
-        initializeSystemDatas();
+        getSystemData();
 
         return view;
     }
 
-    private void initializeSystemDatas() {
-
-        DeviceBrightness();
-        isBluetoothOnOff();
-        ScreenLockOutTime();
-        DeviceSoundStatus();
-        GetBatteryLevel();
-
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        registerBatteryInfoReceiver();
     }
 
-    private void GetBatteryLevel() {
+    @Override
+    public void onPause() {
+        if (battery_info_receiver != null)
+            context.unregisterReceiver(battery_info_receiver);
+        super.onPause();
+    }
 
+    private void getSystemData() {
+        getDeviceBrightnessLevel();
+        checkIfBluetoothOnOrOff();
+        getScreenTimeout();
+        getDeviceRingerMode();
+        getBatteryLevel();
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void getBatteryLevel() {
         myBatteryManger = (BatteryManager) context.getSystemService(Context.BATTERY_SERVICE);
-        //  Long batteryLevel =myBatteryManger.getLongProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER);
-
-        //  Log.d(TAG,"Battery Remainign Info= "+ String.valueOf(batteryLevel));
     }
 
-    private void DeviceSoundStatus() {
-
-//        Constant values
-//        SilentMode =0;
-//        RingtonMode=2;
-//        VibrateMode=1;
-
+    private void getDeviceRingerMode() {
         audioCurrentMode = audioManagerMode.getRingerMode();
-        Log.d(TAG, "Audio mode" + String.valueOf(audioCurrentMode));
+        Log.d(TAG_HOME_FRAGMENT, "Audio mode" + String.valueOf(audioCurrentMode));
+
         switch (audioCurrentMode) {
+
+            case AudioManager.RINGER_MODE_SILENT:
+                soundTextView.setText(R.string.silentsound);
+                audioCurrentMode = AudioManager.RINGER_MODE_SILENT;
+                soundImageView.setImageResource(R.drawable.sound_silent);
+                inWhichSoundIndex = SILENT_MODE;
+                break;
 
             case AudioManager.RINGER_MODE_NORMAL:
                 soundTextView.setText(R.string.soundText);
                 soundImageView.setImageResource(R.drawable.sound);
                 audioCurrentMode = AudioManager.RINGER_MODE_NORMAL;
-                inWhichSoundIndex = 1;
+                inWhichSoundIndex = RINGTONE_MODE;
                 break;
-            case AudioManager.RINGER_MODE_SILENT:
-                soundTextView.setText(R.string.silentsound);
-                audioCurrentMode = AudioManager.RINGER_MODE_SILENT;
-                soundImageView.setImageResource(R.drawable.sound_silent);
-                inWhichSoundIndex = 0;
-                break;
+
             case AudioManager.RINGER_MODE_VIBRATE:
                 soundTextView.setText(R.string.soundvibrate);
                 audioCurrentMode = AudioManager.RINGER_MODE_VIBRATE;
                 soundImageView.setImageResource(R.drawable.sound_vibrate);
-                inWhichSoundIndex = 2;
+                inWhichSoundIndex = VIBRATE_MODE;
                 break;
-
         }
-
-
     }
 
-    private void ScreenLockOutTime() {
+    /**
+     * See {@link com.receptix.batterybuddy.helper.Constants.LockScreenTimeout} for different range of values for screen timeout
+     */
+    private void getScreenTimeout() {
 
         int inWhichIndexSeconds;
         int inWhichIndexMinutes;
 
         lockScreenTimeOut = Settings.System.getInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, DELAY);
-        Log.d(TAG, "Timeout=" + String.valueOf(lockScreenTimeOut));
+        Log.d(TAG_HOME_FRAGMENT, "Timeout=" + String.valueOf(lockScreenTimeOut));
 
         inWhichIndexSeconds = lockScreenTimeOut / 1000;
+
+        // if lock screen timeout is less than (or equal to) 30 seconds
         if (inWhichIndexSeconds <= 30) {
             if (inWhichIndexSeconds < 1) {
-                WhatisLockScreenTimeOut = 0;
+                WhatisLockScreenTimeOut = TIMEOUT_AUTO_LOCK;
                 lockscreenTextView.setText(R.string.autolock);
-
             } else if (inWhichIndexSeconds == 5) {
-                WhatisLockScreenTimeOut = 1;
+                WhatisLockScreenTimeOut = TIMEOUT_5_SECONDS;
                 lockscreenTextView.setText(R.string.fivesecond);
 
             } else if (inWhichIndexSeconds == 15) {
-                WhatisLockScreenTimeOut = 2;
+                WhatisLockScreenTimeOut = TIMEOUT_15_SECONDS;
                 lockscreenTextView.setText(R.string.fivesecond);
 
             } else if (inWhichIndexSeconds == 30) {
-                WhatisLockScreenTimeOut = 3;
+                WhatisLockScreenTimeOut = TIMEOUT_30_SECONDS;
                 lockscreenTextView.setText(R.string.thirtysecond);
-
             }
-
-        } else {
+        } else
+        // if lock screen timeout is greater than 30 seconds
+        {
             inWhichIndexMinutes = inWhichIndexSeconds / 60;
             if (inWhichIndexMinutes == 1) {
-                WhatisLockScreenTimeOut = 4;
+                WhatisLockScreenTimeOut = TIMEOUT_1_MINUTE;
                 lockscreenTextView.setText(R.string.oneminute);
 
             } else if (inWhichIndexMinutes == 2) {
-                WhatisLockScreenTimeOut = 5;
+                WhatisLockScreenTimeOut = TIMEOUT_2_MINUTE;
                 lockscreenTextView.setText(R.string.twominute);
 
             } else if (inWhichIndexMinutes == 5) {
-                WhatisLockScreenTimeOut = 6;
+                WhatisLockScreenTimeOut = TIMEOUT_5_MINUTES;
                 lockscreenTextView.setText(R.string.fiveminute);
 
             } else if (inWhichIndexMinutes == 10) {
-                WhatisLockScreenTimeOut = 7;
+                WhatisLockScreenTimeOut = TIMEOUT_10_MINUTES;
                 lockscreenTextView.setText(R.string.tenminute);
 
             } else if (inWhichIndexMinutes == 30) {
-                WhatisLockScreenTimeOut = 8;
+                WhatisLockScreenTimeOut = TIMEOUT_30_MINUTES;
                 lockscreenTextView.setText(R.string.thirtyminute);
 
             }
         }
 
-
     }
 
-    private void isBluetoothOnOff() {
+    private void checkIfBluetoothOnOrOff() {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter.isEnabled()) {
             isBluetoothOn = 0;
-            bluetoothTextView.setText("On");
-
+            bluetoothTextView.setText(getString(R.string.on));
         } else {
-            bluetoothTextView.setText("Off");
+            bluetoothTextView.setText(getString(R.string.off));
         }
-
     }
 
-    private void DeviceBrightness() {
+    private void getDeviceBrightnessLevel() {
 
-        int whatIsScreenBrightnessLevel;
-        brightess = Settings.System.getInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 20);
-        Log.d(TAG, "The brightnessis:" + String.valueOf(brightess));
-        whatIsScreenBrightnessLevel = brightess;
+        int screenBrightnessLevel;
 
+        screenBrightness = Settings.System.getInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, BRIGHTNESS_DEFAULT_VALUE);
 
-        if (whatIsScreenBrightnessLevel <= 26) {
-            inWhichBrightness = 0;
+        Log.d(TAG_HOME_FRAGMENT, "The brightness is: " + screenBrightness);
+
+        screenBrightnessLevel = screenBrightness;
+
+        if (screenBrightnessLevel <= BRIGHTNESS_LEVEL_0_UPPER_LIMIT) {
+            inWhichBrightness = BRIGHTNESS_LEVEL_0;
             brightnessTextView.setText(R.string.zerobright);
-        } else if (whatIsScreenBrightnessLevel > 26 && whatIsScreenBrightnessLevel <= 51) {
-            inWhichBrightness = 1;
+        } else if (screenBrightnessLevel > BRIGHTNESS_LEVEL_0_UPPER_LIMIT && screenBrightnessLevel <= BRIGHTNESS_LEVEL_1_UPPER_LIMIT) {
+            inWhichBrightness = BRIGHTNESS_LEVEL_1;
             brightnessTextView.setText(R.string.onebright);
-
-        } else if (whatIsScreenBrightnessLevel > 51 && whatIsScreenBrightnessLevel <= 77) {
-            inWhichBrightness = 2;
+        } else if (screenBrightnessLevel > BRIGHTNESS_LEVEL_1_UPPER_LIMIT && screenBrightnessLevel <= BRIGHTNESS_LEVEL_2_UPPER_LIMIT) {
+            inWhichBrightness = BRIGHTNESS_LEVEL_2;
             brightnessTextView.setText(R.string.twobright);
-
-        } else if (whatIsScreenBrightnessLevel > 77 && whatIsScreenBrightnessLevel <= 102) {
-            inWhichBrightness = 3;
+        } else if (screenBrightnessLevel > BRIGHTNESS_LEVEL_2_UPPER_LIMIT && screenBrightnessLevel <= BRIGHTNESS_LEVEL_3_UPPER_LIMIT) {
+            inWhichBrightness = BRIGHTNESS_LEVEL_3;
             brightnessTextView.setText(R.string.threebright);
-
-        } else if (whatIsScreenBrightnessLevel > 102 && whatIsScreenBrightnessLevel <= 128) {
-            inWhichBrightness = 4;
+        } else if (screenBrightnessLevel > BRIGHTNESS_LEVEL_3_UPPER_LIMIT && screenBrightnessLevel <= BRIGHTNESS_LEVEL_4_UPPER_LIMIT) {
+            inWhichBrightness = BRIGHTNESS_LEVEL_4;
             brightnessTextView.setText(R.string.fourbright);
-
-        } else if (whatIsScreenBrightnessLevel > 128 && whatIsScreenBrightnessLevel <= 153) {
-            inWhichBrightness = 5;
+        } else if (screenBrightnessLevel > BRIGHTNESS_LEVEL_4_UPPER_LIMIT && screenBrightnessLevel <= BRIGHTNESS_LEVEL_5_UPPER_LIMIT) {
+            inWhichBrightness = BRIGHTNESS_LEVEL_5;
             brightnessTextView.setText(R.string.fivebright);
-
-        } else if (whatIsScreenBrightnessLevel > 153 && whatIsScreenBrightnessLevel <= 179) {
-            inWhichBrightness = 6;
+        } else if (screenBrightnessLevel > BRIGHTNESS_LEVEL_5_UPPER_LIMIT && screenBrightnessLevel <= BRIGHTNESS_LEVEL_6_UPPER_LIMIT) {
+            inWhichBrightness = BRIGHTNESS_LEVEL_6;
             brightnessTextView.setText(R.string.sixbright);
-
-        } else if (whatIsScreenBrightnessLevel > 179 && whatIsScreenBrightnessLevel <= 204) {
-            inWhichBrightness = 7;
+        } else if (screenBrightnessLevel > BRIGHTNESS_LEVEL_6_UPPER_LIMIT && screenBrightnessLevel <= BRIGHTNESS_LEVEL_7_UPPER_LIMIT) {
+            inWhichBrightness = BRIGHTNESS_LEVEL_7;
             brightnessTextView.setText(R.string.sevenbright);
-
-        } else if (whatIsScreenBrightnessLevel > 204 && whatIsScreenBrightnessLevel <= 230) {
-            inWhichBrightness = 8;
+        } else if (screenBrightnessLevel > BRIGHTNESS_LEVEL_7_UPPER_LIMIT && screenBrightnessLevel <= BRIGHTNESS_LEVEL_8_UPPER_LIMIT) {
+            inWhichBrightness = BRIGHTNESS_LEVEL_8;
             brightnessTextView.setText(R.string.eightbright);
-
-        } else if (whatIsScreenBrightnessLevel > 230 && whatIsScreenBrightnessLevel <= 255) {
-            inWhichBrightness = 9;
+        } else if (screenBrightnessLevel > BRIGHTNESS_LEVEL_8_UPPER_LIMIT && screenBrightnessLevel <= BRIGHTNESS_LEVEL_9_UPPER_LIMIT) {
+            inWhichBrightness = BRIGHTNESS_LEVEL_9;
             brightnessTextView.setText(R.string.ninebright);
-
         }
-
-
     }
 
     private void registerBatteryInfoReceiver() {
-
         IntentFilter intentfilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         context.registerReceiver(battery_info_receiver, intentfilter);
-
     }
 
     private void initView(View view) {
-        technologyTextView = (TextView) view.findViewById(R.id.technologyTextView);
-        temperaturTextView = (TextView) view.findViewById(R.id.temperatureTextView);
-        volatageTextView = (TextView) view.findViewById(R.id.voltageTextView);
+        textView_batteryTechnology = (TextView) view.findViewById(R.id.technologyTextView);
+        textView_batteryTemperature = (TextView) view.findViewById(R.id.temperatureTextView);
+        textView_batteryVoltage = (TextView) view.findViewById(R.id.voltageTextView);
         batteryProgress = (DonutProgress) view.findViewById(R.id.homebatteryProgress);
         optimzerButton = (Button) view.findViewById(R.id.optimizerButton);
         optimzerButton.setOnClickListener(this);
@@ -299,239 +403,58 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         lockscreenTextView = (TextView) view.findViewById(R.id.lockscreenTextView);
         soundImageView = (ImageView) view.findViewById(R.id.soundImageView);
 
-        hourTextView = (TextView) view.findViewById(R.id.hourTextView);
-        minutesTextView = (TextView) view.findViewById(R.id.minutesTextView);
-        voiceCallTextView = (TextView) view.findViewById(R.id.voiceCallTextView);
-        wifiCallTextView = (TextView) view.findViewById(R.id.wifiCallTextView);
-        videoCallTextView = (TextView) view.findViewById(R.id.videoCallTextView);
+        textView_availableBattery_Hours = (TextView) view.findViewById(R.id.hourTextView);
+        textView_availableBattery_Minutes = (TextView) view.findViewById(R.id.minutesTextView);
+        textView_timeLeft_VoiceCall = (TextView) view.findViewById(R.id.voiceCallTextView);
+        textview_timeLeft_Wifi = (TextView) view.findViewById(R.id.wifiCallTextView);
+        textview_timeLeft_Video = (TextView) view.findViewById(R.id.videoCallTextView);
 
 
     }
 
-    private BroadcastReceiver battery_info_receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
+    private void getValueInHoursMinutes(double remainingScreenTime, int statisticType) {
 
-            boolean isPresent = intent.getBooleanExtra("present", false);
-            if (isPresent) {
+        int hours = (int) remainingScreenTime;
+        //obtain actual number of minutes from double value of Hours
+        String stringminutes = String.valueOf(String.format("%.2f", remainingScreenTime));
+        String lasttwo = stringminutes.substring(stringminutes.length() - 2);
+        int minute = Integer.parseInt(lasttwo);
+        int realminutes = (minute * 60) / 100;
 
-                technology = intent.getStringExtra("technology");
-                voltage = intent.getIntExtra("voltage", 0);
-                temperature = intent.getIntExtra("temperature", 0);
-                level = intent.getIntExtra("level", 0);
-                scale = intent.getIntExtra("scale", 0);
+        String valueGreaterThanEqualToOneHour = String.valueOf(hours) + HOURS + String.valueOf(realminutes) + MINUTES;
+        String valueLessThanOneHour = String.valueOf(0) + HOURS + String.valueOf(realminutes) + MINUTES;
 
-                double doublevolt = voltage * 0.001;
-                double doubletemp = temperature * 0.1;
-
-
-                // Calculate the battery charged percentage
-                float percentage = level / (float) scale;
-
-                int totalCapacityInMAh = (int) getBatteryCapacity();
-                int remainingBatteryInMah = level * totalCapacityInMAh / 100;
-                int radioPowerConsumption = getVoiceCallCapacity(); //milli-amps
-                int remainingBatteryCallsHours = remainingBatteryInMah / radioPowerConsumption; // milliAmpHour / millAmp = hour
-                Log.d("call talktime", String.valueOf(remainingBatteryCallsHours));
-
-                double screenPowerConsumption = getTotalRemainingTime();
-
-                double remainingScreenTime = remainingBatteryInMah / screenPowerConsumption;
-
-                getValueInHoursMinutes(remainingScreenTime, 0);
-
-                Log.d("Total Stand", String.valueOf(remainingScreenTime));
-
-                double wifiPowerConsumption = getWifiRemainingTime();
-
-                double wifiRemaingTime = remainingBatteryInMah / wifiPowerConsumption;
-                getValueInHoursMinutes(wifiRemaingTime,3);
-
-                Log.d("Wifi", String.valueOf(wifiRemaingTime));
-
-                double voiceCallConsumption = getVoiceRemainingTime();
-                double voiceCallTimeRemaing =remainingBatteryInMah/voiceCallConsumption;
-                getValueInHoursMinutes(voiceCallTimeRemaing,1);
-
-                double videoCallConsumption = getVideoRemainingTime();
-                double videoCallTimeRemaing = remainingBatteryInMah/videoCallConsumption;
-                getValueInHoursMinutes(videoCallTimeRemaing,2);
-
-
-                // voice calll...
-
-//                remainingBatteryInMah /
-
-
-                Log.e("remaining", remainingBatteryInMah + " mAH");
-
-                // Update the progress bar to display current battery charged percentage
-                mProgressStatus = (int) ((percentage) * 100);
-
-
-                batteryProgress.setProgress(mProgressStatus);
-
-                volatageTextView.setText(String.format("%.1f", doublevolt) + "V");
-                temperaturTextView.setText(String.format("%.1f", doubletemp) + (char) 0x00b0 + "C");
-                technologyTextView.setText(technology);
-                Bundle bundle = intent.getExtras();
-                Log.d(TAG, bundle.toString());
-
-                Log.d(TAG, "Technology=" + technology + "voltage=" + voltage + "Temperature=" + temperature);
-
-
+        if (statisticType == OVERALL_BATTERY) {
+            if (remainingScreenTime > 0.9) {
+                textView_availableBattery_Hours.setText(String.valueOf(hours));
+                textView_availableBattery_Minutes.setText(String.valueOf(realminutes));
             } else {
-
-                showMessage("There is no battery");
+                textView_availableBattery_Hours.setText("0");
+                textView_availableBattery_Minutes.setText(String.valueOf(realminutes));
             }
-
+        } else if (statisticType == VOICE_CALL) {
+            if (remainingScreenTime > 0.9) {
+                textView_timeLeft_VoiceCall.setText(valueGreaterThanEqualToOneHour);
+            } else {
+                textView_timeLeft_VoiceCall.setText(valueLessThanOneHour);
+            }
+        } else if (statisticType == VIDEO) {
+            if (remainingScreenTime > 0.9) {
+                textview_timeLeft_Video.setText(valueGreaterThanEqualToOneHour);
+            } else {
+                textview_timeLeft_Video.setText(valueLessThanOneHour);
+            }
+        } else if (statisticType == WIFI) {
+            if (remainingScreenTime > 0.9) {
+                textview_timeLeft_Wifi.setText(valueGreaterThanEqualToOneHour);
+            } else {
+                textview_timeLeft_Wifi.setText(valueLessThanOneHour);
+            }
         }
-    };
-
-    private void getValueInHoursMinutes(double remainingScreenTime, int type) {
-
-        if (type == 0) {
-
-            // 0 stands for the over alll battery life ...
-
-            if (remainingScreenTime > 0.9) {
-                int hours = (int) remainingScreenTime;
-                String stringminutes = String.valueOf(String.format("%.2f", remainingScreenTime));
-
-                String lasttwo = stringminutes.substring(stringminutes.length() - 2);
-                int minute = Integer.parseInt(lasttwo);
-
-                int realminutes = (minute * 60) / 100;
-                hourTextView.setText(String.valueOf(hours));
-                minutesTextView.setText(String.valueOf(realminutes));
-
-                Log.d("Asadf", String.valueOf(realminutes));
-            } else {
-
-
-                String stringminutes = String.valueOf(String.format("%.2f", remainingScreenTime));
-
-                String lasttwo = stringminutes.substring(stringminutes.length() - 2);
-                int minute = Integer.parseInt(lasttwo);
-
-                int realminutes = (minute * 60) / 100;
-                hourTextView.setText("0");
-                minutesTextView.setText(String.valueOf(realminutes));
-
-                Log.d("Asadf", String.valueOf(realminutes));
-            }
-        } else if (type == 1) {
-            // 1 for voice call
-
-            // 0 stands for the over alll battery life ...
-
-            if (remainingScreenTime > 0.9) {
-                int hours = (int) remainingScreenTime;
-                String stringminutes = String.valueOf(String.format("%.2f", remainingScreenTime));
-
-                String lasttwo = stringminutes.substring(stringminutes.length() - 2);
-                int minute = Integer.parseInt(lasttwo);
-
-                int realminutes = (minute * 60) / 100;
-
-                voiceCallTextView.setText(String.valueOf(hours) + "h" + String.valueOf(realminutes) + "min");
-
-
-                Log.d("Asadf", String.valueOf(realminutes));
-            } else {
-
-
-                String stringminutes = String.valueOf(String.format("%.2f", remainingScreenTime));
-
-                String lasttwo = stringminutes.substring(stringminutes.length() - 2);
-                int minute = Integer.parseInt(lasttwo);
-
-                int realminutes = (minute * 60) / 100;
-                voiceCallTextView.setText(String.valueOf(0) + "h" + String.valueOf(realminutes) + "min");
-
-                Log.d("Asadf", String.valueOf(realminutes));
-            }
-
-
-        } else if (type == 2) {
-            // 2 for video
-            // 0 stands for the over alll battery life ...
-
-            if (remainingScreenTime > 0.9) {
-                int hours = (int) remainingScreenTime;
-                String stringminutes = String.valueOf(String.format("%.2f", remainingScreenTime));
-
-                String lasttwo = stringminutes.substring(stringminutes.length() - 2);
-                int minute = Integer.parseInt(lasttwo);
-
-                int realminutes = (minute * 60) / 100;
-                videoCallTextView.setText(String.valueOf(hours) + "h" + String.valueOf(realminutes) + "min");
-
-
-                Log.d("Asadf", String.valueOf(realminutes));
-            } else {
-
-
-                String stringminutes = String.valueOf(String.format("%.2f", remainingScreenTime));
-
-                String lasttwo = stringminutes.substring(stringminutes.length() - 2);
-                int minute = Integer.parseInt(lasttwo);
-
-                int realminutes = (minute * 60) / 100;
-                voiceCallTextView.setText(String.valueOf(0) + "h" + String.valueOf(realminutes) + "min");
-
-
-                Log.d("Asadf", String.valueOf(realminutes));
-            }
-
-
-        } else if (type == 3) {
-
-            //3 for the wifi ...
-            // 0 stands for the over alll battery life ...
-
-            if (remainingScreenTime > 0.9) {
-                int hours = (int) remainingScreenTime;
-                String stringminutes = String.valueOf(String.format("%.2f", remainingScreenTime));
-
-                String lasttwo = stringminutes.substring(stringminutes.length() - 2);
-                int minute = Integer.parseInt(lasttwo);
-
-                int realminutes = (minute * 60) / 100;
-                wifiCallTextView.setText(String.valueOf(hours) + "h" + String.valueOf(realminutes) + "min");
-
-
-                Log.d("Asadf", String.valueOf(realminutes));
-            } else {
-
-
-                String stringminutes = String.valueOf(String.format("%.2f", remainingScreenTime));
-
-                String lasttwo = stringminutes.substring(stringminutes.length() - 2);
-                int minute = Integer.parseInt(lasttwo);
-
-                int realminutes = (minute * 60) / 100;
-                voiceCallTextView.setText(String.valueOf(0) + "h" + String.valueOf(realminutes) + "min");
-
-                Log.d("Asadf", String.valueOf(realminutes));
-            }
-
-
-        }
-
-
     }
 
     private void showMessage(String s) {
-
         Toast.makeText(context, s, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        context.unregisterReceiver(battery_info_receiver);
     }
 
     @Override
@@ -843,8 +766,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                         if (which == 0) {
                             bluetoothAdapter.enable();
                             bluetoothTextView.setText("On");
-
-
                         } else {
                             bluetoothAdapter.disable();
                             bluetoothTextView.setText("Off");
@@ -861,8 +782,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     public double getBatteryCapacity() {
         Object mPowerProfile = null;
-        final String POWER_PROFILE_CLASS = "com.android.internal.os.PowerProfile";
-
         try {
             mPowerProfile = Class.forName(POWER_PROFILE_CLASS)
                     .getConstructor(Context.class)
@@ -872,10 +791,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }
 
         try {
-            //Total battery capacity in mAh.
-            double batteryCapacity = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "battery.capacity");
+            Method getAveragePower = Class.forName(POWER_PROFILE_CLASS).getMethod(METHOD_GET_AVERAGE_POWER, String.class);
+            //Get total battery capacity in mAh.
+            double batteryCapacity = (Double) getAveragePower.invoke(mPowerProfile, BATTERY_CAPACITY);
             return batteryCapacity;
         } catch (Exception e) {
             e.printStackTrace();
@@ -883,14 +801,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         return 0.0;
     }
 
-
-    // ends here
-
-    public int getVoiceCallCapacity() {
+    public int getPowerConsumption_radio() {
 
         Object mPowerProfile = null;
-        final String POWER_PROFILE_CLASS = "com.android.internal.os.PowerProfile";
-
         try {
             mPowerProfile = Class.forName(POWER_PROFILE_CLASS)
                     .getConstructor(Context.class)
@@ -898,40 +811,28 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         try {
+            Method getAveragePower = Class.forName(POWER_PROFILE_CLASS).getMethod(METHOD_GET_AVERAGE_POWER, String.class);
+            double radioActive = (Double) getAveragePower.invoke(mPowerProfile, RADIO_ACTIVE);
+            double radioScanning = (Double) getAveragePower.invoke(mPowerProfile, RADIO_SCANNING);
+            double radioOn = (Double) getAveragePower.invoke(mPowerProfile, RADIO_ON);
 
-            double radioActive = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "radio.active");
-
-            double radioScanning = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "radio.scanning");
-
-            double radioOn = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "radio.on");
-
-            int powerRadio = (int) radioActive + (int) radioScanning + (int) radioOn;
-
-            return powerRadio;
-
+            int radioPowerConsumption = (int) radioActive + (int) radioScanning + (int) radioOn;
+            return radioPowerConsumption;
 
         } catch (Exception ex) {
-
             ex.printStackTrace();
         }
-
+        // default value to return if radio power values not obtained
         return 0;
 
     }
 
 
-    public double getTotalRemainingTime() {
+    public double getPowerConsumption_Total() {
 
         Object mPowerProfile = null;
-        final String POWER_PROFILE_CLASS = "com.android.internal.os.PowerProfile";
-
         try {
             mPowerProfile = Class.forName(POWER_PROFILE_CLASS)
                     .getConstructor(Context.class)
@@ -941,31 +842,90 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }
         try {
 
-            double cpuAwake = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "cpu.awake");
-            double wifiOn = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "wifi.on");
+            Method getAveragePower = Class.forName(POWER_PROFILE_CLASS).getMethod(METHOD_GET_AVERAGE_POWER, String.class);
 
-            double screenOn = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "screen.on");
-            double gpsOn = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "gps.on");
-            double cpuActive = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "cpu.active");
+            double powerConsumption_wifiOn = (Double) getAveragePower.invoke(mPowerProfile, WIFI_ON);
+            double powerConsumption_screenOn = (Double) getAveragePower.invoke(mPowerProfile, SCREEN_ON);
+            double powerConsumption_gpsOn = (Double) getAveragePower.invoke(mPowerProfile, GPS_ON);
+            double powerConsumption_cpuActive = (Double) getAveragePower.invoke(mPowerProfile, CPU_ACTIVE);
+            double powerConsumption_cpuAwake = (Double) getAveragePower.invoke(mPowerProfile, CPU_AWAKE);
 
-            double cputotal = (cpuActive + cpuAwake) / 2;
+            double averageConsumption_Cpu = (powerConsumption_cpuActive + powerConsumption_cpuAwake) / 2;
+            double powerConsumption_total = (averageConsumption_Cpu + powerConsumption_wifiOn + powerConsumption_screenOn);
+            return powerConsumption_total;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0.0;
 
 
-            double totalConsumption = (cputotal + wifiOn + screenOn);
+    }
+
+    public double getPowerConsumption_Wifi() {
+
+        Object mPowerProfile = null;
+        try {
+            mPowerProfile = Class.forName(POWER_PROFILE_CLASS)
+                    .getConstructor(Context.class)
+                    .newInstance(getContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+
+            Method getAveragePower = Class.forName(POWER_PROFILE_CLASS).getMethod(METHOD_GET_AVERAGE_POWER, String.class);
+
+            double wifiOn = (Double) getAveragePower.invoke(mPowerProfile, WIFI_ON);
+            double wifiActive = (Double) getAveragePower.invoke(mPowerProfile, WIFI_ACTIVE);
+            double wifiScan = (Double) getAveragePower.invoke(mPowerProfile, WIFI_SCANNING);
+
+            double screenOn = (Double) getAveragePower.invoke(mPowerProfile, SCREEN_ON);
+            double cpuAwake = (Double) getAveragePower.invoke(mPowerProfile, CPU_AWAKE);
+            double cpuIdle = (Double) getAveragePower.invoke(mPowerProfile, CPU_IDLE);
+            double cpuActive = (Double) getAveragePower.invoke(mPowerProfile, CPU_ACTIVE);
+
+            double averageConsumption_Cpu = (cpuActive + cpuAwake + cpuIdle) / 3;
+            double totalConsumption_WifiOnly = (wifiActive + wifiOn + wifiScan) / 3;
+            // to get a rough estimate for
+            // ETA for wifi usage, we also consider CPU Usage and Screen On (since both CPU and Screen are used when Wifi is used (mostly))
+            double totalConsumptionOnWifi = (totalConsumption_WifiOnly + averageConsumption_Cpu + screenOn);
+            return totalConsumptionOnWifi;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return 0.0;
 
 
-            return totalConsumption;
+    }
 
+    public double getPowerConsumption_Videos() {
+
+        Object mPowerProfile = null;
+        try {
+            mPowerProfile = Class.forName(POWER_PROFILE_CLASS)
+                    .getConstructor(Context.class)
+                    .newInstance(getContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+
+            Method getAveragePower = Class.forName(POWER_PROFILE_CLASS).getMethod(METHOD_GET_AVERAGE_POWER, String.class);
+
+            double cpuAwake = (Double) getAveragePower.invoke(mPowerProfile, CPU_AWAKE);
+            double cpuActive = (Double) getAveragePower.invoke(mPowerProfile, CPU_ACTIVE);
+            double wifiOn = (Double) getAveragePower.invoke(mPowerProfile, WIFI_ON);
+            double screenOn = (Double) getAveragePower.invoke(mPowerProfile, SCREEN_ON);
+            double dspAudio = (Double) getAveragePower.invoke(mPowerProfile, DSP_AUDIO);
+            double dspVideo = (Double) getAveragePower.invoke(mPowerProfile, DSP_VIDEO);
+
+            double averageConsumption_Cpu = (cpuActive + cpuAwake) / 2;
+
+            // to get a rough estimate for
+            // ETA for video usage, we also consider CPU Usage, Screen On
+            // and Audio-Video Decoding Power Consumption.
+            double totalConsumption_Videos = (averageConsumption_Cpu + wifiOn + screenOn + dspAudio + dspVideo);
+            return totalConsumption_Videos;
 
         } catch (Exception ex) {
 
@@ -977,11 +937,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    public double getWifiRemainingTime() {
+    public double getPowerConsumption_VoiceCalls() {
 
         Object mPowerProfile = null;
-        final String POWER_PROFILE_CLASS = "com.android.internal.os.PowerProfile";
-
         try {
             mPowerProfile = Class.forName(POWER_PROFILE_CLASS)
                     .getConstructor(Context.class)
@@ -991,148 +949,20 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }
         try {
 
+            Method getAveragePower = Class.forName(POWER_PROFILE_CLASS).getMethod(METHOD_GET_AVERAGE_POWER, String.class);
 
-            double wifiOn = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "wifi.on");
-            double wifiActive = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "wifi.active");
-            double wifiScan = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "wifi.scan");
+            double cpuAwake = (Double) getAveragePower.invoke(mPowerProfile, CPU_AWAKE);
+            double cpuActive = (Double) getAveragePower.invoke(mPowerProfile, CPU_ACTIVE);
+            double wifiOn = (Double) getAveragePower.invoke(mPowerProfile, WIFI_ON);
+            double screenOn = (Double) getAveragePower.invoke(mPowerProfile, SCREEN_ON);
+            double dspAudio = (Double) getAveragePower.invoke(mPowerProfile, DSP_AUDIO);
 
-            double screenOn = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "screen.on");
-            double cpuAwake = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "cpu.awake");
-            double cpuIdle = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "cpu.idle");
-            double cpuActive = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "cpu.active");
-
-            double cpuaverage = (cpuActive + cpuAwake + cpuIdle) / 3;
-
-
-            double wifiTotal = (wifiActive + wifiOn + wifiScan) / 3;
-
-
-            double totalConsumption = (wifiTotal + cpuaverage + screenOn);
-
-
+            double averageConsumption_Cpu = (cpuActive + cpuAwake) / 2;
+            // to get a rough estimate for
+            // ETA for video usage, we also consider CPU Usage, Wifi (for voice calls through wifi), Screen
+            // and Audio Decoding Power Consumption.
+            double totalConsumption = (averageConsumption_Cpu + wifiOn + screenOn + dspAudio);
             return totalConsumption;
-
-
-        } catch (Exception ex) {
-
-            ex.printStackTrace();
-        }
-
-        return 0.0;
-
-
-    }
-
-    public double getVideoRemainingTime() {
-
-        Object mPowerProfile = null;
-        final String POWER_PROFILE_CLASS = "com.android.internal.os.PowerProfile";
-
-        try {
-            mPowerProfile = Class.forName(POWER_PROFILE_CLASS)
-                    .getConstructor(Context.class)
-                    .newInstance(getContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-
-            double cpuAwake = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "cpu.awake");
-            double wifiOn = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "wifi.on");
-
-            double screenOn = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "screen.on");
-            double dspAudio = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "dsp.audio");
-            double cpuActive = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "cpu.active");
-            double dspVideo = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "dsp.video");
-
-
-
-
-            double cputotal = (cpuActive + cpuAwake) / 2;
-
-
-            double totalConsumption = (cputotal + wifiOn + screenOn+dspAudio+dspVideo);
-
-
-            return totalConsumption;
-
-
-        } catch (Exception ex) {
-
-            ex.printStackTrace();
-        }
-
-        return 0.0;
-
-
-    }
-
-    public double getVoiceRemainingTime() {
-
-        Object mPowerProfile = null;
-        final String POWER_PROFILE_CLASS = "com.android.internal.os.PowerProfile";
-
-        try {
-            mPowerProfile = Class.forName(POWER_PROFILE_CLASS)
-                    .getConstructor(Context.class)
-                    .newInstance(getContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-
-            double cpuAwake = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "cpu.awake");
-            double wifiOn = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "wifi.on");
-
-            double screenOn = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "screen.on");
-            double dspAudio = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "dsp.audio");
-            double cpuActive = (Double) Class.forName(POWER_PROFILE_CLASS)
-                    .getMethod("getAveragePower", String.class)
-                    .invoke(mPowerProfile, "cpu.active");
-
-            double cputotal = (cpuActive + cpuAwake) / 2;
-
-
-            double totalConsumption = (cputotal + wifiOn + screenOn+dspAudio);
-
-
-            return totalConsumption;
-
-
         } catch (Exception ex) {
 
             ex.printStackTrace();

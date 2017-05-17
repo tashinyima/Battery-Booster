@@ -3,62 +3,43 @@ package com.receptix.batterybuddy.general;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_FIRST_TIME;
+import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_OPTIMIZED_NOW;
+import static com.receptix.batterybuddy.helper.Constants.Preferences.PREFER_NAME;
+import static com.receptix.batterybuddy.helper.Constants.Preferences.PRIVATE_MODE;
+
 /**
  * Created by hello on 5/15/2017.
  */
 
 public class UserSessionManager {
 
-
-    private static final String IS_OPTIMIZED_NOW = "is_optimized";
-
-    private static final String PREFER_NAME = "AndroidExamplePref";
-    private static final String IS_FIRST_TIME="is_first_time";
-
     public SharedPreferences sharedPreferences;
-    // Editor reference for Shared preferences
     public SharedPreferences.Editor editor;
-    // Context
     Context context;
-    // Shared pref mode
-    int PRIVATE_MODE = 0;
 
     public UserSessionManager(Context context) {
-
         this.context = context;
         sharedPreferences = context.getSharedPreferences(PREFER_NAME, PRIVATE_MODE);
         editor=sharedPreferences.edit();
-
     }
 
-    public  boolean getIsOptimizedNow(){
-
-        return sharedPreferences.getBoolean(IS_OPTIMIZED_NOW,false);
-
+    public boolean isOptimized() {
+        return sharedPreferences.getBoolean(IS_OPTIMIZED_NOW, false);
     }
 
 
-    public void setIsOptimizedNow(boolean isOptimizedNow){
-
+    public void setIsOptimized(boolean isOptimizedNow) {
         editor.putBoolean(IS_OPTIMIZED_NOW,isOptimizedNow);
         editor.commit();
-
     }
 
-    public boolean  getIsFirstTime(){
-
+    public boolean isFirstTime() {
         return sharedPreferences.getBoolean(IS_FIRST_TIME,false);
-
     }
 
     public void setIsFirstTime(boolean isFirstTime){
-
         editor.putBoolean(IS_FIRST_TIME,isFirstTime);
         editor.commit();
-
-
     }
-
-
-
 }
