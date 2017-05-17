@@ -2,6 +2,7 @@ package com.receptix.batterybuddy;
 
 import android.Manifest;
 import android.app.KeyguardManager;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -25,11 +26,14 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import com.receptix.batterybuddy.adapter.HomePagersAdapter;
 import com.receptix.batterybuddy.charge.ChargeFragment;
 import com.receptix.batterybuddy.home.HomeFragment;
+import com.receptix.batterybuddy.optimizeractivity.AfterOptimizerActivity;
+import com.receptix.batterybuddy.optimizeractivity.OptimizerActivity;
 import com.receptix.batterybuddy.rank.RankFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -46,9 +50,9 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
 
 
-
     private Fragment fragment;
     private FragmentManager fragmentManager;
+    int NotificationId =999;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +67,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, String.valueOf(isScreenOn));
             keyguard = (KeyguardManager) getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
             boolean isLockedScreen = keyguard.inKeyguardRestrictedInputMode();
-            Log.d(TAG,"isLockedScren: "+isLockedScreen);
-
+            Log.d(TAG, "isLockedScren: " + isLockedScreen);
 
 
             if (!isLockedScreen) {
@@ -91,8 +94,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         getPermission();
-        sendNotification();
-       setupToolBar(getString(R.string.batterybuddy));
+
+        sendCustomNotification();
+        //  sendNotification();
+        setupToolBar(getString(R.string.batterybuddy));
 
 
         initView();
@@ -119,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.action_home:
                         fragment = new HomeFragment();
                         break;
@@ -143,7 +148,37 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void sendCustomNotification() {
+
+
+        nmanager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+
+        RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notification_layout);
+        contentView.setImageViewResource(R.id.image, R.drawable.brush_notification);
+        contentView.setTextViewText(R.id.title, "Custom notification");
+        contentView.setTextViewText(R.id.text, "This is a custom layout");
+        intent = new Intent(getApplicationContext(), OptimizerActivity.class);
+        pintent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
+
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setContent(contentView);
+
+        contentView.setOnClickPendingIntent(R.id.notificationOptimizerBtn, pintent);
+
+
+        Notification notification = mBuilder.build();
+        notification.flags |= Notification.FLAG_NO_CLEAR;
+        notification.defaults |= Notification.DEFAULT_SOUND;
+        notification.defaults |= Notification.DEFAULT_VIBRATE;
+        nmanager.notify(NotificationId,notification);
+    }
+
     private void sendNotification() {
+
+
+        //end of the notification...
 
         intent = new Intent(getApplicationContext(), MainActivity.class);
         pintent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
