@@ -116,7 +116,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     int lockScreenTimeOut = 0;
     int inWhichBrightness = 0;
     int WhatisLockScreenTimeOut = 0;
-    int isBluetoothOn = 1; // 1 = bluetooth is off by default....
+    int isBluetoothOn; // 1 = bluetooth is off by default....
     BluetoothAdapter bluetoothAdapter;
     AudioManager audioManagerMode = null;
     int audioCurrentMode = 0;
@@ -203,6 +203,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         context = getActivity();
         audioManagerMode = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
+
         initView(view);
         getSystemData();
 
@@ -213,6 +214,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onResume() {
         super.onResume();
         registerBatteryInfoReceiver();
+
     }
 
     @Override
@@ -236,6 +238,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void getDeviceRingerMode() {
+
         audioCurrentMode = audioManagerMode.getRingerMode();
         Log.d(TAG_HOME_FRAGMENT, "Audio mode" + String.valueOf(audioCurrentMode));
 
@@ -324,13 +327,24 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void checkIfBluetoothOnOrOff() {
+
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (bluetoothAdapter.isEnabled()) {
-            isBluetoothOn = 0;
-            bluetoothTextView.setText(getString(R.string.on));
-        } else {
-            bluetoothTextView.setText(getString(R.string.off));
+
+
+
+        if(bluetoothAdapter!=null){
+
+            if (bluetoothAdapter.isEnabled()) {
+                isBluetoothOn =0;
+                bluetoothTextView.setText(getString(R.string.on));
+            } else if(bluetoothAdapter.disable()) {
+                isBluetoothOn=1;
+                bluetoothTextView.setText(getString(R.string.off));
+            }
         }
+
+        Log.d("Bluetooth",String.valueOf(isBluetoothOn));
+
     }
 
     private void getDeviceBrightnessLevel() {
@@ -538,6 +552,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                         }
 
 
+                        getDeviceRingerMode();
+
                         return true;
                     }
                 })
@@ -633,6 +649,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                 break;
                         }
 
+                        getDeviceBrightnessLevel();
 
                         return true;
                     }
@@ -733,6 +750,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                         }
 
 
+                        getScreenTimeout();
                         return true;
                     }
                 })
@@ -763,14 +781,32 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                          * returning false here won't allow the newly selected radio button to actually be selected.
                          **/
                         Toast.makeText(context, which + ": " + text + ", ID = " + view.getId(), Toast.LENGTH_SHORT).show();
-                        if (which == 0) {
-                            bluetoothAdapter.enable();
-                            bluetoothTextView.setText("On");
-                        } else {
-                            bluetoothAdapter.disable();
-                            bluetoothTextView.setText("Off");
+
+                        switch (which){
+                            case 0:
+
+                                 if(bluetoothAdapter.disable()){
+
+                                     bluetoothAdapter.enable();
+                                     bluetoothTextView.setText("On");
+                                     isBluetoothOn =0;
+                                 }
+
+
+                                break;
+                            case 1:
+
+                                if(bluetoothAdapter.enable()){
+
+                                    bluetoothAdapter.disable();
+                                    bluetoothTextView.setText("Off");
+                                    isBluetoothOn =1;
+                                }
+
+                                break;
 
                         }
+
 
 
                         return true;

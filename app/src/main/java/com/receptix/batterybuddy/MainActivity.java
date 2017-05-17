@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabLayout;
@@ -74,15 +75,33 @@ public class MainActivity extends AppCompatActivity {
 
                 String from = bundle.getString("from");
                 if (from.equalsIgnoreCase("broadcast")) {
-                    startActivity(new Intent(getApplicationContext(), BatteryAdActivity.class));
-                    finish();
+
+                    new Handler().postDelayed(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            startActivity(new Intent(getApplicationContext(), BatteryAdActivity.class));
+                            finish();
+                        }
+                    }, 4000);
+
 
                 }
             } else {
+
                 String from = bundle.getString("from");
                 if (from.equalsIgnoreCase("broadcast")) {
-                    startActivity(new Intent(getApplicationContext(), LockAdsActivity.class));
-                    finish();
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            startActivity(new Intent(getApplicationContext(), LockAdsActivity.class));
+                            finish();
+
+                        }
+                    },4000);
+
 
                 }
 
