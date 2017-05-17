@@ -21,6 +21,7 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
 import com.receptix.batterybuddy.R;
+import com.receptix.batterybuddy.general.UserSessionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,7 @@ public class OptimizerActivity extends AppCompatActivity {
     private long mShortAnimationDuration = 300;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +56,7 @@ public class OptimizerActivity extends AppCompatActivity {
         notificationManager.cancel(999);
         initView();
         setupToolBar(getString(R.string.poweroptimization));
+
 
         new Handler().postDelayed(new Runnable() {
             @Override

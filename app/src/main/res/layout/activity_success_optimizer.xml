@@ -27,7 +27,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/check_mark_100" />
+            android:src="@drawable/optimal_state_ic_150" />
         <TextView
             android:textStyle="bold"
             android:layout_marginTop="20dp"

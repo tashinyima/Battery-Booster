@@ -11,9 +11,11 @@ import android.media.AudioManager;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,7 +30,10 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.lzyzsd.circleprogress.DonutProgress;
 import com.receptix.batterybuddy.R;
+import com.receptix.batterybuddy.general.UserSessionManager;
+import com.receptix.batterybuddy.optimizeractivity.OptimalStateActivity;
 import com.receptix.batterybuddy.optimizeractivity.OptimizerActivity;
+import com.receptix.batterybuddy.optimizeractivity.SuccessOptimizerActivity;
 
 import java.lang.reflect.Method;
 
@@ -122,6 +127,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     int audioCurrentMode = 0;
     int inWhichSoundIndex;
     BatteryManager myBatteryManger;
+    UserSessionManager userSessionManager;
+    TextView isssueTextView,problemTextView;
     ImageView soundImageView;
     TextView textView_availableBattery_Hours, textView_availableBattery_Minutes;
     TextView textView_timeLeft_VoiceCall, textview_timeLeft_Video, textview_timeLeft_Wifi;
@@ -202,18 +209,36 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         view = inflater.inflate(R.layout.fragment_home, container, false);
         context = getActivity();
         audioManagerMode = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        userSessionManager = new UserSessionManager(context);
 
 
         initView(view);
         getSystemData();
+        isOptimizedCheck();
 
         return view;
+    }
+
+    private void isOptimizedCheck() {
+        if(userSessionManager.isOptimized()){
+
+            optimzerButton.setBackgroundResource(R.drawable.optimizedbuttonbgcolor);
+            problemTextView.setTextColor(ContextCompat.getColor(context,R.color.optimizedbtncolor));
+            isssueTextView.setVisibility(View.INVISIBLE);
+            TerminateSession();
+        }else {
+
+            optimzerButton.setBackgroundResource(R.drawable.optimizerbuttonbgcolor);
+            problemTextView.setTextColor(ContextCompat.getColor(context,R.color.buttonColor));
+            isssueTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
         registerBatteryInfoReceiver();
+        isOptimizedCheck();
 
     }
 
@@ -331,19 +356,18 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
 
-
-        if(bluetoothAdapter!=null){
+        if (bluetoothAdapter != null) {
 
             if (bluetoothAdapter.isEnabled()) {
-                isBluetoothOn =0;
+                isBluetoothOn = 0;
                 bluetoothTextView.setText(getString(R.string.on));
-            } else if(bluetoothAdapter.disable()) {
-                isBluetoothOn=1;
+            } else if (bluetoothAdapter.disable()) {
+                isBluetoothOn = 1;
                 bluetoothTextView.setText(getString(R.string.off));
             }
         }
 
-        Log.d("Bluetooth",String.valueOf(isBluetoothOn));
+        Log.d("Bluetooth", String.valueOf(isBluetoothOn));
 
     }
 
@@ -423,6 +447,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         textview_timeLeft_Wifi = (TextView) view.findViewById(R.id.wifiCallTextView);
         textview_timeLeft_Video = (TextView) view.findViewById(R.id.videoCallTextView);
 
+        isssueTextView = (TextView) view.findViewById(R.id.isssueTextView);
+        problemTextView = (TextView) view.findViewById(R.id.problemTextView);
+
+
+
 
     }
 
@@ -477,8 +506,26 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
 
             case R.id.optimizerButton:
-                Intent optintent = new Intent(context, OptimizerActivity.class);
-                context.startActivity(optintent);
+
+
+
+
+                if (!userSessionManager.isOptimized()) {
+
+                    userSessionManager.setIsOptimized(true);
+                    TerminateSession();
+                    Intent optintent = new Intent(context, OptimizerActivity.class);
+                    context.startActivity(optintent);
+
+                } else {
+
+                    TerminateSession();
+                    Intent nointent = new Intent(context, OptimalStateActivity.class);
+                    context.startActivity(nointent);
+
+
+                }
+
 
 //                Intent BatteryAdsActivity for testing purpose
 //
@@ -506,6 +553,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 break;
 
         }
+    }
+
+    private void TerminateSession() {
+
+        new CountDownTimer(30000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            public void onFinish() {
+                userSessionManager.setIsOptimized(false);
+
+            }
+        }.start();
     }
 
     private void SoundStatusChange() {
@@ -782,31 +844,30 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                          **/
                         Toast.makeText(context, which + ": " + text + ", ID = " + view.getId(), Toast.LENGTH_SHORT).show();
 
-                        switch (which){
+                        switch (which) {
                             case 0:
 
-                                 if(bluetoothAdapter.disable()){
+                                if (bluetoothAdapter.disable()) {
 
-                                     bluetoothAdapter.enable();
-                                     bluetoothTextView.setText("On");
-                                     isBluetoothOn =0;
-                                 }
+                                    bluetoothAdapter.enable();
+                                    bluetoothTextView.setText("On");
+                                    isBluetoothOn = 0;
+                                }
 
 
                                 break;
                             case 1:
 
-                                if(bluetoothAdapter.enable()){
+                                if (bluetoothAdapter.enable()) {
 
                                     bluetoothAdapter.disable();
                                     bluetoothTextView.setText("Off");
-                                    isBluetoothOn =1;
+                                    isBluetoothOn = 1;
                                 }
 
                                 break;
 
                         }
-
 
 
                         return true;

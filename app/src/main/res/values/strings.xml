@@ -95,6 +95,7 @@
     <string name="no_battery_present">There is no battery</string>
     <string name="on">ON</string>
     <string name="off">OFF</string>
+    <string name="optimalStateTextView">Optimal State</string>
     <string-array name="sreenlocktimer">
         <item>Immediately</item>
         <item>5 second </item>
