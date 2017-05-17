@@ -114,4 +114,8 @@ public class Constants {
         public static final int TIMEOUT_10_MINUTES = 7;
         public static final int TIMEOUT_30_MINUTES = 8;
     }
+
+    public static class Params {
+        public static final int INVALID_POSITION = -1;
+    }
 }
