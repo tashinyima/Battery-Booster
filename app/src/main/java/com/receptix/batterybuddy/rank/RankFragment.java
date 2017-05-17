@@ -114,12 +114,33 @@ public class RankFragment extends Fragment {
             int percentageUsed = (valueInMb*100)/totalMemoryInMb;
             Log.e(packageName+"\t","\t" + memoryUsedByPackage/1024 + "Mb \t ==> "+ percentageUsed + "%");
 
-            RankData rankdata = new RankData(packageName, percentageUsed+" %", appicon, type, applicationName);
-            rankDatas.add(rankdata);
-            rankAdapter.notifyDataSetChanged();
+            if(percentageUsed >0 ){
+                RankData rankdata = new RankData(packageName, percentageUsed+" %", appicon, type, applicationName);
+                rankDatas.add(rankdata);
+                rankAdapter.notifyDataSetChanged();
+
+            }else {
+
+
+
+            }
+
+
         }
 
 
+
+
+
+    }
+
+    private boolean isSystemPackage(ApplicationInfo ai) {
+
+        if((ai.flags & (ApplicationInfo.FLAG_UPDATED_SYSTEM_APP | ApplicationInfo.FLAG_SYSTEM)) == 0)
+        {
+            return true;
+        }
+        return false;
     }
 
     private int getPercentageFromPackage(String packageName) {
@@ -231,6 +252,8 @@ public class RankFragment extends Fragment {
             progressDialog.setMessage("Loading");
             progressDialog.setCancelable(false);
             progressDialog.show();
+
+
         }
 
         @Override
@@ -255,7 +278,7 @@ public class RankFragment extends Fragment {
             totalMemoryInMb = (int) (memoryInfo.totalMem/(1024*1024));
             Log.e("Total Device memory", String.valueOf(totalMemoryInMb));
 
-            getAllProcessesMemoryInfo();
+           getAllProcessesMemoryInfo();
             return null;
         }
     }
