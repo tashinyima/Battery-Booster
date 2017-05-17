@@ -1,6 +1,7 @@
 package com.receptix.batterybuddy.optimizeractivity;
 
 import android.app.ActivityManager;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -34,6 +35,8 @@ public class OptimizerActivity extends AppCompatActivity {
     PackageManager packageManager;
     Drawable appicon;
     Toolbar toolbar;
+    NotificationManager notificationManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,9 @@ public class OptimizerActivity extends AppCompatActivity {
         view_optimize = getLayoutInflater().inflate(R.layout.activity_optimizer, null);
         setContentView(view_optimize);
         packageManager = this.getPackageManager();
+
+        notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(999);
         initView();
         setupToolBar(getString(R.string.poweroptimization));
 
