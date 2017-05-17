@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     KeyguardManager keyguard;
     Toolbar toolbar;
     int NotificationId = 999;
+    int currentSelectedFragment = 0;
     private Fragment fragment;
     private FragmentManager fragmentManager;
 
@@ -141,24 +142,43 @@ public class MainActivity extends AppCompatActivity {
         fragment = new HomeFragment();
         final FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(R.id.main_container, fragment).commit();
+
         BottomNavigationView bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.bottom_navigation);
+
+        final Fragment fragmentHome = new HomeFragment();
+        final Fragment fragmentCharge = new ChargeFragment();
+        final Fragment fragmentRank = new RankFragment();
+
+        currentSelectedFragment = 1;
+
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_home:
-                        fragment = new HomeFragment();
+                        if (currentSelectedFragment != 1) {
+                            fragment = fragmentHome;
+                            currentSelectedFragment = 1;
+                        }
                         break;
                     case R.id.action_charge:
-                        fragment = new ChargeFragment();
+                        if (currentSelectedFragment != 2) {
+                            fragment = fragmentCharge;
+                            currentSelectedFragment = 2;
+                        }
                         break;
                     case R.id.action_rank:
-                        fragment = new RankFragment();
+                        if (currentSelectedFragment != 3) {
+                            fragment = fragmentRank;
+                            currentSelectedFragment = 3;
+                        }
                         break;
                 }
-                final FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.main_container, fragment).commit();
+
+                final FragmentTransaction transactionNew = fragmentManager.beginTransaction();
+                transactionNew.replace(R.id.main_container, fragment).commit();
+
                 return true;
             }
         });
