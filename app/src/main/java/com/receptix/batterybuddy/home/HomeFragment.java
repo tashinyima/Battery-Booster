@@ -223,6 +223,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         if(userSessionManager.isOptimized()){
 
             optimzerButton.setBackgroundResource(R.drawable.optimizedbuttonbgcolor);
+            problemTextView.setText(getString(R.string.noproblemdetected));
             problemTextView.setTextColor(ContextCompat.getColor(context,R.color.optimizedbtncolor));
             isssueTextView.setVisibility(View.INVISIBLE);
             TerminateSession();

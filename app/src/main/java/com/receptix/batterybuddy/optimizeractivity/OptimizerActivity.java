@@ -9,8 +9,10 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +24,7 @@ import android.widget.TextView;
 
 import com.receptix.batterybuddy.R;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +47,7 @@ public class OptimizerActivity extends AppCompatActivity {
     NotificationManager notificationManager;
     private long mShortAnimationDuration = 300;
     private boolean isOptimizationInProgress = false;
+    TextView applistTextView;
 
 
     @Override
@@ -91,6 +95,10 @@ public class OptimizerActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        new TestAsync().execute();
+
+
+
     }
 
     @Override
@@ -220,6 +228,8 @@ public class OptimizerActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(context, 5));
         recyclerView.setAdapter(myOptimizerAdapter);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        applistTextView= (TextView) findViewById(R.id.applistTextView);
+
     }
 
     @Override
@@ -227,4 +237,54 @@ public class OptimizerActivity extends AppCompatActivity {
         if (!isOptimizationInProgress)
             finish();
     }
+
+
+    class TestAsync extends AsyncTask<Void, Integer, String>
+    {
+        String TAG = "TADF";
+
+        protected void onPreExecute (){
+            super.onPreExecute();
+            Log.d(TAG + " PreExceute","On pre Exceute......");
+        }
+
+        protected String doInBackground(Void...arg0) {
+            Log.d(TAG + " DoINBackGround","On doInBackground...");
+
+            List<ApplicationInfo> applicationInfoList = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+
+
+            for (ApplicationInfo applicationInfo : applicationInfoList) {
+                // list only NON-SYSTEM apps
+                if ((applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+
+                    for(int i=0; i<applicationInfoList.size(); i++){
+
+
+                        Integer in = new Integer(i);
+                        publishProgress(i);
+                    }
+                }
+            }
+
+
+
+            return "You are at PostExecute";
+        }
+
+        protected void onProgressUpdate(Integer...a){
+            super.onProgressUpdate(a);
+
+            applistTextView.setText(getString(R.string.analyzingdata) + " "+ a[0] +" "+"problems");
+            applistTextView.setTextColor(ContextCompat.getColor(context,R.color.buttonColor));
+
+            Log.d(TAG + " onProgressUpdate", "You are in progress update ... " + a[0]);
+        }
+
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            Log.d(TAG + " onPostExecute", "" + result);
+        }
+    }
+
 }
