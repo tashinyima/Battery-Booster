@@ -15,5 +15,11 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
 
+    <ImageView
+        android:id="@+id/imageview_system_analyzer_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/ic_settings_white_48dp" />
 
 </RelativeLayout>

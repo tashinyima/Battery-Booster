@@ -1,6 +1,8 @@
 package com.receptix.batterybuddy.rank;
 
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -16,8 +18,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.receptix.batterybuddy.R;
 
 import java.util.ArrayList;
@@ -48,7 +53,8 @@ public class RankFragment extends Fragment {
     int totalMemoryInMb = 0;
     HashMap<String, Integer> hashMap_packageRamUsage;
     private ProgressBar progressBar;
-
+    private ImageView imageView_systemAnalyzerProgress;
+    private long mShortAnimationDuration = 300;
 
     public RankFragment() {
         // Required empty public constructor
@@ -170,11 +176,17 @@ public class RankFragment extends Fragment {
             }
         }
 
+        /*Log.e("getAllProcessesMemoryInfo()", "pidList obtained");*/
+
         int[] pidIntegerArray = new int[pidList.size()];
+
+        Log.e("pidListSize", pidList.size() + "");
+
         for(int i=0, len = pidList.size(); i < len; i++)
             pidIntegerArray[i] = pidList.get(i);
 
         Debug.MemoryInfo[] memoryInfo = activityManager.getProcessMemoryInfo(pidIntegerArray);
+        /*Log.e("getAllProcessesMemoryInfo()", "getProcessMemoryInfo");*/
 
         for(int i=0; i<memoryInfo.length; i++)
         {
@@ -182,8 +194,11 @@ public class RankFragment extends Fragment {
             // this value is already in kB
             hashMap.put(processNameList.get(i), memoryInfo[i].getTotalPrivateDirty());
         }
-        ActivityManager.MemoryInfo ramInfo = new ActivityManager.MemoryInfo();
-        activityManager.getMemoryInfo(ramInfo);
+
+        /*Log.e("getAllProcessesMemoryInfo()", "hashMap obtained");*/
+
+       /* ActivityManager.MemoryInfo ramInfo = new ActivityManager.MemoryInfo();
+        activityManager.getMemoryInfo(ramInfo);*/
 
         hashMap = sortByValues(hashMap);
 
@@ -213,6 +228,7 @@ public class RankFragment extends Fragment {
         recyclerView.setAdapter(rankAdapter);
 
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar_loading_ranks);
+        imageView_systemAnalyzerProgress = (ImageView) view.findViewById(R.id.imageview_system_analyzer_progress);
 
     }
 
@@ -221,7 +237,15 @@ public class RankFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressBar.setVisibility(View.VISIBLE);
+
+            // keep the contentView i.e. Recycler hidden initially
+            recyclerView.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
+            imageView_systemAnalyzerProgress.setVisibility(View.VISIBLE);
+            YoYo.with(Techniques.Bounce)
+                    .duration(1000)
+                    .repeat(10)
+                    .playOn(imageView_systemAnalyzerProgress);
             Log.e("LoadRankData", "onPreExecute()");
         }
 
@@ -244,7 +268,34 @@ public class RankFragment extends Fragment {
             Log.e("LoadRankData", "onPostExecute()");
             if (progressBar != null)
                 progressBar.setVisibility(View.GONE);
+
             LoadSystemApps(view);
+
+            // now perform cross-fading of loading imageView and recyclerView
+            // Set the content view to 0% opacity but visible, so that it is visible
+            // (but fully transparent) during the animation.
+            recyclerView.setAlpha(0f);
+            recyclerView.setVisibility(View.VISIBLE);
+
+            // Animate the content view to 100% opacity, and clear any animation
+            // listener set on the view.
+            recyclerView.animate()
+                    .alpha(1f)
+                    .setDuration(mShortAnimationDuration)
+                    .setListener(null);
+
+            // Animate the loading view to 0% opacity. After the animation ends,
+            // set its visibility to GONE as an optimization step (it won't
+            // participate in layout passes, etc.)
+            imageView_systemAnalyzerProgress.animate()
+                    .alpha(0f)
+                    .setDuration(mShortAnimationDuration)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            imageView_systemAnalyzerProgress.setVisibility(View.GONE);
+                        }
+                    });
         }
     }
 }
