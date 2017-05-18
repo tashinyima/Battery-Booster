@@ -107,8 +107,8 @@
 
             <com.github.lzyzsd.circleprogress.ArcProgress
                 android:id="@+id/batteryArcProgress"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 app:arc_finished_color="@color/colorGreen"
                 app:arc_progress="30"
                 app:arc_text_color="@color/white"
@@ -134,8 +134,8 @@
 
             <com.github.lzyzsd.circleprogress.ArcProgress
                 android:id="@+id/ramArcProgress"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 app:arc_finished_color="@color/colorGreen"
                 app:arc_progress="50"
                 app:arc_text_color="@color/white"
@@ -161,8 +161,8 @@
 
             <com.github.lzyzsd.circleprogress.ArcProgress
                 android:id="@+id/cpuArcProgress"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 app:arc_finished_color="@color/colorGreen"
                 app:arc_progress="51"
                 app:arc_text_color="@color/white"

@@ -32,19 +32,30 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BatteryAdActivity" />
+        <activity android:name=".BatteryAdActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".LockAdsActivity"
             android:screenOrientation="portrait"
             android:showForAllUsers="true"
             android:showOnLockScreen="true" />
+        <!-- Optimizer Module -->
+        <activity android:name=".optimizeractivity.OptimizerActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".optimizeractivity.AfterOptimizerActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".optimizeractivity.SuccessOptimizerActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".optimizeractivity.OptimalStateActivity"
+            android:screenOrientation="portrait"/>
 
 
         <receiver
@@ -57,6 +68,12 @@
             </intent-filter>
         </receiver>
 
+        <!-- invoke this receiver every time user does one of the following things -
+        1) Disconnect charger
+        2) Connect charger
+        3) Turn Screen off
+        4) Turn Screen on
+        -->
         <receiver
             android:name=".receiver.PowerConnectionReceiver"
             android:enabled="true"
@@ -69,10 +86,6 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".optimizeractivity.OptimizerActivity" />
-        <activity android:name=".optimizeractivity.AfterOptimizerActivity" />
-        <activity android:name=".optimizeractivity.SuccessOptimizerActivity" />
-        <activity android:name=".optimizeractivity.OptimalStateActivity"></activity>
     </application>
 
 </manifest>
