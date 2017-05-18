@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="small_padding">10dp</dimen>
+    <!-- Margins and Padding Dimensions -->
+    <dimen name="x_small_margin">5dp</dimen>
+    <dimen name="small_margin">10dp</dimen>
+    <dimen name="medium_margin">15dp</dimen>
+    <dimen name="large_margin">20dp</dimen>
+    <dimen name="x_large_margin">30dp</dimen>
+
+    <!-- Text Size -->
+    <dimen name="x_large_text_size">24sp</dimen>
+    <dimen name="large_text_size">20sp</dimen>
+    <dimen name="medium_text_size">16sp</dimen>
 </resources>

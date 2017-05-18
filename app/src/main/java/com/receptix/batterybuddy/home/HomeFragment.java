@@ -25,7 +25,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.lzyzsd.circleprogress.DonutProgress;
@@ -33,7 +32,6 @@ import com.receptix.batterybuddy.R;
 import com.receptix.batterybuddy.general.UserSessionManager;
 import com.receptix.batterybuddy.optimizeractivity.OptimalStateActivity;
 import com.receptix.batterybuddy.optimizeractivity.OptimizerActivity;
-import com.receptix.batterybuddy.optimizeractivity.SuccessOptimizerActivity;
 
 import java.lang.reflect.Method;
 
@@ -465,8 +463,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         int minute = Integer.parseInt(lasttwo);
         int realminutes = (minute * 60) / 100;
 
-        String valueGreaterThanEqualToOneHour = String.valueOf(hours) + HOURS + String.valueOf(realminutes) + MINUTES;
-        String valueLessThanOneHour = String.valueOf(0) + HOURS + String.valueOf(realminutes) + MINUTES;
+        String valueGreaterThanEqualToOneHour = String.valueOf(hours) + HOURS + " " + String.valueOf(realminutes) + MINUTES;
+        String valueLessThanOneHour = String.valueOf(0) + HOURS + " " + String.valueOf(realminutes) + MINUTES;
 
         if (statisticType == OVERALL_BATTERY) {
             if (remainingScreenTime > 0.9) {
@@ -498,7 +496,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void showMessage(String s) {
-        Toast.makeText(context, s, Toast.LENGTH_LONG).show();
+        // Toast.makeText(context, s, // Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -591,7 +589,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                          * If you use alwaysCallSingleChoiceCallback(), which is discussed below,
                          * returning false here won't allow the newly selected radio button to actually be selected.
                          **/
-                        Toast.makeText(context, which + ": " + text + ", ID = " + view.getId(), Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(context, which + ": " + text + ", ID = " + view.getId(), // Toast.LENGTH_SHORT).show();
 
                         switch (which) {
 
@@ -648,7 +646,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                          * If you use alwaysCallSingleChoiceCallback(), which is discussed below,
                          * returning false here won't allow the newly selected radio button to actually be selected.
                          **/
-                        Toast.makeText(context, which + ": " + text + ", ID = " + view.getId(), Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(context, which + ": " + text + ", ID = " + view.getId(), // Toast.LENGTH_SHORT).show();
 
                         switch (which) {
 
@@ -747,7 +745,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                          * If you use alwaysCallSingleChoiceCallback(), which is discussed below,
                          * returning false here won't allow the newly selected radio button to actually be selected.
                          **/
-                        Toast.makeText(context, which + ": " + text + ", ID = " + view.getId(), Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(context, which + ": " + text + ", ID = " + view.getId(), // Toast.LENGTH_SHORT).show();
 
                         switch (which) {
 
@@ -843,7 +841,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                          * If you use alwaysCallSingleChoiceCallback(), which is discussed below,
                          * returning false here won't allow the newly selected radio button to actually be selected.
                          **/
-                        Toast.makeText(context, which + ": " + text + ", ID = " + view.getId(), Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(context, which + ": " + text + ", ID = " + view.getId(), // Toast.LENGTH_SHORT).show();
 
                         switch (which) {
                             case 0:

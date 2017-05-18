@@ -222,12 +222,14 @@ public class RankFragment extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             progressBar.setVisibility(View.VISIBLE);
+            Log.e("LoadRankData", "onPreExecute()");
         }
 
 
         @Override
         protected Void doInBackground(Void... params) {
             // get total memory
+            Log.e("LoadRankData", "doInBackground()");
             ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
             ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
             activityManager.getMemoryInfo(memoryInfo);
@@ -239,6 +241,7 @@ public class RankFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            Log.e("LoadRankData", "onPostExecute()");
             if (progressBar != null)
                 progressBar.setVisibility(View.GONE);
             LoadSystemApps(view);

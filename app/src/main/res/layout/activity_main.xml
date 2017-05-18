@@ -50,8 +50,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             app:itemBackground="@color/bgcolor"
-            app:itemIconTint="@android:color/white"
-            app:itemTextColor="@android:color/white"
+            app:itemIconTint="@drawable/bottombar_color_selector"
+            app:itemTextColor="@drawable/bottombar_color_selector"
             app:menu="@menu/bottom_navigation" />
 
 

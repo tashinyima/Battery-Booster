@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/backgroundcolor"
         android:orientation="horizontal"
-        android:padding="@dimen/small_padding">
+        android:padding="@dimen/small_margin">
 
         <!-- SIMPLE IMAGE SHOWING SUCCESSFUL OPTIMIZATION -->
         <ImageView
