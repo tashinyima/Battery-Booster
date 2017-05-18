@@ -1,5 +1,6 @@
 package com.receptix.batterybuddy.optimizeractivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,15 +35,19 @@ public class SuccessOptimizerActivity extends AppCompatActivity {
                 .repeat(3)
                 .playOn(findViewById(R.id.imageview_successful_optimization));
 
-        // open AdsActivity after animation completes
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Intent backIntent = new Intent(SuccessOptimizerActivity.this, AfterOptimizerActivity.class);
-                startActivity(backIntent);
-                finish();
-            }
-        }, 3000);
+
+            // open AdsActivity after animation completes
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // show activity only if user is currently on this activity
+                    if(!isFinishing()) {
+                        Intent backIntent = new Intent(SuccessOptimizerActivity.this, AfterOptimizerActivity.class);
+                        startActivity(backIntent);
+                        finish();
+                    }
+                }
+            }, 3000);
 
 
     }
