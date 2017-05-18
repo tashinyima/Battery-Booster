@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.inmobi.ads"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_lock_ads"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bgcolormain"
-    android:orientation="vertical"
     tools:context="com.receptix.batterybuddy.LockAdsActivity">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bgcolormain"
+    android:layout_alignParentTop="true"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -185,22 +193,22 @@
         </LinearLayout>
 
     </LinearLayout>
+</LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="140dp"
-        android:gravity="center">
+        android:layout_height="120dp"
+        android:layout_alignParentBottom="true">
 
-        <ImageView
-            android:id="@+id/kickmeImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:baselineAlignBottom="true"
-            android:src="@drawable/ic_launcher" />
+        <com.inmobi.ads.InMobiBanner
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/banner"
+            ads:placementId="1494642457622"
+            />
 
 
     </LinearLayout>
 
-
-</LinearLayout>
+    </RelativeLayout>

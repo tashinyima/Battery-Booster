@@ -1,0 +1,38 @@
+{
+  "project_info": {
+    "project_number": "743250649602",
+    "project_id": "firebase-batterybuddy"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:743250649602:android:8d45247bc90f4b62",
+        "android_client_info": {
+          "package_name": "com.receptix.batterybuddy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3DnARkKhEzkltlnhxo-OcCqc5uLdPlc4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-99375641-2"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

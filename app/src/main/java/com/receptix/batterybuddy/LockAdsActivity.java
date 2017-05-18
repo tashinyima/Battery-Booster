@@ -20,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.lzyzsd.circleprogress.ArcProgress;
+import com.inmobi.ads.InMobiBanner;
+import com.inmobi.sdk.InMobiSdk;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -34,8 +36,7 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
     Calendar calendar;
     ActivityManager myActivityManager;
     Context context;
-    ImageView kickmeImageView;
-
+    InMobiBanner bannerAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,11 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_lock_ads);
         myActivityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
         this.context =getApplicationContext();
+
+        // initialize InMobiSDK and load ad
+        bannerAd = (InMobiBanner) findViewById(R.id.banner);
+        InMobiSdk.init(LockAdsActivity.this, "4a38c3c40747428fa346cb0456d9034f");
+        bannerAd.load();
 
         initView();
 
@@ -163,17 +169,14 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
         lockcpuProgress = (ArcProgress) findViewById(R.id.lockcpuArcProgress);
         lockramProgress = (ArcProgress) findViewById(R.id.lockramArcProgress);
         lockbatteryProgress = (ArcProgress) findViewById(R.id.lockbatteryArcProgress);
-        kickmeImageView = (ImageView) findViewById(R.id.kickmeImageView);
-        kickmeImageView.setOnClickListener(this);
-
 
     }
 
     @Override
     public void onClick(View v) {
-
+/*
         showMessage("I am Clicked man");
-        finish();
+        finish();*/
     }
 
     private void showMessage(String s) {

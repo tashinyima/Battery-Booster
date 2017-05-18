@@ -44,7 +44,7 @@ public class RankFragment extends Fragment {
     private static final String TAG = "BatteryBuddy";
     RankAdapter rankAdapter;
     ArrayList<RankData> rankDataList = new ArrayList<RankData>();
-    RecyclerView recyclerView;
+    RecyclerView recyclerView_runningServices;
     LinearLayoutManager myLinearLayout;
     Context context;
     View view;
@@ -219,13 +219,13 @@ public class RankFragment extends Fragment {
 
     private void initView(View view) {
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
+        recyclerView_runningServices = (RecyclerView) view.findViewById(R.id.recyclerview_listOfRunningServices);
         myLinearLayout = new LinearLayoutManager(context);
         if (rankDataList != null)
             rankDataList.clear();
         rankAdapter = new RankAdapter(context, rankDataList);
-        recyclerView.setLayoutManager(myLinearLayout);
-        recyclerView.setAdapter(rankAdapter);
+        recyclerView_runningServices.setLayoutManager(myLinearLayout);
+        recyclerView_runningServices.setAdapter(rankAdapter);
 
         progressBar = (ProgressBar) view.findViewById(R.id.progressbar_loading_ranks);
         imageView_systemAnalyzerProgress = (ImageView) view.findViewById(R.id.imageview_system_analyzer_progress);
@@ -239,7 +239,7 @@ public class RankFragment extends Fragment {
             super.onPreExecute();
 
             // keep the contentView i.e. Recycler hidden initially
-            recyclerView.setVisibility(View.GONE);
+            recyclerView_runningServices.setVisibility(View.GONE);
             progressBar.setVisibility(View.GONE);
             imageView_systemAnalyzerProgress.setVisibility(View.VISIBLE);
             YoYo.with(Techniques.Bounce)
@@ -271,15 +271,15 @@ public class RankFragment extends Fragment {
 
             LoadSystemApps(view);
 
-            // now perform cross-fading of loading imageView and recyclerView
+            // now perform cross-fading of loading imageView and recyclerView_runningServices
             // Set the content view to 0% opacity but visible, so that it is visible
             // (but fully transparent) during the animation.
-            recyclerView.setAlpha(0f);
-            recyclerView.setVisibility(View.VISIBLE);
+            recyclerView_runningServices.setAlpha(0f);
+            recyclerView_runningServices.setVisibility(View.VISIBLE);
 
             // Animate the content view to 100% opacity, and clear any animation
             // listener set on the view.
-            recyclerView.animate()
+            recyclerView_runningServices.animate()
                     .alpha(1f)
                     .setDuration(mShortAnimationDuration)
                     .setListener(null);
