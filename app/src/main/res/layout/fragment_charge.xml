@@ -38,6 +38,7 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/textview_eta_heading"
             style="@style/TextViewChargingHeader"
             android:text="@string/estimatedchargeText" />
 

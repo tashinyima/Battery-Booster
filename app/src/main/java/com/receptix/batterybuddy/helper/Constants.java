@@ -135,4 +135,10 @@ public class Constants {
         public static final String FORMAT_FULL_LENGTH_DAY = "EEEE";
     }
 
+    public static class CurrentValues
+    {
+        public static final int CURRENT_RATE_USB = 500;
+        public static final int CURRENT_RATE_AC = 1000;
+    }
+
 }
