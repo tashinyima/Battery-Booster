@@ -30,7 +30,7 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
         Intent launchIntent = pm.getLaunchIntentForPackage(APP_PACKAGE_NAME);
         launchIntent.putExtra(FROM, BROADCAST_RECEIVER);
         launchIntent.putExtra(IS_SCREEN_ON, isScreenOn);
-        /*context.startActivity(launchIntent);*/
+        context.startActivity(launchIntent);
 
         /*showMessage("charging"+ isScreenOn);*/
     }

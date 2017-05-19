@@ -24,19 +24,23 @@ import android.widget.Toast;
 
 import com.github.lzyzsd.circleprogress.ArcProgress;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+
+import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_LEVEL;
+import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_SCALE;
+import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_TEMPERATURE;
+import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_TEMPERATURE_CONVERSION_UNIT;
+import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_VOLTAGE;
+import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_VOLTAGE_CONVERSION_UNIT;
 
 public class BatteryAdActivity extends AppCompatActivity implements View.OnClickListener, SensorEventListener {
     private static final String TAG = "AdsActivity";
     LinearLayout adsLinearLayout, swipeLinearLayout;
     ActivityManager myActivityManager;
     Context context;
-    ArcProgress ramprogress, batteryProgress, cpuArcProgress;
+    ArcProgress arcProgress_Ram, arcProgress_Battery, cpuArcProgress;
     TextView dateTextView;
     Calendar calendar;
     private SensorManager mSensorManager;
@@ -69,38 +73,10 @@ public class BatteryAdActivity extends AppCompatActivity implements View.OnClick
         }
 
 
-        // getApplicationDetails();
+
 
     }
 
-    private void getApplicationDetails() {
-
-
-        ActivityManager mgr = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> processes = mgr.getRunningAppProcesses();
-        Log.e("DEBUG", "Running processes:");
-        for (Iterator i = processes.iterator(); i.hasNext(); ) {
-            ActivityManager.RunningAppProcessInfo p = (ActivityManager.RunningAppProcessInfo) i.next();
-            Log.e("DEBUG", "  process name: " + p.processName);
-            Log.e("DEBUG", "     pid: " + p.pid);
-            int[] pids = new int[1];
-            pids[0] = p.pid;
-            android.os.Debug.MemoryInfo[] MI = mgr.getProcessMemoryInfo(pids);
-            Log.e("memory", "     dalvik private: " + MI[0].dalvikPrivateDirty);
-            Log.e("memory", "     dalvik shared: " + MI[0].dalvikSharedDirty);
-            Log.e("memory", "     dalvik pss: " + MI[0].dalvikPss);
-            Log.e("memory", "     native private: " + MI[0].nativePrivateDirty);
-            Log.e("memory", "     native shared: " + MI[0].nativeSharedDirty);
-            Log.e("memory", "     native pss: " + MI[0].nativePss);
-            Log.e("memory", "     other private: " + MI[0].otherPrivateDirty);
-            Log.e("memory", "     other shared: " + MI[0].otherSharedDirty);
-            Log.e("memory", "     other pss: " + MI[0].otherPss);
-
-            Log.e("memory", "     total private dirty memory (KB): " + MI[0].getTotalPrivateDirty());
-            Log.e("memory", "     total shared (KB): " + MI[0].getTotalSharedDirty());
-            Log.e("memory", "     total pss: " + MI[0].getTotalPss());
-        }
-    }
 
     private void InitializeSystemData() {
         getRamInfo();
@@ -126,17 +102,24 @@ public class BatteryAdActivity extends AppCompatActivity implements View.OnClick
                 int temperature = intent.getIntExtra("temperature", 0);
                 double doubletemp = temperature * 0.1;
                 int progresint = (int) doubletemp;
-                int level = intent.getIntExtra("level", 0);
-                int scale = intent.getIntExtra("scale", 0);
+                int level = intent.getIntExtra(BATTERY_LEVEL, 0);
+                int scale = intent.getIntExtra(BATTERY_SCALE, 0);
+                int batteryVoltage = intent.getIntExtra(BATTERY_VOLTAGE, 0);
+                int batteryTemperature = intent.getIntExtra(BATTERY_TEMPERATURE, 0);
+                double voltageValueInDouble = batteryVoltage * BATTERY_VOLTAGE_CONVERSION_UNIT;
+                double temperatureValueInDouble = batteryTemperature * BATTERY_TEMPERATURE_CONVERSION_UNIT;
+
                 // Calculate the battery charged percentage
                 float percentage = level / (float) scale;
                 // Update the progress bar to display current battery charged percentage
-                int mProgressStatus = (int) ((percentage) * 100);
-                batteryProgress.setProgress(progresint);
+                int batteryPercentageProgress = (int) ((percentage) * 100);
 
-                batteryProgress.setSuffixText((char) 0x00b0 + "C");
-                batteryProgressbar.setProgress(mProgressStatus);
-                batteryLevelTextView.setText(String.valueOf(mProgressStatus) + "%");
+                arcProgress_Battery.setProgress(batteryTemperature);
+
+                arcProgress_Battery.setSuffixText((char) 0x00b0 + "C");
+
+                batteryProgressbar.setProgress(batteryPercentageProgress);
+                batteryLevelTextView.setText(String.valueOf(batteryPercentageProgress) + "%");
                 if(isChargerConnected(context)){
 
 
@@ -200,11 +183,11 @@ public class BatteryAdActivity extends AppCompatActivity implements View.OnClick
         double percentage = ratio * 100;
         int rampercentage = (int) percentage;
         if (rampercentage > 70) {
-            ramprogress.setProgress(rampercentage);
-            ramprogress.setFinishedStrokeColor(ContextCompat.getColor(context, R.color.red));
-            ramprogress.setTextColor(ContextCompat.getColor(context, R.color.red));
+            arcProgress_Ram.setProgress(rampercentage);
+            arcProgress_Ram.setFinishedStrokeColor(ContextCompat.getColor(context, R.color.red));
+            arcProgress_Ram.setTextColor(ContextCompat.getColor(context, R.color.red));
         } else {
-            ramprogress.setProgress(rampercentage);
+            arcProgress_Ram.setProgress(rampercentage);
         }
 
 
@@ -219,9 +202,9 @@ public class BatteryAdActivity extends AppCompatActivity implements View.OnClick
         adsLinearLayout.setOnClickListener(this);
         swipeLinearLayout = (LinearLayout) findViewById(R.id.swipeLinearLayout);
         swipeLinearLayout.setOnClickListener(this);
-        ramprogress = (ArcProgress) findViewById(R.id.ramArcProgress);
+        arcProgress_Ram = (ArcProgress) findViewById(R.id.ramArcProgress);
         dateTextView = (TextView) findViewById(R.id.datetv);
-        batteryProgress = (ArcProgress) findViewById(R.id.batteryArcProgress);
+        arcProgress_Battery = (ArcProgress) findViewById(R.id.batteryArcProgress);
         cpuArcProgress = (ArcProgress) findViewById(R.id.cpuArcProgress);
         cpuArcProgress.setSuffixText((char) 0x00b0 + "C");
         cpuArcProgress.setProgress(54);
