@@ -109,16 +109,13 @@
 
             <com.github.lzyzsd.circleprogress.ArcProgress
                 android:id="@+id/batteryArcProgress"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                style="@style/ArcProgressLayout"
                 app:arc_finished_color="@color/colorGreen"
-                app:arc_progress="30"
                 app:arc_text_color="@color/white"
                 app:arc_unfinished_color="@color/white" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/CustomBaseTextView"
                 android:gravity="center"
                 android:paddingTop="5dp"
                 android:text="@string/batterytext"
@@ -136,16 +133,13 @@
 
             <com.github.lzyzsd.circleprogress.ArcProgress
                 android:id="@+id/ramArcProgress"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                style="@style/ArcProgressLayout"
                 app:arc_finished_color="@color/colorGreen"
-                app:arc_progress="50"
                 app:arc_text_color="@color/white"
                 app:arc_unfinished_color="@color/white" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/CustomBaseTextView"
                 android:gravity="center"
                 android:paddingTop="5dp"
                 android:text="@string/ramtext"
@@ -163,16 +157,13 @@
 
             <com.github.lzyzsd.circleprogress.ArcProgress
                 android:id="@+id/cpuArcProgress"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
                 app:arc_finished_color="@color/colorGreen"
-                app:arc_progress="51"
                 app:arc_text_color="@color/white"
-                app:arc_unfinished_color="@color/white" />
+                app:arc_unfinished_color="@color/white"
+                style="@style/ArcProgressLayout" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/CustomBaseTextView"
                 android:gravity="center"
                 android:paddingTop="5dp"
                 android:text="@string/cputext"

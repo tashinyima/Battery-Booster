@@ -15,18 +15,15 @@
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/CustomBaseTextView"
         android:layout_toRightOf="@id/image"
         android:text="Testing"
         android:textColor="@color/white"
         android:textSize="13dp" />
 
     <TextView
-
         android:id="@+id/text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/CustomBaseTextView"
         android:layout_below="@id/title"
         android:layout_toRightOf="@id/image"
         android:text="Testing is awecome"

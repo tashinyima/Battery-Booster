@@ -168,8 +168,8 @@ public class MainActivity extends AppCompatActivity {
         notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notification_layout);
         contentView.setImageViewResource(R.id.image, R.drawable.brush_notification);
-        contentView.setTextViewText(R.id.title, "Custom notification");
-        contentView.setTextViewText(R.id.text, "This is a custom layout");
+        contentView.setTextViewText(R.id.title, getString(R.string.notification_title_optimize));
+        contentView.setTextViewText(R.id.text, getString(R.string.notification_description_optimize));
         intent = new Intent(getApplicationContext(), OptimizerActivity.class);
         pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 

@@ -22,8 +22,7 @@
 
     <TextView
         android:id="@+id/packageNameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/CustomBaseTextView"
         android:layout_centerVertical="true"
         android:layout_toEndOf="@+id/packageIconImageView"
         android:ellipsize="end"
@@ -44,14 +43,12 @@
 
         <TextView
             android:id="@+id/powerConsumedTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/CustomBaseTextView"
             android:text="@string/powerconsumedValueText"
             android:textColor="@color/white" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/CustomBaseTextView"
             android:text="@string/rankpowerText"
             android:textColor="@color/white" />
 
