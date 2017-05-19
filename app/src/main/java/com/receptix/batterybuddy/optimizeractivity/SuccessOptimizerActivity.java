@@ -31,23 +31,24 @@ public class SuccessOptimizerActivity extends AppCompatActivity {
 
         // show animation for 3 seconds
         YoYo.with(Techniques.Shake)
-                .duration(1000)
-                .repeat(3)
+                .repeat(10)
                 .playOn(findViewById(R.id.imageview_successful_optimization));
 
 
-            // open AdsActivity after animation completes
+       /*     // open AdsActivity after animation completes
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     // show activity only if user is currently on this activity
                     if(!isFinishing()) {
-                        Intent backIntent = new Intent(SuccessOptimizerActivity.this, AfterOptimizerActivity.class);
-                        startActivity(backIntent);
+                        *//*Intent backIntent = new Intent(SuccessOptimizerActivity.this, AfterOptimizerActivity.class);
+                        startActivity(backIntent);*//*
                         finish();
                     }
                 }
-            }, 3000);
+            }, 3000);*/
+
+
 
 
     }

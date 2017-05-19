@@ -87,7 +87,7 @@
     <string name="extentedhours">0 H 40 Min</string>
     <string name="dummy_time_value">1 Hour 40 mins</string>
     <string name="optimalStateTextView">Optimal State</string>
-    <string name="extentedTimeTextView">Extended Times</string>
+    <string name="extentedTimeTextView">Extended Battery By : </string>
     <string name="extentedhoursAfter">Extented By : </string>
     <string name="powerconsumptionToolbar">Power Consumption</string>
     <string name="poweroptimization">Power Optimization</string>
