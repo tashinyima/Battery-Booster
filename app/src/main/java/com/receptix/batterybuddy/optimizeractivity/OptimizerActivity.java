@@ -25,11 +25,14 @@ import com.receptix.batterybuddy.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import jp.wasabeef.recyclerview.animators.FadeInAnimator;
 
+import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_LEVEL;
 import static com.receptix.batterybuddy.helper.Constants.Params.MINIMUM_INSTALLED_APPS;
 import static com.receptix.batterybuddy.helper.Constants.Params.NUMBER_OF_SYSTEM_APPS_TO_SHOW;
+import static com.receptix.batterybuddy.helper.Constants.ShortHandNotations.MINUTES;
 
 public class OptimizerActivity extends AppCompatActivity {
 
@@ -46,7 +49,8 @@ public class OptimizerActivity extends AppCompatActivity {
     private long mShortAnimationDuration = 300;
     private boolean isOptimizationInProgress = false;
     TextView textView_analysisProgressIndicator;
-
+    TextView textView_estimatedExtendedTime;
+    int receivedBatteryLevel = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +59,7 @@ public class OptimizerActivity extends AppCompatActivity {
         view_optimize = getLayoutInflater().inflate(R.layout.activity_optimizer, null);
         setContentView(view_optimize);
         packageManager = this.getPackageManager();
-
+        handleIntent(getIntent());
         notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(999);
         initView();
@@ -85,6 +89,22 @@ public class OptimizerActivity extends AppCompatActivity {
 
     }
 
+    private void handleIntent(Intent intent)
+    {
+        if(intent!=null)
+        {
+            if(intent.getExtras() != null)
+            {
+                int batteryLevel = intent.getExtras().getInt(BATTERY_LEVEL, 0);
+                if(batteryLevel!=0)
+                {
+                    receivedBatteryLevel = batteryLevel;
+                }
+            }
+        }
+    }
+
+
     private void setupToolBar(String title) {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -113,6 +133,7 @@ public class OptimizerActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Intent intent = new Intent(OptimizerActivity.this, SuccessOptimizerActivity.class);
+                intent.putExtra(BATTERY_LEVEL, receivedBatteryLevel);
                 startActivity(intent);
                 finish();
             }
@@ -233,8 +254,40 @@ public class OptimizerActivity extends AppCompatActivity {
         recyclerView.setAdapter(myOptimizerAdapter);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         textView_analysisProgressIndicator = (TextView) findViewById(R.id.applistTextView);
+        textView_estimatedExtendedTime = (TextView) findViewById(R.id.estimatedextensionTextView);
 
+        int startRange = 0;
+        int endRange = 0;
+
+        if(receivedBatteryLevel<=10)
+        {
+            startRange = 10;
+            endRange = 15;
+        }
+        if(receivedBatteryLevel>10 && receivedBatteryLevel<=30)
+        {
+            startRange = 20;
+            endRange = 35;
+        }
+        if(receivedBatteryLevel>30)
+        {
+            startRange = 40;
+            endRange = 50;
+        }
+        int randomExtendedTimePeriod = getRandomNumberInRange(startRange,endRange);
+        textView_estimatedExtendedTime.setText(" " + randomExtendedTimePeriod + " " + MINUTES);
     }
+
+    private static int getRandomNumberInRange(int min, int max) {
+
+        if (min >= max) {
+            throw new IllegalArgumentException("max must be greater than min");
+        }
+
+        Random r = new Random();
+        return r.nextInt((max - min) + 1) + min;
+    }
+
 
     @Override
     public void onBackPressed() {

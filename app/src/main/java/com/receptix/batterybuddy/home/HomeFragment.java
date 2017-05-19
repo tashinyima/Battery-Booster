@@ -483,6 +483,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 userSessionManager.setIsOptimized(true);
                 TerminateSession();
                 Intent optintent = new Intent(context, OptimizerActivity.class);
+                optintent.putExtra(BATTERY_LEVEL, batteryLevel);
                 context.startActivity(optintent);
             } else {
                 TerminateSession();

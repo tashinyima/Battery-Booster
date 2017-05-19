@@ -36,7 +36,7 @@ public class OptimalStateActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        final Handler handler = new Handler();
+       /* final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -45,6 +45,6 @@ public class OptimalStateActivity extends AppCompatActivity {
                 startActivity(backIntent);
                 finish();
             }
-        }, 2000);
+        }, 2000);*/
     }
 }

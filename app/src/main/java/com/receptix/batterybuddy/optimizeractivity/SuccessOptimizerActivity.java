@@ -15,9 +15,16 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.receptix.batterybuddy.R;
 
+import java.util.Random;
+
+import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_LEVEL;
+import static com.receptix.batterybuddy.helper.Constants.ShortHandNotations.MINUTES;
+
 public class SuccessOptimizerActivity extends AppCompatActivity {
     Toolbar toolbar;
     ImageView imageView_successfulOptimization;
+    TextView textView_extendedTime;
+    int receivedBatteryLevel = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,10 +33,9 @@ public class SuccessOptimizerActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
        setupToolBar(getString(R.string.poweroptimization));
-
+        handleIntent(getIntent());
         findViewsById();
 
-        // show animation for 3 seconds
         YoYo.with(Techniques.Shake)
                 .repeat(10)
                 .playOn(findViewById(R.id.imageview_successful_optimization));
@@ -53,8 +59,54 @@ public class SuccessOptimizerActivity extends AppCompatActivity {
 
     }
 
+    private void handleIntent(Intent intent) {
+        if(intent!=null)
+        {
+            if(intent.getExtras() != null)
+            {
+                int batteryLevel = intent.getExtras().getInt(BATTERY_LEVEL, 0);
+                if(batteryLevel!=0)
+                {
+                    receivedBatteryLevel = batteryLevel;
+                }
+            }
+
+        }
+    }
+
     private void findViewsById() {
         imageView_successfulOptimization = (ImageView) findViewById(R.id.imageview_successful_optimization);
+        textView_extendedTime = (TextView) findViewById(R.id.extendedTextView);
+
+        int startRange = 0;
+        int endRange = 0;
+        if(receivedBatteryLevel<=10)
+        {
+            startRange = 10;
+            endRange = 15;
+        }
+        if(receivedBatteryLevel>10 && receivedBatteryLevel<=30)
+        {
+            startRange = 20;
+            endRange = 35;
+        }
+        if(receivedBatteryLevel>30)
+        {
+            startRange = 40;
+            endRange = 50;
+        }
+        int randomExtendedTimePeriod = getRandomNumberInRange(startRange,endRange);
+        textView_extendedTime.setText(" " + randomExtendedTimePeriod + " " + MINUTES);
+    }
+
+    private static int getRandomNumberInRange(int min, int max) {
+
+        if (min >= max) {
+            throw new IllegalArgumentException("max must be greater than min");
+        }
+
+        Random r = new Random();
+        return r.nextInt((max - min) + 1) + min;
     }
 
     private void setupToolBar(String title) {

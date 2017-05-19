@@ -119,7 +119,7 @@ public class Constants {
         public static final int INVALID_POSITION = -1;
         public static final int MINIMUM_INSTALLED_APPS = 10;
         public static final int NUMBER_OF_SYSTEM_APPS_TO_SHOW = 12;
-        public static final int COUNTDOWN_TIMER_VALUE = 3000;
+        public static final int COUNTDOWN_TIMER_VALUE = 15000; //15 seconds before we show ISSUES with the phone again (to Optimize)
         public static final String APP_PACKAGE_NAME = "com.receptix.batterybuddy";
 
         public static final String FROM = "from";
