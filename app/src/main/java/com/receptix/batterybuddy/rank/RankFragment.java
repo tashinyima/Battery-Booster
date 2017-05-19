@@ -249,6 +249,7 @@ public class RankFragment extends Fragment {
                     .repeat(10)
                     .playOn(imageView_systemAnalyzerProgress);*/
             Log.e("LoadRankData", "onPreExecute()");
+            // hello
         }
 
 
