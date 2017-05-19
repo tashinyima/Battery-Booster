@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.receptix.batterybuddy.rank.RankFragment">
 
     <android.support.v7.widget.RecyclerView
@@ -9,13 +10,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <ProgressBar
+    <net.bohush.geometricprogressview.GeometricProgressView
         android:id="@+id/progressbar_loading_ranks"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:gp_type="triangle"
+        app:gp_number_of_angles="7"
+        app:gp_color="@color/colorPrimary"
+        app:gp_duration="800"
+        app:gp_figure_padding="3dp"
         android:layout_centerInParent="true" />
 
     <ImageView
+        android:visibility="gone"
         android:id="@+id/imageview_system_analyzer_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

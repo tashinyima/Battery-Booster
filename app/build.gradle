@@ -48,6 +48,8 @@ dependencies {
     compile 'com.google.android.gms:play-services:8.4.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.android.support:multidex:1.0.1'
+    compile 'net.bohush.geometricprogressview:geometricprogressview:1.1.1'
+
     testCompile 'junit:junit:4.12'
 }
 

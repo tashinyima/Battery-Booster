@@ -25,6 +25,8 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.receptix.batterybuddy.R;
 
+import net.bohush.geometricprogressview.GeometricProgressView;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -52,7 +54,7 @@ public class RankFragment extends Fragment {
     Drawable appicon;
     int totalMemoryInMb = 0;
     HashMap<String, Integer> hashMap_packageRamUsage;
-    private ProgressBar progressBar;
+    private GeometricProgressView progressBar;
     private ImageView imageView_systemAnalyzerProgress;
     private long mShortAnimationDuration = 300;
 
@@ -227,7 +229,7 @@ public class RankFragment extends Fragment {
         recyclerView_runningServices.setLayoutManager(myLinearLayout);
         recyclerView_runningServices.setAdapter(rankAdapter);
 
-        progressBar = (ProgressBar) view.findViewById(R.id.progressbar_loading_ranks);
+        progressBar = (GeometricProgressView) view.findViewById(R.id.progressbar_loading_ranks);
         imageView_systemAnalyzerProgress = (ImageView) view.findViewById(R.id.imageview_system_analyzer_progress);
 
     }
@@ -240,12 +242,12 @@ public class RankFragment extends Fragment {
 
             // keep the contentView i.e. Recycler hidden initially
             recyclerView_runningServices.setVisibility(View.GONE);
-            progressBar.setVisibility(View.GONE);
-            imageView_systemAnalyzerProgress.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
+            /*imageView_systemAnalyzerProgress.setVisibility(View.VISIBLE);
             YoYo.with(Techniques.Bounce)
                     .duration(1000)
                     .repeat(10)
-                    .playOn(imageView_systemAnalyzerProgress);
+                    .playOn(imageView_systemAnalyzerProgress);*/
             Log.e("LoadRankData", "onPreExecute()");
         }
 
