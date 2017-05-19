@@ -26,13 +26,10 @@
                 android:layout_height="wrap_content"
                 app:wlv_borderColor="@color/bgcolormain"
                 app:wlv_borderWidth="10dp"
-                app:wlv_progressValue="30"
                 app:wlv_shapeType="circle"
-                app:wlv_titleCenter="@string/batteryChargeLevel"
                 app:wlv_titleCenterColor="@android:color/white"
                 app:wlv_titleCenterSize="28sp"
-                app:wlv_waveAmplitude="70"
-                app:wlv_waveColor="@color/colorGreen" />
+                app:wlv_waveAmplitude="70" />
 
 
         </LinearLayout>

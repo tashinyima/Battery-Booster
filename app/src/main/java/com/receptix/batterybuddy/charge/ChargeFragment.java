@@ -43,7 +43,7 @@ public class ChargeFragment extends Fragment {
     int batteryLevel, batteryScale, batteryChargedPercentage;
     private TextView textViewChargeTimeRemaining;
     private TextView textViewEtaHeading;
-
+    private long mShortAnimationDuration = 300;
     private BroadcastReceiver battery_info_receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent batteryStatus) {
@@ -158,6 +158,20 @@ public class ChargeFragment extends Fragment {
         View viewFragmentCharge = inflater.inflate(R.layout.fragment_charge, container, false);
         context = getActivity();
         initView(viewFragmentCharge);
+        textViewChargeTimeRemaining.setVisibility(View.GONE);
+        textViewEtaHeading.setVisibility(View.GONE);
+
+        //fade in the WaveLoadingView
+        waveLoadingView.setAlpha(0f);
+        waveLoadingView.setVisibility(View.VISIBLE);
+
+        // Animate the content view to 100% opacity, and clear any animation
+        // listener set on the view.
+        waveLoadingView.animate()
+                .alpha(1f)
+                .setDuration(mShortAnimationDuration)
+                .setListener(null);
+
         return viewFragmentCharge;
     }
 
