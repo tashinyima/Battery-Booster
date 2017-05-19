@@ -100,6 +100,9 @@
     <string name="off">OFF</string>
     <string name="noproblemdetected">No Problem Detected</string>
     <string name="analyzingdata">Completed Analyzing of</string>
+    <string name="charging">Charging</string>
+    <string name="percentage_symbol">%</string>
+    <string name="discharging">Discharging</string>
     <string-array name="sreenlocktimer">
         <item>Immediately</item>
         <item>5 second </item>

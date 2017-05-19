@@ -18,7 +18,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.RemoteViews;
 
@@ -37,11 +36,11 @@ public class MainActivity extends AppCompatActivity {
     static WindowManager.LayoutParams params;
     NotificationCompat.Builder myBuilder;
     Intent intent;
-    PendingIntent pintent;
-    NotificationManager nmanager;
-    KeyguardManager keyguard;
+    PendingIntent pendingIntent;
+    NotificationManager notificationManager;
+    KeyguardManager keyguardManager;
     Toolbar toolbar;
-    int NotificationId = 999;
+    int NOTIFICATION_ID = 999;
     int currentSelectedFragment = 0;
     private Fragment fragment;
     private FragmentManager fragmentManager;
@@ -57,8 +56,8 @@ public class MainActivity extends AppCompatActivity {
         try {
             boolean isScreenOn = bundle.getBoolean(IS_SCREEN_ON);
             Log.d(TAG, String.valueOf(isScreenOn));
-            keyguard = (KeyguardManager) getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
-            boolean isLockedScreen = keyguard.inKeyguardRestrictedInputMode();
+            keyguardManager = (KeyguardManager) getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
+            boolean isLockedScreen = keyguardManager.inKeyguardRestrictedInputMode();
             Log.d(TAG, "isLockedScreen : " + isLockedScreen);
 
             String from = bundle.getString(FROM);
@@ -94,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         sendCustomNotification();
         /*  sendNotification();*/
         setupToolBar(getString(R.string.batterybuddy));
-        initView();
+        /*initView();*/
         setupBottomNavigationBar();
     }
 
@@ -166,38 +165,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void sendCustomNotification() {
-        nmanager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notification_layout);
         contentView.setImageViewResource(R.id.image, R.drawable.brush_notification);
         contentView.setTextViewText(R.id.title, "Custom notification");
         contentView.setTextViewText(R.id.text, "This is a custom layout");
         intent = new Intent(getApplicationContext(), OptimizerActivity.class);
-        pintent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
+        pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.notification_icon)
                 .setAutoCancel(false)
                 .setContent(contentView);
 
-        contentView.setOnClickPendingIntent(R.id.notificationOptimizerBtn, pintent);
+        contentView.setOnClickPendingIntent(R.id.notificationOptimizerBtn, pendingIntent);
 
         Notification notification = mBuilder.build();
         notification.flags |= Notification.FLAG_NO_CLEAR;
-        nmanager.notify(NotificationId,notification);
+        notificationManager.notify(NOTIFICATION_ID,notification);
     }
 
     private void sendNotification() {
         //end of the notification...
         intent = new Intent(getApplicationContext(), MainActivity.class);
-        pintent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
-        nmanager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
+        notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         myBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.notification)
                 .setContentTitle("This is the content")
                 .setContentText("This is the description of the notification")
-                .setContentIntent(pintent);
+                .setContentIntent(pendingIntent);
 
-        nmanager.notify(1, myBuilder.build());
+        notificationManager.notify(1, myBuilder.build());
     }
 
   /*  private void getPermission() {

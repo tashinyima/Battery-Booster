@@ -14,12 +14,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp">
 
+        <!-- Hide Date for Now -->
         <TextView
             android:id="@+id/datetv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:padding="10dp"
+            android:visibility="gone"
             android:text="@string/systemDate"
             android:textColor="@color/white"
             android:textSize="18sp" />

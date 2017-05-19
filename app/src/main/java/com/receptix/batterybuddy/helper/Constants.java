@@ -126,4 +126,13 @@ public class Constants {
         public static final String IS_SCREEN_ON = "isScreenOn";
         public static final String BROADCAST_RECEIVER = "broadcast";
     }
+
+
+    public static class DateFormats
+    {
+        //Date-Month-Year Hour:Minutes am/pm
+        public static final String FORMAT_DATE_MONTH_YEAR_HOUR_MINUTES = "dd-MMM-yyyy hh:mm a";
+        public static final String FORMAT_FULL_LENGTH_DAY = "EEEE";
+    }
+
 }

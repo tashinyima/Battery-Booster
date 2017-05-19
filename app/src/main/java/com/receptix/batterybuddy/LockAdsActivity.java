@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.databinding.DataBindingUtil;
 import android.os.BatteryManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -13,30 +14,32 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.inmobi.ads.InMobiBanner;
 import com.inmobi.sdk.InMobiSdk;
+import com.receptix.batterybuddy.databinding.ActivityLockAdsBinding;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_LEVEL;
+import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_SCALE;
+import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_TEMPERATURE;
+import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_TEMPERATURE_CONVERSION_UNIT;
+import static com.receptix.batterybuddy.helper.Constants.BatteryParams.IS_BATTERY_PRESENT;
+import static com.receptix.batterybuddy.helper.Constants.DateFormats.FORMAT_DATE_MONTH_YEAR_HOUR_MINUTES;
+import static com.receptix.batterybuddy.helper.Constants.DateFormats.FORMAT_FULL_LENGTH_DAY;
+
 public class LockAdsActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String TAG ="LockScreenActivity" ;
-    TextView lockDateTextView, lockBatteryLevelTextView, lockbatteryChargingStatusTextView;
-    ProgressBar lockProgressBar;
-    ArcProgress lockcpuProgress, lockramProgress, lockbatteryProgress;
+    private static final String TAG = LockAdsActivity.class.getSimpleName();
     Calendar calendar;
     ActivityManager myActivityManager;
     Context context;
     InMobiBanner bannerAd;
+    ActivityLockAdsBinding binding;
+    int USED_RAM_PERCENTAGE_THRESHOLD = 70;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,140 +50,128 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-        setContentView(R.layout.activity_lock_ads);
+        
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_lock_ads);
+        
         myActivityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
-        this.context =getApplicationContext();
+        
+        this.context = getApplicationContext();
 
+        // TODO: 19-May-17 Update Code for InMobi ads from Sample
         // initialize InMobiSDK and load ad
         bannerAd = (InMobiBanner) findViewById(R.id.banner);
         InMobiSdk.init(LockAdsActivity.this, "4a38c3c40747428fa346cb0456d9034f");
         bannerAd.load();
 
-        initView();
-
         InitializeData();
     }
 
     private void InitializeData() {
-        getBatteryTemperature();
-        getSystemDateNow();
-        getRamInfo();
-
-
+        getBatteryInformation();
+        getCurrentSystemDateTime();
+        getRamInformation();
     }
 
-    private void getRamInfo() {
+    private void getRamInformation() {
         ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();
         myActivityManager.getMemoryInfo(memInfo);
-        long blabla = memInfo.availMem;
-        long total = memInfo.totalMem;
+        long availableDeviceMemory = memInfo.availMem;
+        long totalDeviceMemory = memInfo.totalMem;
 
-        long usedram = total - blabla;
-
-
-        double ratio = usedram / (double) total;
+        long usedDeviceMemory = totalDeviceMemory - availableDeviceMemory;
+        double ratio = usedDeviceMemory / (double) totalDeviceMemory;
         double percentage = ratio * 100;
-        int rampercentage = (int) percentage;
-        if (rampercentage > 70) {
-            lockramProgress.setProgress(rampercentage);
-            lockramProgress.setFinishedStrokeColor(ContextCompat.getColor(context, R.color.red));
-            lockramProgress.setTextColor(ContextCompat.getColor(context, R.color.red));
+        int usedRamPercentage = (int) percentage;
+        if (usedRamPercentage > USED_RAM_PERCENTAGE_THRESHOLD) {
+            binding.lockramArcProgress.setProgress(usedRamPercentage);
+            binding.lockramArcProgress.setFinishedStrokeColor(ContextCompat.getColor(context, R.color.red));
+            binding.lockramArcProgress.setTextColor(ContextCompat.getColor(context, R.color.red));
         } else {
-            lockramProgress.setProgress(rampercentage);
+            binding.lockramArcProgress.setProgress(usedRamPercentage);
         }
 
-
-        Log.d(TAG, "MEM=" + String.valueOf(blabla) + "Total Ram=" + String.valueOf(total) + "Percentage=" + rampercentage);
-
+        Log.d(TAG, "MEM=" + String.valueOf(availableDeviceMemory) + "Total Ram=" + String.valueOf(totalDeviceMemory) + "Percentage=" + usedRamPercentage);
 
     }
 
-    private void getSystemDateNow() {
-
-        calendar = Calendar.getInstance();
-//date format is:  "Date-Month-Year Hour:Minutes am/pm"
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy HH:mm a"); //Date and time
-        String currentDate = sdf.format(calendar.getTime());
-
-//Day of Name in full form like,"Saturday", or if you need the first three characters you have to put "EEE" in the date format and your result will be "Sat".
-        SimpleDateFormat sdf_ = new SimpleDateFormat("EEEE");
-        Date date = new Date();
-        String dayName = sdf_.format(date);
-        lockDateTextView.setText("" + dayName + " " + currentDate + "");
+    private void getCurrentSystemDateTime() {
+        try {
+            calendar = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat(FORMAT_DATE_MONTH_YEAR_HOUR_MINUTES);
+            String currentDate = sdf.format(calendar.getTime());
+            SimpleDateFormat sdf_ = new SimpleDateFormat(FORMAT_FULL_LENGTH_DAY);
+            Date date = new Date();
+            String dayName = sdf_.format(date);
+            binding.lockdatetv.setText("" + dayName + " " + currentDate + "");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
-    private void getBatteryTemperature() {
-
+    private void getBatteryInformation() {
         IntentFilter intentfilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        this.registerReceiver(battery_info_receiver, intentfilter);
+        if(battery_info_receiver!=null)
+            LockAdsActivity.this.registerReceiver(battery_info_receiver, intentfilter);
     }
 
     private BroadcastReceiver battery_info_receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            boolean isPresent = intent.getBooleanExtra("present", false);
+            boolean isPresent = intent.getBooleanExtra(IS_BATTERY_PRESENT, false);
             if (isPresent) {
 
+                // Calculate Battery Temperature (currently unused)
+                int temperature = intent.getIntExtra(BATTERY_TEMPERATURE, 0);
+                double temperatureInDouble = temperature * BATTERY_TEMPERATURE_CONVERSION_UNIT;
+                int batteryTemperature = (int) temperatureInDouble;
 
-                int temperature = intent.getIntExtra("temperature", 0);
-                double doubletemp = temperature * 0.1;
-                int progresint = (int) doubletemp;
-                int level = intent.getIntExtra("level", 0);
-                int scale = intent.getIntExtra("scale", 0);
-                // Calculate the battery charged percentage
+                // Calculate Battery Charging Level
+                int level = intent.getIntExtra(BATTERY_LEVEL, 0);
+                int scale = intent.getIntExtra(BATTERY_SCALE, 0);
                 float percentage = level / (float) scale;
-                // Update the progress bar to display current battery charged percentage
-                int mProgressStatus = (int) ((percentage) * 100);
-                lockbatteryProgress.setProgress(progresint);
+                int batteryLevel = (int) ((percentage) * 100);
+                binding.lockbatteryArcProgress.setSuffixText((char) 0x00b0 + "C");
+                binding.lockbatteryArcProgress.setProgress(batteryLevel);
+                String batteryLevelString = batteryLevel + getString(R.string.percentage_symbol);
+                binding.lockBatteryLevelTextView.setText(batteryLevelString);
 
-                lockbatteryProgress.setSuffixText((char) 0x00b0 + "C");
-                lockbatteryProgress.setProgress(mProgressStatus);
-                lockBatteryLevelTextView.setText(String.valueOf(mProgressStatus) + "%");
                 if (isChargerConnected(context)) {
-
-
-                    lockbatteryChargingStatusTextView.setText("Charging");
-                    lockbatteryChargingStatusTextView.setVisibility(View.VISIBLE);
+                    binding.lockbatteryChargingStatusTextView.setText(R.string.charging);
+                    binding.lockbatteryChargingStatusTextView.setVisibility(View.VISIBLE);
                 }
-
-
             } else {
-
-                showMessage("There is no battery");
+                binding.lockbatteryChargingStatusTextView.setText(R.string.discharging);
+                binding.lockbatteryChargingStatusTextView.setVisibility(View.VISIBLE);
             }
 
         }
     };
 
     private boolean isChargerConnected(Context context) {
-        Intent intent = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        int plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
-        return plugged == BatteryManager.BATTERY_PLUGGED_AC || plugged == BatteryManager.BATTERY_PLUGGED_USB;
-    }
-
-
-    private void initView() {
-
-        lockDateTextView = (TextView) findViewById(R.id.lockdatetv);
-        lockBatteryLevelTextView = (TextView) findViewById(R.id.lockBatteryLevelTextView);
-        lockbatteryChargingStatusTextView = (TextView) findViewById(R.id.lockbatteryChargingStatusTextView);
-        lockProgressBar = (ProgressBar) findViewById(R.id.lockProgressBar);
-        lockcpuProgress = (ArcProgress) findViewById(R.id.lockcpuArcProgress);
-        lockramProgress = (ArcProgress) findViewById(R.id.lockramArcProgress);
-        lockbatteryProgress = (ArcProgress) findViewById(R.id.lockbatteryArcProgress);
-
+        if(context!=null)
+        {
+            Intent intent = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+            if(intent!=null)
+            {
+                int plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+                return plugged == BatteryManager.BATTERY_PLUGGED_AC || plugged == BatteryManager.BATTERY_PLUGGED_USB;
+            }
+            return false;
+        }
+        return false;
     }
 
     @Override
     public void onClick(View v) {
-/*
+        /*
         showMessage("I am Clicked man");
         finish();*/
     }
 
     private void showMessage(String s) {
-
-        Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+        /*Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();*/
     }
 }
