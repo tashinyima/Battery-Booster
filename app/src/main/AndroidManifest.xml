@@ -31,7 +31,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".NavigationActivity"
+            android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -95,7 +95,10 @@
         <!-- android:label="@string/title_activity_navigation" -->
         <!-- android:theme="@style/AppTheme"></activity> -->
         <activity android:name=".activities.AboutUsActivity" />
-        <activity android:name=".activities.TermsPolicyActivity"></activity>
+        <activity android:name=".activities.TermsPolicyActivity" />
+        <activity android:name=".TCActivity" />
+        <activity android:name=".activities.PrivacyActivity"></activity>
+        <activity android:name=".NavigationActivity"></activity>
     </application>
 
 </manifest>
