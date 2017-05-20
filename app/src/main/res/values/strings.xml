@@ -145,6 +145,9 @@
     <string name="navfeedback">Feed back</string>
     <string name="nav_terms_policy"><![CDATA[Terms & Policy]]></string>
     <string name="nav_share">Share</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="close_window_text">x</string>
     <string name="share_to">Share to</string>
     <string name="welcometext">Welcome to Battery Buddy</string>
     <string name="byusingtext">By using this application, you agree to Battery Buddy\'s</string>

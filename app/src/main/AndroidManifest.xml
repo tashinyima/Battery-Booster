@@ -30,6 +30,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
@@ -39,24 +40,33 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".BatteryAdActivity"
             android:screenOrientation="portrait" />
+
+
         <activity
             android:name=".LockAdsActivity"
             android:screenOrientation="portrait"
             android:showForAllUsers="true"
-            android:showOnLockScreen="true" />
+            android:showOnLockScreen="true"
+            tools:targetApi="m" />
+
+
         <!-- Optimizer Module -->
         <activity
             android:name=".optimizeractivity.OptimizerActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".optimizeractivity.AfterOptimizerActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".optimizeractivity.SuccessOptimizerActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".optimizeractivity.OptimalStateActivity"
             android:screenOrientation="portrait" />
@@ -90,6 +100,21 @@
             </intent-filter>
         </receiver>
 
+
+        <receiver android:name=".BatteryBuddyAppWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="INTENT_ACTION_UPDATE_WIDGET_BATTERY_SERVICE"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/battery_buddy_app_widget_info" />
+        </receiver>
+
+        <service android:name="com.receptix.batterybuddy.BatteryUpdateService"
+            android:exported="false"
+            />
         <!-- <activity -->
         <!-- android:name=".NavigationActivity" -->
         <!-- android:label="@string/title_activity_navigation" -->

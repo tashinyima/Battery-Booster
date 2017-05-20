@@ -5,8 +5,10 @@ import android.app.NativeActivity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,6 +32,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import com.receptix.batterybuddy.activities.AboutUsActivity;
 import com.receptix.batterybuddy.activities.TermsPolicyActivity;
@@ -41,13 +44,15 @@ import com.receptix.batterybuddy.rank.RankFragment;
 import static com.receptix.batterybuddy.helper.Constants.Params.BROADCAST_RECEIVER;
 import static com.receptix.batterybuddy.helper.Constants.Params.FROM;
 import static com.receptix.batterybuddy.helper.Constants.Params.IS_SCREEN_ON;
+import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_ACTIVE;
+import static com.receptix.batterybuddy.helper.Constants.Preferences.PREFERENCES_IS_ACTIVE;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
     private static final int REQUEST_CODE_SOME_FEATURES_PERMISSIONS = 101;
-    private static final String TAG = "BatteryBuddy";
+    private static final String TAG = NavigationActivity.class.getSimpleName();
     static WindowManager.LayoutParams params;
     NotificationCompat.Builder myBuilder;
     Intent intent;
@@ -77,59 +82,10 @@ public class NavigationActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-        // new code..
-
-        Bundle bundle = getIntent().getExtras();
-
-        try {
-            boolean isScreenOn = bundle.getBoolean(IS_SCREEN_ON);
-            Log.d(TAG, String.valueOf(isScreenOn));
-            keyguardManager = (KeyguardManager) getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
-            boolean isLockedScreen = keyguardManager.inKeyguardRestrictedInputMode();
-            Log.d(TAG, "isLockedScreen : " + isLockedScreen);
-
-            String from = bundle.getString(FROM);
-            if (from != null && from.equalsIgnoreCase(BROADCAST_RECEIVER)) {
-                if (!isLockedScreen) {
-                    new Handler().postDelayed(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            startActivity(new Intent(getApplicationContext(), BatteryAdActivity.class));
-                            finish();
-                        }
-                    }, 4000);
-                } else {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            startActivity(new Intent(getApplicationContext(), LockAdsActivity.class));
-                            finish();
-                        }
-                    }, 4000);
-                }
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        /*getPermission();*/
-
         sendCustomNotification();
-        /*  sendNotification();*/
-        //  setupToolBar(getString(R.string.batterybuddy));
-        /*initView();*/
         setupBottomNavigationBar();
 
-
-        // ends here...
-
     }
-
-
-    // main activity codee...
-
 
     private void setupBottomNavigationBar() {
 
@@ -180,9 +136,25 @@ public class NavigationActivity extends AppCompatActivity
 
     }
 
-    private void initView() {
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setIsActive(true);
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        setIsActive(false);
+    }
 
+    private void setIsActive(boolean isActive)
+    {
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES_IS_ACTIVE, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(IS_ACTIVE, isActive);
+        editor.commit();
+        Log.e(TAG, "isActive = "+isActive);
     }
 
     private void sendCustomNotification() {
@@ -260,11 +232,21 @@ public class NavigationActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_share) {
             String url ="https://play.google.com/store/apps/details?id=com.earnmoney.appbucks&hl=en";
-            Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-           // sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
-            sendIntent.setData(Uri.parse(url));
-            startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.share_to)));
+            Intent share = new Intent(android.content.Intent.ACTION_SEND);
+            share.setType("text/plain");
+            // Add data to the intent, the receiving app will decide
+            // what to do with it.
+            share.putExtra(Intent.EXTRA_SUBJECT, "Share Battery Buddy");
+            share.putExtra(Intent.EXTRA_TEXT, url);
+            try {
+                startActivity(Intent.createChooser(share, "Share link!"));
+            }
+            catch (ActivityNotFoundException ae)
+            {
+                // No Activity found to Handle Intent
+                ae.printStackTrace();
+                Toast.makeText(this, "No Activity found to share URL", Toast.LENGTH_SHORT).show();
+            }
 
         }
 

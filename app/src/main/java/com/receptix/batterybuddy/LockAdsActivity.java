@@ -64,6 +64,13 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
         bannerAd.load();
 
         InitializeData();
+
+        binding.closeLockScreenPopup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void InitializeData() {
@@ -141,10 +148,10 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
                 if (isChargerConnected(context)) {
                     binding.lockbatteryChargingStatusTextView.setText(R.string.charging);
                     binding.lockbatteryChargingStatusTextView.setVisibility(View.VISIBLE);
+                } else {
+                    binding.lockbatteryChargingStatusTextView.setText(R.string.discharging);
+                    binding.lockbatteryChargingStatusTextView.setVisibility(View.VISIBLE);
                 }
-            } else {
-                binding.lockbatteryChargingStatusTextView.setText(R.string.discharging);
-                binding.lockbatteryChargingStatusTextView.setVisibility(View.VISIBLE);
             }
 
         }
@@ -169,6 +176,11 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
         /*
         showMessage("I am Clicked man");
         finish();*/
+    }
+
+    @Override
+    public void onBackPressed() {
+        // do nothing if user presses back
     }
 
     private void showMessage(String s) {
