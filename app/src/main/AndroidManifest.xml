@@ -12,8 +12,8 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
 
-
-    <meta-data android:name="com.google.android.gms.version"
+    <meta-data
+        android:name="com.google.android.gms.version"
         android:value="@integer/google_play_services_version" />
 
     <!-- Permissions required for InMobi Ads -->
@@ -23,8 +23,6 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -32,7 +30,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".NavigationActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,23 +39,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BatteryAdActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".BatteryAdActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".LockAdsActivity"
             android:screenOrientation="portrait"
             android:showForAllUsers="true"
             android:showOnLockScreen="true" />
         <!-- Optimizer Module -->
-        <activity android:name=".optimizeractivity.OptimizerActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".optimizeractivity.AfterOptimizerActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".optimizeractivity.SuccessOptimizerActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".optimizeractivity.OptimalStateActivity"
-            android:screenOrientation="portrait"/>
-
+        <activity
+            android:name=".optimizeractivity.OptimizerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".optimizeractivity.AfterOptimizerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".optimizeractivity.SuccessOptimizerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".optimizeractivity.OptimalStateActivity"
+            android:screenOrientation="portrait" />
 
         <receiver
             android:name="com.inmobi.commons.core.utilities.uid.ImIdShareBroadCastReceiver"
@@ -64,11 +67,12 @@
             android:exported="true"
             tools:ignore="ExportedReceiver">
             <intent-filter>
-                <action android:name="com.inmobi.share.id"/>
+                <action android:name="com.inmobi.share.id" />
             </intent-filter>
         </receiver>
 
-        <!-- invoke this receiver every time user does one of the following things -
+        <!--
+        invoke this receiver every time user does one of the following things -
         1) Disconnect charger
         2) Connect charger
         3) Turn Screen off
@@ -86,6 +90,10 @@
             </intent-filter>
         </receiver>
 
+        <!--<activity-->
+            <!--android:name=".NavigationActivity"-->
+            <!--android:label="@string/title_activity_navigation"-->
+            <!--android:theme="@style/AppTheme"></activity>-->
     </application>
 
 </manifest>

@@ -135,4 +135,14 @@
         <item>Sound</item>
         <item>Vibrate</item>
     </string-array>
+    <string name="title_activity_navigation">NavigationActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="aboutUs">About Us</string>
+    <string name="navfeedback">Feed back</string>
+    <string name="nav_terms_policy"><![CDATA[Terms & Policy]]></string>
+    <string name="nav_share">Share</string>
 </resources>
