@@ -38,11 +38,13 @@
             android:layout_weight="50">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/batteryImageView"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
                 android:src="@drawable/battery_half" />
 
         </LinearLayout>
+        <!--// nothing is-->
 
         <LinearLayout
             android:layout_width="0dp"

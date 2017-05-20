@@ -10,9 +10,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +23,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.receptix.batterybuddy.R;
@@ -54,6 +58,7 @@ public class OptimizerActivity extends AppCompatActivity {
     TextView textView_analysisProgressIndicator;
     TextView textView_estimatedExtendedTime;
     int receivedBatteryLevel = 0;
+    ImageView batteryImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -247,6 +252,17 @@ public class OptimizerActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         textView_analysisProgressIndicator = (TextView) findViewById(R.id.applistTextView);
         textView_estimatedExtendedTime = (TextView) findViewById(R.id.estimatedextensionTextView);
+        batteryImageView = (ImageView) findViewById(R.id.batteryImageView);
+        AnimationDrawable animation = new AnimationDrawable();
+
+        animation.addFrame(ContextCompat.getDrawable(context,R.drawable.batterylevel1),100);
+        animation.addFrame(ContextCompat.getDrawable(context,R.drawable.batterylevel2),200);
+        animation.addFrame(ContextCompat.getDrawable(context,R.drawable.batterylevel3),300);
+        animation.addFrame(ContextCompat.getDrawable(context,R.drawable.batterylevel4),400);
+        animation.setOneShot(false);
+        batteryImageView.setImageDrawable(animation);
+        animation.start();
+
 
         int startRange = 0;
         int endRange = 0;
