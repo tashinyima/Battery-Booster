@@ -7,6 +7,7 @@ import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
@@ -32,11 +33,13 @@ import jp.wasabeef.recyclerview.animators.FadeInAnimator;
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_LEVEL;
 import static com.receptix.batterybuddy.helper.Constants.Params.MINIMUM_INSTALLED_APPS;
 import static com.receptix.batterybuddy.helper.Constants.Params.NUMBER_OF_SYSTEM_APPS_TO_SHOW;
+import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_ACTIVE;
+import static com.receptix.batterybuddy.helper.Constants.Preferences.PREFERENCES_IS_ACTIVE;
 import static com.receptix.batterybuddy.helper.Constants.ShortHandNotations.MINUTES;
 
 public class OptimizerActivity extends AppCompatActivity {
 
-    private static final String TAG = "Optimize Android";
+    private static final String TAG = OptimizerActivity.class.getSimpleName();
     Context context;
     View view_optimize;
     MyOptimizerAdapter myOptimizerAdapter;
@@ -112,17 +115,6 @@ public class OptimizerActivity extends AppCompatActivity {
         }
         TextView textViewTitle = (TextView) toolbar.findViewById(R.id.textViewTitle);
         textViewTitle.setText(title);
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     private void performOptimization() {
@@ -294,4 +286,26 @@ public class OptimizerActivity extends AppCompatActivity {
         if (!isOptimizationInProgress)
             finish();
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setIsActive(true);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        setIsActive(false);
+    }
+
+    private void setIsActive(boolean isActive)
+    {
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES_IS_ACTIVE, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(IS_ACTIVE, isActive);
+        editor.commit();
+        Log.e(TAG, "isActive = "+isActive);
+    }
+
 }
