@@ -18,6 +18,19 @@
     android:layout_alignParentTop="true"
     android:orientation="vertical">
 
+    <!-- BUTTON TO CLOSE LOCK SCREEN ACTIVITY -->
+    <TextView
+        android:id="@+id/close_lock_screen_popup"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="@color/bgcolor"
+        android:layout_margin="@dimen/x_small_margin"
+        android:gravity="center"
+        android:layout_gravity="end"
+        android:text="@string/close_window_text"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,7 +40,7 @@
             android:id="@+id/lockdatetv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:padding="10dp"
             android:text="@string/systemDate"
             android:textColor="@color/white"
@@ -37,8 +50,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="15dp"
         android:layout_marginTop="20dp"
         android:orientation="horizontal"
         android:weightSum="100">
@@ -65,8 +78,8 @@
                     android:id="@+id/lockBatteryLevelTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:gravity="center"
                     android:textColor="@color/white" />
@@ -187,6 +200,7 @@
 </LinearLayout>
 
 
+    <!-- InMobi Ad at the bottom of the lock screen -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="120dp"
@@ -196,9 +210,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/banner"
-            ads:placementId="1494642457622"
+            ads:placementId="1496191677809"
             />
-
 
     </LinearLayout>
 

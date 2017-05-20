@@ -130,6 +130,10 @@ public class Constants {
         public static final String IS_SCREEN_ON = "isScreenOn";
         public static final String BROADCAST_RECEIVER = "broadcast";
 
+        public static final String INTENT_ACTION_UPDATE_WIDGET_BATTERY_SERVICE = "INTENT_ACTION_UPDATE_WIDGET_BATTERY_SERVICE";
+
+        public static final String USED_RAM_PERCENTAGE = "usedRamPercentage";
+
     }
 
 
