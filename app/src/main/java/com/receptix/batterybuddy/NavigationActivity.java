@@ -5,6 +5,7 @@ import android.app.NativeActivity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -31,6 +32,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import com.receptix.batterybuddy.activities.AboutUsActivity;
 import com.receptix.batterybuddy.activities.TermsPolicyActivity;
@@ -230,11 +232,21 @@ public class NavigationActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_share) {
             String url ="https://play.google.com/store/apps/details?id=com.earnmoney.appbucks&hl=en";
-            Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-           // sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
-            sendIntent.setData(Uri.parse(url));
-            startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.share_to)));
+            Intent share = new Intent(android.content.Intent.ACTION_SEND);
+            share.setType("text/plain");
+            // Add data to the intent, the receiving app will decide
+            // what to do with it.
+            share.putExtra(Intent.EXTRA_SUBJECT, "Share Battery Buddy");
+            share.putExtra(Intent.EXTRA_TEXT, url);
+            try {
+                startActivity(Intent.createChooser(share, "Share link!"));
+            }
+            catch (ActivityNotFoundException ae)
+            {
+                // No Activity found to Handle Intent
+                ae.printStackTrace();
+                Toast.makeText(this, "No Activity found to share URL", Toast.LENGTH_SHORT).show();
+            }
 
         }
 
