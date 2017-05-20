@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/bgcolor"
     android:orientation="vertical"
-    tools:context="com.receptix.batterybuddy.charge.ChargeFragment">
+    tools:context="com.receptix.batterybuddy.fragments.ChargeFragment">
 
     <LinearLayout
         android:id="@+id/containerLinearLayout"

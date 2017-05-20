@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/bgcolormain"
     android:orientation="vertical"
-    tools:context="com.receptix.batterybuddy.optimizeractivity.AfterOptimizerActivity">
+    tools:context="com.receptix.batterybuddy.activities.AfterOptimizerActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

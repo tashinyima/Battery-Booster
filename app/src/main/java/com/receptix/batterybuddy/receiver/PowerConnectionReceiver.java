@@ -1,26 +1,18 @@
 package com.receptix.batterybuddy.receiver;
 
-import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.receptix.batterybuddy.BatteryAdActivity;
-import com.receptix.batterybuddy.LockAdsActivity;
-import com.receptix.batterybuddy.MainActivity;
+import com.receptix.batterybuddy.activities.BatteryAdActivity;
+import com.receptix.batterybuddy.activities.LockAdsActivity;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.receptix.batterybuddy.helper.Constants.Params.APP_PACKAGE_NAME;
-import static com.receptix.batterybuddy.helper.Constants.Params.BROADCAST_RECEIVER;
-import static com.receptix.batterybuddy.helper.Constants.Params.FROM;
-import static com.receptix.batterybuddy.helper.Constants.Params.IS_SCREEN_ON;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_ACTIVE;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.PREFERENCES_IS_ACTIVE;
 

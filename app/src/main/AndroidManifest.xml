@@ -32,7 +32,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,12 +42,12 @@
         </activity>
 
         <activity
-            android:name=".BatteryAdActivity"
+            android:name=".activities.BatteryAdActivity"
             android:screenOrientation="portrait" />
 
 
         <activity
-            android:name=".LockAdsActivity"
+            android:name=".activities.LockAdsActivity"
             android:screenOrientation="portrait"
             android:showForAllUsers="true"
             android:showOnLockScreen="true"
@@ -56,19 +56,19 @@
 
         <!-- Optimizer Module -->
         <activity
-            android:name=".optimizeractivity.OptimizerActivity"
+            android:name=".activities.OptimizerActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".optimizeractivity.AfterOptimizerActivity"
+            android:name=".activities.AfterOptimizerActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".optimizeractivity.SuccessOptimizerActivity"
+            android:name=".activities.SuccessOptimizerActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".optimizeractivity.OptimalStateActivity"
+            android:name=".activities.OptimalStateActivity"
             android:screenOrientation="portrait" />
 
         <receiver
@@ -121,9 +121,9 @@
         <!-- android:theme="@style/AppTheme"></activity> -->
         <activity android:name=".activities.AboutUsActivity" />
         <activity android:name=".activities.TermsPolicyActivity" />
-        <activity android:name=".TCActivity" />
+        <activity android:name=".activities.TCActivity" />
         <activity android:name=".activities.PrivacyActivity"></activity>
-        <activity android:name=".NavigationActivity"></activity>
+        <activity android:name=".activities.NavigationActivity"></activity>
     </application>
 
 </manifest>

@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/bgcolormain"
-        tools:context="com.receptix.batterybuddy.home.HomeFragment">
+        tools:context="com.receptix.batterybuddy.fragments.HomeFragment">
 
         <LinearLayout
             android:id="@+id/outerMostLinearLayout"
