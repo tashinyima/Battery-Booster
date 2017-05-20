@@ -1,5 +1,6 @@
 package com.receptix.batterybuddy.optimizeractivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.inmobi.ads.InMobiBanner;
+import com.inmobi.sdk.InMobiSdk;
 import com.receptix.batterybuddy.MainActivity;
 import com.receptix.batterybuddy.R;
 
@@ -21,12 +24,19 @@ public class AfterOptimizerActivity extends AppCompatActivity {
 
     int extendedTime ;
     TextView extentedTextViewAfter;
+    InMobiBanner inMobiBanner;
+    Context context;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_after_optimizer);
+        context =getApplicationContext();
+
+        InMobiSdk.init(context,"4a38c3c40747428fa346cb0456d9034f");
 
         Intent intent = getIntent();
         extendedTime = intent.getIntExtra("extendedTime",0);
@@ -50,6 +60,10 @@ public class AfterOptimizerActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         extentedTextViewAfter = (TextView) findViewById(R.id.extentedTextViewAfter);
         extentedTextViewAfter.setText(extendedTime+" Minutes");
+        inMobiBanner = (InMobiBanner) findViewById(R.id.banner);
+        inMobiBanner.load();
+
+
 
     }
 
