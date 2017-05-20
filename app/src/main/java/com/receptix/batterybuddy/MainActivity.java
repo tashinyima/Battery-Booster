@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -29,10 +30,12 @@ import com.receptix.batterybuddy.rank.RankFragment;
 import static com.receptix.batterybuddy.helper.Constants.Params.BROADCAST_RECEIVER;
 import static com.receptix.batterybuddy.helper.Constants.Params.FROM;
 import static com.receptix.batterybuddy.helper.Constants.Params.IS_SCREEN_ON;
+import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_ACTIVE;
+import static com.receptix.batterybuddy.helper.Constants.Preferences.PREFERENCES_IS_ACTIVE;
 
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_SOME_FEATURES_PERMISSIONS = 101;
-    private static final String TAG = "BatteryBuddy";
+    private static final String TAG = MainActivity.class.getSimpleName();
     static WindowManager.LayoutParams params;
     NotificationCompat.Builder myBuilder;
     Intent intent;
@@ -53,43 +56,6 @@ public class MainActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
 
-        try {
-            boolean isScreenOn = bundle.getBoolean(IS_SCREEN_ON);
-            Log.d(TAG, String.valueOf(isScreenOn));
-            keyguardManager = (KeyguardManager) getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
-            boolean isLockedScreen = keyguardManager.inKeyguardRestrictedInputMode();
-            Log.d(TAG, "isLockedScreen : " + isLockedScreen);
-
-            String from = bundle.getString(FROM);
-            if (from!=null && from.equalsIgnoreCase(BROADCAST_RECEIVER)) {
-                if(!isLockedScreen)
-                {
-                    new Handler().postDelayed(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            startActivity(new Intent(getApplicationContext(), BatteryAdActivity.class));
-                            finish();
-                        }
-                    }, 4000);
-                }
-                else
-                {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            startActivity(new Intent(getApplicationContext(), LockAdsActivity.class));
-                            finish();
-                        }
-                    },4000);
-                }
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        /*getPermission();*/
-
         sendCustomNotification();
         /*  sendNotification();*/
         setupToolBar(getString(R.string.batterybuddy));
@@ -108,6 +74,27 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
         }
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setIsActive(true);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        setIsActive(false);
+    }
+
+    private void setIsActive(boolean isActive)
+    {
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES_IS_ACTIVE, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(IS_ACTIVE, isActive);
+        editor.commit();
+        Log.e(TAG, "isActive = "+isActive);
     }
 
     private void setupBottomNavigationBar() {
@@ -163,6 +150,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
 
     private void sendCustomNotification() {
         notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);

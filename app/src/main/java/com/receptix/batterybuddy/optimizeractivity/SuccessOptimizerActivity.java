@@ -2,10 +2,12 @@ package com.receptix.batterybuddy.optimizeractivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -18,9 +20,12 @@ import com.receptix.batterybuddy.R;
 import java.util.Random;
 
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_LEVEL;
+import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_ACTIVE;
+import static com.receptix.batterybuddy.helper.Constants.Preferences.PREFERENCES_IS_ACTIVE;
 import static com.receptix.batterybuddy.helper.Constants.ShortHandNotations.MINUTES;
 
 public class SuccessOptimizerActivity extends AppCompatActivity {
+    private static final String TAG = SuccessOptimizerActivity.class.getSimpleName();
     Toolbar toolbar;
     ImageView imageView_successfulOptimization;
     TextView textView_extendedTime;
@@ -132,4 +137,27 @@ public class SuccessOptimizerActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setIsActive(true);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        setIsActive(false);
+    }
+
+    private void setIsActive(boolean isActive)
+    {
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES_IS_ACTIVE, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(IS_ACTIVE, isActive);
+        editor.commit();
+        Log.e(TAG, "isActive = "+isActive);
+    }
+
 }

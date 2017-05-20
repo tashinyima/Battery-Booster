@@ -12,7 +12,11 @@ public class Constants {
         public static final String IS_FIRST_TIME = "is_first_time";
         // Shared pref mode (Context.MODE_PRIVATE)
         public static final int PRIVATE_MODE = 0;
+
+        public static final String PREFERENCES_IS_ACTIVE = "pref_is_active";
+        public static final String IS_ACTIVE = "is_active";
     }
+
 
     public static class BatteryParams {
         public static final String BATTERY_LEVEL = "level";
@@ -125,6 +129,7 @@ public class Constants {
         public static final String FROM = "from";
         public static final String IS_SCREEN_ON = "isScreenOn";
         public static final String BROADCAST_RECEIVER = "broadcast";
+
     }
 
 
