@@ -58,13 +58,6 @@
         </LinearLayout>
 
 
-        <com.inmobi.ads.InMobiBanner
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/cardview_dark_background" />
-
-
     </RelativeLayout>
 
 

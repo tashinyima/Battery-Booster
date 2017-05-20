@@ -148,4 +148,12 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="close_window_text">x</string>
+    <string name="share_to">Share to</string>
+    <string name="welcometext">Welcome to Battery Buddy</string>
+    <string name="byusingtext">By using this application, you agree to Battery Buddy\'s</string>
+    <string name="termsofservicetext">Terms of Service</string>
+    <string name="andtext">and</string>
+    <string name="privacynoticetext">Privacy Notice</string>
+    <string name="acceptandcontinue"><![CDATA[ACCEPT & CONTINUE]]></string>
+    <string name="privacynotice">Privacy Notice</string>
 </resources>

@@ -1,12 +1,14 @@
 package com.receptix.batterybuddy;
 
 import android.app.KeyguardManager;
+import android.app.NativeActivity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -30,6 +32,8 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.RemoteViews;
 
+import com.receptix.batterybuddy.activities.AboutUsActivity;
+import com.receptix.batterybuddy.activities.TermsPolicyActivity;
 import com.receptix.batterybuddy.charge.ChargeFragment;
 import com.receptix.batterybuddy.home.HomeFragment;
 import com.receptix.batterybuddy.optimizeractivity.OptimizerActivity;
@@ -212,12 +216,25 @@ public class NavigationActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_about_us) {
-            // Handle the camera action
+
+//            start about us activity
+            startActivity(new Intent(NavigationActivity.this, AboutUsActivity.class));
+
+
         } else if (id == R.id.nav_feedback) {
 
-        } else if (id == R.id.nav_privacy_policy) {
+
+        } else if (id == R.id.nav_terms_policy) {
+
+            startActivity(new Intent(NavigationActivity.this, TermsPolicyActivity.class));
 
         } else if (id == R.id.nav_share) {
+            String url ="https://play.google.com/store/apps/details?id=com.earnmoney.appbucks&hl=en";
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+           // sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+            sendIntent.setData(Uri.parse(url));
+            startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.share_to)));
 
         }
 

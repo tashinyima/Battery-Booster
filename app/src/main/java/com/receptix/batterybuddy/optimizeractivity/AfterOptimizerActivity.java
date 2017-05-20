@@ -1,5 +1,6 @@
 package com.receptix.batterybuddy.optimizeractivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,11 +19,18 @@ public class AfterOptimizerActivity extends AppCompatActivity {
     Toolbar toolbar;
     private static final String TAG = AfterOptimizerActivity.class.getSimpleName();
 
+    int extendedTime ;
+    TextView extentedTextViewAfter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_after_optimizer);
+
+        Intent intent = getIntent();
+        extendedTime = intent.getIntExtra("extendedTime",0);
+
 
         initView();
         setupToolBar(getString(R.string.powerconsumptionToolbar));
@@ -40,6 +48,8 @@ public class AfterOptimizerActivity extends AppCompatActivity {
 
     private void initView() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        extentedTextViewAfter = (TextView) findViewById(R.id.extentedTextViewAfter);
+        extentedTextViewAfter.setText(extendedTime+" Minutes");
 
     }
 

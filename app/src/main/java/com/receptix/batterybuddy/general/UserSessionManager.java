@@ -35,7 +35,7 @@ public class UserSessionManager {
     }
 
     public boolean isFirstTime() {
-        return sharedPreferences.getBoolean(IS_FIRST_TIME,false);
+        return sharedPreferences.getBoolean(IS_FIRST_TIME,true);
     }
 
     public void setIsFirstTime(boolean isFirstTime){
