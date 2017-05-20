@@ -90,10 +90,12 @@
             </intent-filter>
         </receiver>
 
-        <!--<activity-->
-            <!--android:name=".NavigationActivity"-->
-            <!--android:label="@string/title_activity_navigation"-->
-            <!--android:theme="@style/AppTheme"></activity>-->
+        <!-- <activity -->
+        <!-- android:name=".NavigationActivity" -->
+        <!-- android:label="@string/title_activity_navigation" -->
+        <!-- android:theme="@style/AppTheme"></activity> -->
+        <activity android:name=".activities.AboutUsActivity" />
+        <activity android:name=".activities.TermsPolicyActivity"></activity>
     </application>
 
 </manifest>

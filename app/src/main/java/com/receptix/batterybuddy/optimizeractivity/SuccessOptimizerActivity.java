@@ -30,6 +30,7 @@ public class SuccessOptimizerActivity extends AppCompatActivity {
     ImageView imageView_successfulOptimization;
     TextView textView_extendedTime;
     int receivedBatteryLevel = 0;
+    int randomExtendedTimePeriod;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,18 +47,19 @@ public class SuccessOptimizerActivity extends AppCompatActivity {
                 .playOn(findViewById(R.id.imageview_successful_optimization));
 
 
-       /*     // open AdsActivity after animation completes
+          // open AdsActivity after animation completes
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     // show activity only if user is currently on this activity
                     if(!isFinishing()) {
-                        *//*Intent backIntent = new Intent(SuccessOptimizerActivity.this, AfterOptimizerActivity.class);
-                        startActivity(backIntent);*//*
+                        Intent backIntent = new Intent(SuccessOptimizerActivity.this, AfterOptimizerActivity.class);
+                        backIntent.putExtra("extendedTime",randomExtendedTimePeriod);
+                        startActivity(backIntent);
                         finish();
                     }
                 }
-            }, 3000);*/
+            }, 3000);
 
 
 
@@ -100,7 +102,7 @@ public class SuccessOptimizerActivity extends AppCompatActivity {
             startRange = 40;
             endRange = 50;
         }
-        int randomExtendedTimePeriod = getRandomNumberInRange(startRange,endRange);
+        randomExtendedTimePeriod = getRandomNumberInRange(startRange,endRange);
         textView_extendedTime.setText(" " + randomExtendedTimePeriod + " " + MINUTES);
     }
 
