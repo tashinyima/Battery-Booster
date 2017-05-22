@@ -6,13 +6,13 @@ package com.receptix.batterybuddy.helper;
 
 public class Constants {
 
+
     public static class Preferences {
         public static final String PREFER_NAME = "AndroidExamplePref";
         public static final String IS_OPTIMIZED_NOW = "is_optimized";
         public static final String IS_FIRST_TIME = "is_first_time";
         // Shared pref mode (Context.MODE_PRIVATE)
         public static final int PRIVATE_MODE = 0;
-
         public static final String PREFERENCES_IS_ACTIVE = "pref_is_active";
         public static final String IS_ACTIVE = "is_active";
         public static final String IS_ONE_DAY_FINISHED="is_one_day_finished";
