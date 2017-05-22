@@ -103,8 +103,8 @@
     <string name="charging">Charging</string>
     <string name="percentage_symbol">%</string>
     <string name="discharging">Discharging</string>
-    <string name="notification_title_optimize">Too many junk apps\n are slowing down your device.</string>
-    <string name="notification_description_optimize"></string>
+    <string name="notification_title_optimize">Too Many Junk Apps</string>
+    <string name="notification_description_optimize">Optimize battery draining apps </string>
     <string-array name="sreenlocktimer">
         <item>Immediately</item>
         <item>5 second </item>
@@ -156,4 +156,5 @@
     <string name="privacynoticetext">Privacy Notice</string>
     <string name="acceptandcontinue"><![CDATA[ACCEPT & CONTINUE]]></string>
     <string name="privacynotice">Privacy Notice</string>
+    <string name="optimizetexttitle">Custom title here</string>
 </resources>

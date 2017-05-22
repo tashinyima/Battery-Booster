@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.receptix.batterybuddy.activities.BatteryAdActivity;
 import com.receptix.batterybuddy.activities.LockAdsActivity;
+import com.receptix.batterybuddy.helper.UserSessionManager;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_ACTIVE;
@@ -28,6 +29,7 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, Intent intent) {
+
 
         if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
             isScreenOn = true;
@@ -69,8 +71,8 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
         this.context = context;
+
         /*PackageManager pm = context.getPackageManager();
         Intent launchIntent = pm.getLaunchIntentForPackage(APP_PACKAGE_NAME);
         launchIntent.putExtra(FROM, BROADCAST_RECEIVER);

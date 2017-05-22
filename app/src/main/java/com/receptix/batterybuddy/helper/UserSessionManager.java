@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_FIRST_TIME;
+import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_ONE_DAY_FINISHED;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_OPTIMIZED_NOW;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.PREFER_NAME;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.PRIVATE_MODE;
@@ -40,6 +41,16 @@ public class UserSessionManager {
 
     public void setIsFirstTime(boolean isFirstTime){
         editor.putBoolean(IS_FIRST_TIME,isFirstTime);
+        editor.commit();
+    }
+    public boolean isOneDayFinished(){
+
+        return sharedPreferences.getBoolean(IS_ONE_DAY_FINISHED,false);
+    }
+
+    public void setIsOneDayFinished(boolean isOneDayFinished){
+
+        editor.putBoolean(IS_ONE_DAY_FINISHED,isOneDayFinished);
         editor.commit();
     }
 }

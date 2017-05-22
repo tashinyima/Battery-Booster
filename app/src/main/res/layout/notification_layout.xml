@@ -14,10 +14,12 @@
         android:src="@mipmap/ic_launcher" />
 
     <TextView
+
         android:id="@+id/title"
-        style="@style/CustomBaseTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_toRightOf="@id/image"
-        android:text="@string/notification_title_optimize"
+        android:text="@string/optimizetexttitle"
         android:textColor="@color/white"
         android:textSize="@dimen/small_text_size" />
 
@@ -27,9 +29,8 @@
         android:layout_below="@id/title"
         android:layout_toRightOf="@id/image"
         android:text="Testing is awecome"
-        android:visibility="gone"
         android:textColor="@color/white"
-        android:textSize="13dp" />
+        android:textSize="12dp" />
 
     <Button
         android:id="@+id/notificationOptimizerBtn"

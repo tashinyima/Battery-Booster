@@ -15,6 +15,7 @@ public class Constants {
 
         public static final String PREFERENCES_IS_ACTIVE = "pref_is_active";
         public static final String IS_ACTIVE = "is_active";
+        public static final String IS_ONE_DAY_FINISHED="is_one_day_finished";
     }
 
 

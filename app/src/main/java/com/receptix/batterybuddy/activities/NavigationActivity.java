@@ -1,6 +1,8 @@
 package com.receptix.batterybuddy.activities;
 
+import android.app.AlarmManager;
 import android.app.KeyguardManager;
+import android.app.NativeActivity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -32,6 +34,7 @@ import com.receptix.batterybuddy.R;
 import com.receptix.batterybuddy.fragments.ChargeFragment;
 import com.receptix.batterybuddy.fragments.HomeFragment;
 import com.receptix.batterybuddy.fragments.RankFragment;
+import com.receptix.batterybuddy.receiver.AlarmReceiver;
 
 import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_ACTIVE;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.PREFERENCES_IS_ACTIVE;
@@ -73,6 +76,21 @@ public class NavigationActivity extends AppCompatActivity
 
         sendCustomNotification();
         setupBottomNavigationBar();
+        startAlarm();
+
+
+    }
+
+    private void startAlarm() {
+
+        Intent alarmIntent = new Intent(NavigationActivity.this, AlarmReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(NavigationActivity.this, 0, alarmIntent, 0);
+
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        int interval = 24*60*60*1000;
+
+        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
+       // manager.setInexactRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),AlarmManager.INTERVAL_DAY,pendingIntent);
 
     }
 
