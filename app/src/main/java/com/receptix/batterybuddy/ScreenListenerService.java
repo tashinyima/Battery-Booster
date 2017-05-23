@@ -19,10 +19,12 @@ public class ScreenListenerService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+                Log.e("ScreenListenerService", "ACTION_SCREEN_ON");
                 Intent i = new Intent(context, LockAdsActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(i);
             } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+                Log.e("ScreenListenerService", "ACTION_SCREEN_OFF");
                 Intent i = new Intent(context, LockAdsActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 /*context.startActivity(i);*/
@@ -35,7 +37,6 @@ public class ScreenListenerService extends Service {
         super.onCreate();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_SCREEN_ON);
-        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
         registerReceiver(mScreenStateBroadcastReceiver, intentFilter);
         Log.e("ScreenListener", "onCreate()");
 

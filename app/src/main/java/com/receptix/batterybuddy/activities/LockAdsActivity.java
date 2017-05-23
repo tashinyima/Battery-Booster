@@ -144,7 +144,7 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
                 int scale = intent.getIntExtra(BATTERY_SCALE, 0);
                 float percentage = level / (float) scale;
                 int batteryLevel = (int) ((percentage) * 100);
-                binding.lockbatteryArcProgress.setSuffixText((char) 0x00b0 + "C");
+                binding.lockbatteryArcProgress.setSuffixText(getString(R.string.percentage_symbol));
                 binding.lockbatteryArcProgress.setProgress(batteryLevel);
                 String batteryLevelString = batteryLevel + getString(R.string.percentage_symbol);
                 binding.lockBatteryLevelTextView.setText(batteryLevelString);
