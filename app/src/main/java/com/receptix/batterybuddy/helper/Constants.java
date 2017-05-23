@@ -172,4 +172,14 @@ public class Constants {
         public static final String URL_OZOCK = "http://www.ozock.com/";
     }
 
+    public static class APPS_FLYER_ATTRIBUTES
+    {
+        public static final String INSTALL_TYPE = "af_status";
+        public static final String MEDIA_SOURCE = "media_source";
+        public static final String INSTALL_TIME = "install_time";
+        public static final String CLICK_TIME = "click_time";
+        public static final String INSTALL_CAMPAIGN = "campaign";
+        public static final String AGENCY = "agency";
+    }
+
 }
