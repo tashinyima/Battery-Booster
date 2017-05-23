@@ -1,19 +1,28 @@
 package com.receptix.batterybuddy.activities;
 
+import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.KeyguardManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.BatteryManager;
+import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.inmobi.ads.InMobiBanner;
 import com.inmobi.sdk.InMobiSdk;
@@ -51,27 +60,21 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-        
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_lock_ads);
-        
+
         myActivityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
         
         this.context = getApplicationContext();
 
-        // TODO: 19-May-17 Update Code for InMobi ads from Sample
-        // initialize InMobiSDK and load ad
+        // initialize InMobi SDK and load ad
         bannerAd = (InMobiBanner) findViewById(R.id.banner);
         InMobiSdk.init(LockAdsActivity.this, "4a38c3c40747428fa346cb0456d9034f");
         bannerAd.load();
 
         InitializeData();
 
-        binding.closeLockScreenPopup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        binding.closeLockScreenPopup.setOnClickListener(this);
     }
 
     private void InitializeData() {
@@ -174,9 +177,11 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        /*
-        showMessage("I am Clicked man");
-        finish();*/
+        if(v==binding.closeLockScreenPopup)
+        {
+            finish();
+            overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+        }
     }
 
     @Override
@@ -187,4 +192,12 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
     private void showMessage(String s) {
         /*Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();*/
     }
+
+    @Override
+    protected void onDestroy() {
+        if(battery_info_receiver!=null)
+            LockAdsActivity.this.unregisterReceiver(battery_info_receiver);
+        super.onDestroy();
+    }
+
 }

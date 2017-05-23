@@ -32,6 +32,7 @@ import com.google.gson.JsonPrimitive;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.receptix.batterybuddy.R;
+import com.receptix.batterybuddy.ScreenListenerService;
 import com.receptix.batterybuddy.helper.UserSessionManager;
 import com.receptix.batterybuddy.helper.Utils;
 
@@ -75,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         context = getApplicationContext();
         userSessionManager = new UserSessionManager(context);
+
+        //start screen listener service
+        startService(new Intent(this, ScreenListenerService.class));
 
         AppsFlyerLib.getInstance().startTracking(this.getApplication(), getString(R.string.apps_flyer_dev_key));
         /*
@@ -262,5 +266,8 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-
+    @Override
+    public void onBackPressed() {
+        // do nothing if user presses back button (let the activity load)
+    }
 }
