@@ -97,7 +97,7 @@
         android:layout_marginTop="20dp"
         android:orientation="horizontal"
         android:padding="10dp"
-        android:weightSum="300">
+        android:weightSum="200">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -146,29 +146,7 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_weight="100"
-            android:gravity="center"
-            android:orientation="vertical">
 
-            <com.github.lzyzsd.circleprogress.ArcProgress
-                android:id="@+id/cpuArcProgress"
-                app:arc_finished_color="@color/colorGreen"
-                app:arc_text_color="@color/white"
-                app:arc_unfinished_color="@color/white"
-                style="@style/ArcProgressLayout" />
-
-            <TextView
-                style="@style/CustomBaseTextView"
-                android:gravity="center"
-                android:paddingTop="5dp"
-                android:text="@string/cputext"
-                android:textColor="@color/white" />
-
-        </LinearLayout>
 
 
     </LinearLayout>

@@ -41,7 +41,7 @@ public class BatteryAdActivity extends AppCompatActivity implements View.OnClick
     LinearLayout adsLinearLayout, swipeLinearLayout;
     ActivityManager myActivityManager;
     Context context;
-    ArcProgress arcProgress_Ram, arcProgress_Battery, cpuArcProgress;
+    ArcProgress arcProgress_Ram, arcProgress_Battery;
     TextView dateTextView;
     Calendar calendar;
     private SensorManager mSensorManager;
@@ -206,9 +206,7 @@ public class BatteryAdActivity extends AppCompatActivity implements View.OnClick
         arcProgress_Ram = (ArcProgress) findViewById(R.id.ramArcProgress);
         dateTextView = (TextView) findViewById(R.id.datetv);
         arcProgress_Battery = (ArcProgress) findViewById(R.id.batteryArcProgress);
-        cpuArcProgress = (ArcProgress) findViewById(R.id.cpuArcProgress);
-        cpuArcProgress.setSuffixText((char) 0x00b0 + "C");
-        cpuArcProgress.setProgress(54);
+
         batteryProgressbar = (ProgressBar) findViewById(R.id.batteryProgressBar);
         batteryLevelTextView = (TextView) findViewById(R.id.batteryLevelTextView);
         batteryChargingStatusTextView= (TextView) findViewById(R.id.batteryChargingStatusTextView);
