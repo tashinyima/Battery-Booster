@@ -50,7 +50,7 @@ dependencies {
     compile 'net.bohush.geometricprogressview:geometricprogressview:1.1.1'
     testCompile 'junit:junit:4.12'
     compile 'com.koushikdutta.ion:ion:2.1.9'
-    compile 'com.appsflyer:af-android-sdk:4.7.2'
+    compile 'com.appsflyer:af-android-sdk:4.7.2@aar'
 
 }
 
