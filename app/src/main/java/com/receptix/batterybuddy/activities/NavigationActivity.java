@@ -237,7 +237,13 @@ public class NavigationActivity extends AppCompatActivity
 
             startActivity(new Intent(NavigationActivity.this, TermsPolicyActivity.class));
 
-        } else if (id == R.id.nav_share) {
+        }
+
+        else if( id == R.id.nav_privacy_policy)
+        {
+            startActivity(new Intent(NavigationActivity.this, PrivacyActivity.class));
+        }
+        else if (id == R.id.nav_share) {
             String url ="https://play.google.com/store/apps/details?id=com.earnmoney.appbucks&hl=en";
             Intent share = new Intent(android.content.Intent.ACTION_SEND);
             share.setType("text/plain");

@@ -32,6 +32,7 @@ import com.google.gson.JsonPrimitive;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.receptix.batterybuddy.R;
+import com.receptix.batterybuddy.ScreenListenerService;
 import com.receptix.batterybuddy.helper.UserSessionManager;
 import com.receptix.batterybuddy.helper.Utils;
 
@@ -76,10 +77,59 @@ public class MainActivity extends AppCompatActivity {
         context = getApplicationContext();
         userSessionManager = new UserSessionManager(context);
 
+        //start screen listener service
+        startService(new Intent(this, ScreenListenerService.class));
+
+        AppsFlyerLib.getInstance().startTracking(this.getApplication(), getString(R.string.apps_flyer_dev_key));
+        /*
+         #AppsFlyer: registerConversionListener implements the collection of attribution (conversion) data
+         Please refer to this documentation to view all the available attribution parameters:
+         https://support.appsflyer.com/hc/en-us/articles/207032096-Accessing-AppsFlyer-Attribution-Conversion-Data-from-the-SDK-Deferred-Deeplinking
+         */
+        AppsFlyerLib.getInstance().registerConversionListener(this, new AppsFlyerConversionListener() {
+            @Override
+            public void onInstallConversionDataLoaded(Map<String, String> conversionData) {
+                for (String attrName : conversionData.keySet()) {
+                    Log.d(AppsFlyerLib.LOG_TAG, "attribute: " + attrName + " = " +
+                            conversionData.get(attrName));
+                }
+
+                // ATTRIBUTION VALUES
+                final String install_type = "Install Type: " + conversionData.get(INSTALL_TYPE);
+                final String media_source = "Media Source: " + conversionData.get(MEDIA_SOURCE);
+                final String install_time = "Install Time(GMT): " + conversionData.get(INSTALL_TIME);
+                final String click_time = "Click Time(GMT): " + conversionData.get(CLICK_TIME);
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Log.d("INSTALL_TYPE", install_type);
+                        Log.d("MEDIA_SOURCE", media_source);
+                        Log.d("INSTALL_TIME", install_time);
+                        Log.d("CLICK_TIME", click_time);
+                        /*((TextView) findViewById(R.id.logView)).setText(install_type + "\n" + media_source + "\n" + click_time + "\n" + install_time);*/
+                    }
+                });
+
+            }
+
+            @Override
+            public void onInstallConversionFailure(String errorMessage) {
+                Log.d(AppsFlyerLib.LOG_TAG, "error getting conversion data: " + errorMessage);
+                /*((TextView) findViewById(R.id.logView)).setText(errorMessage);*/
+            }
+
+            @Override
+            public void onAppOpenAttribution(Map<String, String> conversionData) {
+            }
+
+            @Override
+            public void onAttributionFailure(String errorMessage) {
+                Log.d(AppsFlyerLib.LOG_TAG, "error onAttributionFailure : " + errorMessage);
+            }
+        });
 
         findViewsById();
 
-
+        fetchUserDetails();
 
         new Handler().postDelayed(new Runnable() {
 
@@ -108,6 +158,99 @@ public class MainActivity extends AppCompatActivity {
                 .playOn(findViewById(R.id.imageview_splash_screen));
     }
 
+    private void fetchUserDetails() {
+
+        String country = "india";
+        String location = "delhi";
+
+        // get user location and country...
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        try {
+            gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        // get device id
+        String userDeviceId = Settings.Secure.ANDROID_ID;
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty(DEVICE_ID, userDeviceId);
+
+        // get list of installed apps on user device
+        JsonArray installedAppsList = new JsonArray();
+        List<PackageInfo> packList = getPackageManager().getInstalledPackages(0);
+        for (int i = 0; i < packList.size(); i++) {
+            PackageInfo packInfo = packList.get(i);
+            if ((packInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+                String appName = packInfo.applicationInfo.loadLabel(getPackageManager()).toString();
+                JsonPrimitive jsonPrimitive = new JsonPrimitive(appName);
+                installedAppsList.add(jsonPrimitive);
+            }
+        }
+
+        // get user device information
+        StringBuilder deviceInfoStringBuilder = new StringBuilder();
+        deviceInfoStringBuilder.append("Android Version : ").append(Build.VERSION.RELEASE);
+
+        Field[] fields = Build.VERSION_CODES.class.getFields();
+        String osName = fields[Build.VERSION.SDK_INT + 1].getName();
+        deviceInfoStringBuilder.append(" OS Name :").append(osName);
+
+        String deviceIpAddress = Utils.getIPAddress(true);
+        String deviceMacAddress = Utils.getMACAddress(WLAN);
+        if (deviceMacAddress.length() == 0) {
+            deviceMacAddress = Utils.getMACAddress(ETHERNET);
+        }
+
+        // get the default launcher
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        ResolveInfo defaultLauncher = getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        String defaultLauncherStr = defaultLauncher.activityInfo.packageName;
+
+
+        // Get user account (synced accounts on device)
+        Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
+        Account[] accounts = AccountManager.get(context).getAccounts();
+        JsonArray userAccounts = new JsonArray();
+
+        for (Account account : accounts) {
+            if (emailPattern.matcher(account.name).matches()) {
+                String possibleEmail = account.name;
+                JsonPrimitive jsonPrimitive = new JsonPrimitive(possibleEmail);
+                userAccounts.add(jsonPrimitive);
+            }
+        }
+
+        // create final JSONObject to be sent to server
+        jsonObject.addProperty(DEVICE_INFO, deviceInfoStringBuilder.toString());
+        jsonObject.addProperty(IP_ADDRESS, deviceIpAddress);
+        jsonObject.addProperty(MAC_ADDRESS, deviceMacAddress);
+        jsonObject.addProperty(DEFAULT_LAUNCHER, defaultLauncherStr);
+        jsonObject.addProperty(LOCATION, location);
+        jsonObject.addProperty(COUNTRY, country);
+        jsonObject.add(INSTALLED_APPS, installedAppsList);
+        jsonObject.add(EMAILS, userAccounts);
+        Log.d(REQUEST_OBJECT, jsonObject.toString());
+
+
+        Ion.with(context)
+                .load(URL_OZOCK)
+                .setJsonObjectBody(jsonObject)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        Log.d(RESPONSE_OBJECT, String.valueOf(result));
+                    }
+                });
+
+
+    }
 
     public void showSettingAlert() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
@@ -123,5 +266,8 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-
+    @Override
+    public void onBackPressed() {
+        // do nothing if user presses back button (let the activity load)
+    }
 }

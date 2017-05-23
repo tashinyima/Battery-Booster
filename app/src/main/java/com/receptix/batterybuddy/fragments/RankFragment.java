@@ -123,9 +123,12 @@ public class RankFragment extends Fragment {
            /* Log.e(packageName+"\t","\t" + memoryUsedByPackage/1024 + "Mb \t ==> "+ percentageUsed + "%");*/
             // show only those apps which are using memory > 0 %
             if(percentageUsed >0 ){
-                RankData rankdata = new RankData(packageName, percentageUsed+" %", appicon, type, applicationName);
-                rankDataList.add(rankdata);
-                rankAdapter.notifyDataSetChanged();
+                if(!applicationName.equalsIgnoreCase(getString(R.string.app_name)))
+                {
+                    RankData rankdata = new RankData(packageName, percentageUsed+" %", appicon, type, applicationName);
+                    rankDataList.add(rankdata);
+                    rankAdapter.notifyDataSetChanged();
+                }
             }
         }
     }

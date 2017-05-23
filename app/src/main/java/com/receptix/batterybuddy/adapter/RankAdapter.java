@@ -56,66 +56,56 @@ public class RankAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         final RankData rankData = rankDatas.get(position);
 
-        if(rankData!=null){
-            try{
-
-            if(holder instanceof SystemTypeViewHolder){
-
+        if (rankData != null) {
+            try {
+                if (holder instanceof SystemTypeViewHolder) {
                     ((SystemTypeViewHolder) holder).spackageName.setText(rankData.getPackageLabel());
                     ((SystemTypeViewHolder) holder).sbatteyUsage.setText(rankData.getPowerUsage());
                     ((SystemTypeViewHolder) holder).spackageImage.setImageDrawable(rankData.getPackageIcon());
-                   // Glide.with(context).load(rankData.getPackageIcon()).error(R.drawable.kiwi).into(((SystemTypeViewHolder) holder).spackageImage);
-                ((SystemTypeViewHolder) holder).checkbutton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                    // Glide.with(context).load(rankData.getPackageIcon()).error(R.drawable.kiwi).into(((SystemTypeViewHolder) holder).spackageImage);
+                    ((SystemTypeViewHolder) holder).checkbutton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                        /*showMessage("System");*/
+                            Intent i = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            i.addCategory(Intent.CATEGORY_DEFAULT);
+                            i.setData(Uri.parse("package:" + rankData.getPackageName()));
+                            context.startActivity(i);
+                        }
+                    });
 
 
-                        showMessage("System");
-                        Intent i = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        i.addCategory(Intent.CATEGORY_DEFAULT);
-                        i.setData(Uri.parse("package:" + rankData.getPackageName()));
-                        context.startActivity(i);
+                } else if (holder instanceof InstalledTypeViewHolder) {
 
-                    }
-                });
+                    ((InstalledTypeViewHolder) holder).packageName.setText(rankData.getPackageLabel());
+                    ((InstalledTypeViewHolder) holder).batteryUsage.setText(rankData.getPowerUsage());
+                    ((InstalledTypeViewHolder) holder).packageImage.setImageDrawable(rankData.getPackageIcon());
+                    //  Glide.with(context).load(rankData.getPackageIcon()).error(R.drawable.rabbit32).into(((InstalledTypeViewHolder) holder).packageImage);
+                    ((InstalledTypeViewHolder) holder).closebutton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(Intent.ACTION_DELETE);
+                            intent.setData(Uri.parse("package:" + rankData.getPackageName()));
+                            context.startActivity(intent);
+                        /*showMessage("Non_System");*/
 
-
-                } else if(holder instanceof InstalledTypeViewHolder){
-
-                ((InstalledTypeViewHolder) holder).packageName.setText(rankData.getPackageLabel());
-                ((InstalledTypeViewHolder) holder).batteryUsage.setText(rankData.getPowerUsage());
-                ((InstalledTypeViewHolder) holder).packageImage.setImageDrawable(rankData.getPackageIcon());
-               //  Glide.with(context).load(rankData.getPackageIcon()).error(R.drawable.rabbit32).into(((InstalledTypeViewHolder) holder).packageImage);
-                ((InstalledTypeViewHolder) holder).closebutton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        Intent intent = new Intent(Intent.ACTION_DELETE);
-                        intent.setData(Uri.parse("package:"+rankData.getPackageName()));
-                        context.startActivity(intent);
-
-                        showMessage("Non_System");
-
-                    }
-                });
+                        }
+                    });
 
 
+                }
 
-            }
-
-            }catch (Exception ex){
+            } catch (Exception ex) {
 
                 ex.fillInStackTrace();
             }
         }
 
 
-
-
     }
 
     private void showMessage(String system) {
-        Toast.makeText(context,system, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, system, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -149,8 +139,6 @@ public class RankAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             packageName.setEms(9);
             batteryUsage = (TextView) itemView.findViewById(R.id.powerConsumedTextView);
             closebutton = (Button) itemView.findViewById(R.id.checkbutton);
-
-
         }
     }
 
