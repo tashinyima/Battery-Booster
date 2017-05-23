@@ -23,6 +23,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.lzyzsd.circleprogress.ArcProgress;
+import com.inmobi.ads.InMobiBanner;
+import com.inmobi.sdk.InMobiSdk;
 import com.receptix.batterybuddy.R;
 
 import java.text.SimpleDateFormat;
@@ -48,6 +50,7 @@ public class BatteryAdActivity extends AppCompatActivity implements View.OnClick
     private Sensor mTempSensor;
     ProgressBar batteryProgressbar;
     TextView batteryLevelTextView,batteryChargingStatusTextView;
+    InMobiBanner banner;
 
 
     @Override
@@ -61,6 +64,9 @@ public class BatteryAdActivity extends AppCompatActivity implements View.OnClick
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
         mSensorManager.registerListener(this, mTempSensor, SensorManager.SENSOR_DELAY_FASTEST);
+        banner = (InMobiBanner) findViewById(R.id.banner);
+        InMobiSdk.init(BatteryAdActivity.this, "4a38c3c40747428fa346cb0456d9034f");
+        banner.load();
 
         initView();
         InitializeSystemData();
@@ -218,7 +224,7 @@ public class BatteryAdActivity extends AppCompatActivity implements View.OnClick
         Toast.makeText(this, "I am clicked ", Toast.LENGTH_SHORT).show();
         switch (v.getId()) {
             case R.id.swipeLinearLayout:
-                finish();
+
                 break;
             case R.id.adsLinearLayout:
                 break;
