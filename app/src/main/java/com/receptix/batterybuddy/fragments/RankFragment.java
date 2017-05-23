@@ -270,37 +270,42 @@ public class RankFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            Log.e("LoadRankData", "onPostExecute()");
-            if (progressBar != null)
-                progressBar.setVisibility(View.GONE);
 
-            LoadSystemApps(view);
+            if(isAdded())
+            {
+                Log.e("LoadRankData", "onPostExecute()");
+                if (progressBar != null)
+                    progressBar.setVisibility(View.GONE);
 
-            // now perform cross-fading of loading imageView and recyclerView_runningServices
-            // Set the content view to 0% opacity but visible, so that it is visible
-            // (but fully transparent) during the animation.
-            recyclerView_runningServices.setAlpha(0f);
-            recyclerView_runningServices.setVisibility(View.VISIBLE);
+                LoadSystemApps(view);
 
-            // Animate the content view to 100% opacity, and clear any animation
-            // listener set on the view.
-            recyclerView_runningServices.animate()
-                    .alpha(1f)
-                    .setDuration(mShortAnimationDuration)
-                    .setListener(null);
+                // now perform cross-fading of loading imageView and recyclerView_runningServices
+                // Set the content view to 0% opacity but visible, so that it is visible
+                // (but fully transparent) during the animation.
+                recyclerView_runningServices.setAlpha(0f);
+                recyclerView_runningServices.setVisibility(View.VISIBLE);
 
-            // Animate the loading view to 0% opacity. After the animation ends,
-            // set its visibility to GONE as an optimization step (it won't
-            // participate in layout passes, etc.)
-            imageView_systemAnalyzerProgress.animate()
-                    .alpha(0f)
-                    .setDuration(mShortAnimationDuration)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            imageView_systemAnalyzerProgress.setVisibility(View.GONE);
-                        }
-                    });
+                // Animate the content view to 100% opacity, and clear any animation
+                // listener set on the view.
+                recyclerView_runningServices.animate()
+                        .alpha(1f)
+                        .setDuration(mShortAnimationDuration)
+                        .setListener(null);
+
+                // Animate the loading view to 0% opacity. After the animation ends,
+                // set its visibility to GONE as an optimization step (it won't
+                // participate in layout passes, etc.)
+                imageView_systemAnalyzerProgress.animate()
+                        .alpha(0f)
+                        .setDuration(mShortAnimationDuration)
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                imageView_systemAnalyzerProgress.setVisibility(View.GONE);
+                            }
+                        });
+            }
+
         }
     }
 }
