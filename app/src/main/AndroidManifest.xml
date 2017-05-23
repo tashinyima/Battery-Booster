@@ -150,6 +150,16 @@
             </intent-filter>
         </receiver>
 
+
+        <service android:name="com.google.android.gms.tagmanager.InstallReferrerService"/>
+        <receiver
+            android:name=".receiver.InstallReferrerReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+
         <service android:name="com.receptix.batterybuddy.BatteryUpdateService"
             android:exported="false"
             />
