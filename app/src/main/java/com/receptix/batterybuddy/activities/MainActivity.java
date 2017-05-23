@@ -19,7 +19,10 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.Patterns;
+import android.widget.ImageView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -55,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     Context context;
     // Splash screen timer
     private static int SPLASH_TIME_OUT = 3000;
+    private ImageView imageView_splashScreen;
 
 
     @Override
@@ -63,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         context = getApplicationContext();
         userSessionManager = new UserSessionManager(context);
+
+        findViewsById();
 
         fetchUserDetails();
 
@@ -84,6 +90,13 @@ public class MainActivity extends AppCompatActivity {
         }, SPLASH_TIME_OUT);
 
 
+    }
+
+    private void findViewsById() {
+        imageView_splashScreen = (ImageView) findViewById(R.id.imageview_splash_screen);
+        YoYo.with(Techniques.Bounce)
+                .repeat(10)
+                .playOn(findViewById(R.id.imageview_splash_screen));
     }
 
     private void fetchUserDetails() {
