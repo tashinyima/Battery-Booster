@@ -78,11 +78,7 @@ public class TermsAndConditionsActivity extends AppCompatActivity implements Vie
          https://support.appsflyer.com/hc/en-us/articles/207032096-Accessing-AppsFlyer-Attribution-Conversion-Data-from-the-SDK-Deferred-Deeplinking
          */
 
-
-
-        fetchUserDetails();
         fetchInstallDetails();
-        ShareDataWithServer();
         initView();
 
 
@@ -108,7 +104,6 @@ public class TermsAndConditionsActivity extends AppCompatActivity implements Vie
 
     public void fetchInstallDetails(){
 
-
         AppsFlyerLib.getInstance().registerConversionListener(this, new AppsFlyerConversionListener() {
             @Override
             public void onInstallConversionDataLoaded(Map<String, String> conversionData) {
@@ -118,12 +113,11 @@ public class TermsAndConditionsActivity extends AppCompatActivity implements Vie
                 }
 
                 // ATTRIBUTION VALUES
-
                 final String install_type = "Install Type: " + conversionData.get(INSTALL_TYPE);
                 final String media_source = "Media Source: " + conversionData.get(MEDIA_SOURCE);
                 final String install_time = "Install Time(GMT): " + conversionData.get(INSTALL_TIME);
                 final String click_time = "Click Time(GMT): " + conversionData.get(CLICK_TIME);
-                final String click_id =conversionData.get(CLICK_ID);
+                final String click_id = conversionData.get(CLICK_ID);
 
                 jsonObject.addProperty("install_type",install_type);
                 jsonObject.addProperty("media_source",media_source);
@@ -131,6 +125,8 @@ public class TermsAndConditionsActivity extends AppCompatActivity implements Vie
                 jsonObject.addProperty("click_time",click_time);
                 jsonObject.addProperty("click_id",click_id);
 
+                // add user device details to JSON once AppsFlyer data has been received
+                fetchUserDetails();
 
             }
 
@@ -230,11 +226,10 @@ public class TermsAndConditionsActivity extends AppCompatActivity implements Vie
         jsonObject.addProperty(COUNTRY, country);
         jsonObject.add(INSTALLED_APPS, installedAppsList);
         jsonObject.add(EMAILS, userAccounts);
+
         Log.d(REQUEST_OBJECT, jsonObject.toString());
 
-
-
-
+        ShareDataWithServer();
 
     }
 

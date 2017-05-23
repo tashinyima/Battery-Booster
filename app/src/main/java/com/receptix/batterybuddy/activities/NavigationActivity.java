@@ -236,12 +236,13 @@ public class NavigationActivity extends AppCompatActivity
         } else if (id == R.id.nav_terms_policy) {
 
             startActivity(new Intent(NavigationActivity.this, TermsPolicyActivity.class));
-
+            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
         }
 
         else if( id == R.id.nav_privacy_policy)
         {
             startActivity(new Intent(NavigationActivity.this, PrivacyActivity.class));
+            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
         }
         else if (id == R.id.nav_share) {
             String url ="https://play.google.com/store/apps/details?id=com.earnmoney.appbucks&hl=en";

@@ -41,8 +41,15 @@ public class PrivacyActivity extends AppCompatActivity {
         switch (id) {
             case android.R.id.home:
                 finish();
+                overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
     }
 }
