@@ -2,6 +2,7 @@ package com.receptix.batterybuddy.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -41,9 +42,12 @@ public class SuccessOptimizerActivity extends AppCompatActivity {
         handleIntent(getIntent());
         findViewsById();
 
-        YoYo.with(Techniques.Shake)
-                .repeat(10)
-                .playOn(findViewById(R.id.imageview_successful_optimization));
+        if(Build.VERSION.SDK_INT>19)
+        {
+            YoYo.with(Techniques.Shake)
+                    .repeat(10)
+                    .playOn(findViewById(R.id.imageview_successful_optimization));
+        }
 
 
           // open AdsActivity after animation completes

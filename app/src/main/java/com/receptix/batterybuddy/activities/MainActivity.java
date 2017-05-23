@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
         findViewsById();
 
-        fetchUserDetails();
+      /*  fetchUserDetails();*/
 
         new Handler().postDelayed(new Runnable() {
 
@@ -106,9 +106,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void findViewsById() {
         imageView_splashScreen = (ImageView) findViewById(R.id.imageview_splash_screen);
-        YoYo.with(Techniques.Bounce)
+       /* YoYo.with(Techniques.Bounce)
                 .repeat(10)
-                .playOn(findViewById(R.id.imageview_splash_screen));
+                .playOn(findViewById(R.id.imageview_splash_screen));*/
     }
 
     private void fetchUserDetails() {
@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         deviceInfoStringBuilder.append("Android Version : ").append(Build.VERSION.RELEASE);
 
         Field[] fields = Build.VERSION_CODES.class.getFields();
-        String osName = fields[Build.VERSION.SDK_INT + 1].getName();
+        String osName = fields[Build.VERSION.SDK_INT].getName();
         deviceInfoStringBuilder.append(" OS Name :").append(osName);
 
         String deviceIpAddress = Utils.getIPAddress(true);
