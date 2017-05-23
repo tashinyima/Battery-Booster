@@ -151,4 +151,25 @@ public class Constants {
         public static final int CURRENT_RATE_AC = 1000;
     }
 
+    public static class JsonProperties {
+        public static final String DEVICE_INFO = "deviceInfo";
+        public static final String DEVICE_ID = "deviceId";
+        public static final String IP_ADDRESS = "ipaddress";
+        public static final String MAC_ADDRESS = "macaddress";
+        public static final String WLAN = "wlan0";
+        public static final String ETHERNET = "eth0";
+        public static final String DEFAULT_LAUNCHER = "launcher";
+        public static final String LOCATION = "location";
+        public static final String COUNTRY = "country";
+        public static final String EMAILS = "emails";
+        public static final String INSTALLED_APPS = "installedapps";
+        public static final String REQUEST_OBJECT = "requestObject";
+        public static final String RESPONSE_OBJECT = "responseObject";
+    }
+
+    public static class Urls
+    {
+        public static final String URL_OZOCK = "http://www.ozock.com/";
+    }
+
 }

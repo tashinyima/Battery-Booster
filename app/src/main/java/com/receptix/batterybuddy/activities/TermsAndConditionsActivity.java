@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.receptix.batterybuddy.R;
 import com.receptix.batterybuddy.helper.UserSessionManager;
 
-public class TCActivity extends AppCompatActivity implements View.OnClickListener {
+public class TermsAndConditionsActivity extends AppCompatActivity implements View.OnClickListener {
 
     TextView secondtextView,fourthtextView;
     UserSessionManager userSessionManager;
@@ -43,17 +43,17 @@ public class TCActivity extends AppCompatActivity implements View.OnClickListene
     public void onClick(View v) {
         if(v.getId()==R.id.secondtv){
 
-            startActivity(new Intent(TCActivity.this, TermsPolicyActivity.class));
+            startActivity(new Intent(TermsAndConditionsActivity.this, TermsPolicyActivity.class));
 
 
         }else if(v.getId()==R.id.fourthtv){
 
-             startActivity(new Intent(TCActivity.this, PrivacyActivity.class));
+             startActivity(new Intent(TermsAndConditionsActivity.this, PrivacyActivity.class));
 
         }else if(v.getId()==R.id.useragreeBtn){
 
 
-            startActivity(new Intent(TCActivity.this,NavigationActivity.class));
+            startActivity(new Intent(TermsAndConditionsActivity.this,NavigationActivity.class));
             userSessionManager.setIsFirstTime(false);
             finish();
         }

