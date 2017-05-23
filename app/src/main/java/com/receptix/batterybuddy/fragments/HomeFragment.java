@@ -111,7 +111,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     int inWhichBrightness = 0;
     int WhatisLockScreenTimeOut = 0;
     int isBluetoothOn; // 1 = if Bluetooth OFF, 0 otherwise
-    
+
     BluetoothAdapter bluetoothAdapter;
     AudioManager audioManagerMode = null;
 
@@ -120,7 +120,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     BatteryManager myBatteryManger;
     UserSessionManager userSessionManager;
-    
+
     private int mProgressStatus = 0;
     private int screenBrightness = 0;
 
@@ -218,16 +218,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void isOptimizedCheck() {
-        if(userSessionManager.isOptimized()){
+        if (userSessionManager.isOptimized()) {
 
             homeBinding.buttonOptimizeBattery.setBackgroundResource(R.drawable.optimizedbuttonbgcolor);
             homeBinding.textviewProblemsDetected.setText(getString(R.string.noproblemdetected));
-            homeBinding.textviewProblemsDetected.setTextColor(ContextCompat.getColor(context,R.color.optimizedbtncolor));
+            homeBinding.textviewProblemsDetected.setTextColor(ContextCompat.getColor(context, R.color.optimizedbtncolor));
             homeBinding.textviewIssueCount.setVisibility(View.INVISIBLE);
             TerminateSession();
-        }else {
+        } else {
             homeBinding.buttonOptimizeBattery.setBackgroundResource(R.drawable.optimizerbuttonbgcolor);
-            homeBinding.textviewProblemsDetected.setTextColor(ContextCompat.getColor(context,R.color.buttonColor));
+            homeBinding.textviewProblemsDetected.setTextColor(ContextCompat.getColor(context, R.color.buttonColor));
             homeBinding.textviewIssueCount.setVisibility(View.VISIBLE);
         }
     }
@@ -411,9 +411,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             inWhichBrightness = BRIGHTNESS_LEVEL_9;
             brightnessTextViewString = getString(R.string.ninebright);
         }
-        
+
         homeBinding.brightnessTextView.setText(brightnessTextViewString);
-        
+
     }
 
     private void registerBatteryInfoReceiver() {
@@ -428,6 +428,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         homeBinding.bluetoothLinearLayout.setOnClickListener(this);
         homeBinding.soundLinearLayout.setOnClickListener(this);
     }
+
     private void getValueInHoursMinutes(double remainingScreenTime, int statisticType) {
 
         int hours = (int) remainingScreenTime;
@@ -476,8 +477,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         // BUTTON - OPTIMIZE
-        if(v == homeBinding.buttonOptimizeBattery)
-        {
+        if (v == homeBinding.buttonOptimizeBattery) {
             if (!userSessionManager.isOptimized()) {
                 userSessionManager.setIsOptimized(true);
                 TerminateSession();
@@ -492,29 +492,25 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }
 
         // BRIGHTNESS SELECTION OPTIONS
-        if(v == homeBinding.brightnessLinearLayout)
-        {
+        if (v == homeBinding.brightnessLinearLayout) {
             showMessage("I am brightness");
             SetScreenBrightness();
         }
 
         // LOCK SCREEN TIMEOUT SELECTION OPTIONS
-        if(v == homeBinding.lockscreenLinearLayout)
-        {
+        if (v == homeBinding.lockscreenLinearLayout) {
             showMessage("I am Lock ");
             SetLockScreenTimer();
         }
 
         // BLUETOOTH TOGGLE OPTIONS
-        if(v == homeBinding.bluetoothLinearLayout)
-        {
+        if (v == homeBinding.bluetoothLinearLayout) {
             showMessage("I am Bluetooth");
             OnOffBluetooth();
         }
 
         // SOUND TOGGLE OPTIONS
-        if(v == homeBinding.soundLinearLayout)
-        {
+        if (v == homeBinding.soundLinearLayout) {
             showMessage("I am Sound ");
             SoundStatusChange();
         }
@@ -809,25 +805,31 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                          **/
                         // Toast.makeText(context, which + ": " + text + ", ID = " + view.getId(), // Toast.LENGTH_SHORT).show();
 
-                        switch (which) {
-                            case 0:
-                                if (bluetoothAdapter.disable()) {
-                                    bluetoothAdapter.enable();
-                                    homeBinding.bluetoothTextView.setText(getString(R.string.on));
-                                    isBluetoothOn = 0;
-                                }
-                                break;
-                            case 1:
+                        try {
 
-                                if (bluetoothAdapter.enable()) {
-                                    bluetoothAdapter.disable();
-                                    homeBinding.bluetoothTextView.setText(getString(R.string.off));
-                                    isBluetoothOn = 1;
-                                }
-                                break;
+                            switch (which) {
+                                case 0:
+                                    if (bluetoothAdapter.disable()) {
+                                        bluetoothAdapter.enable();
+                                        homeBinding.bluetoothTextView.setText(getString(R.string.on));
+                                        isBluetoothOn = 0;
+                                    }
+                                    break;
+                                case 1:
 
+                                    if (bluetoothAdapter.enable()) {
+                                        bluetoothAdapter.disable();
+                                        homeBinding.bluetoothTextView.setText(getString(R.string.off));
+                                        isBluetoothOn = 1;
+                                    }
+                                    break;
+
+                            }
+
+
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
                         }
-
 
                         return true;
                     }
