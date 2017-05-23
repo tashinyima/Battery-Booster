@@ -4,12 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.receptix.batterybuddy.activities.PrivacyActivity">
 
-    <TextView
-        android:gravity="center"
-        android:text="@string/privacynotice"
+
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content">
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/app_bar" />
+    </android.support.design.widget.AppBarLayout>
+
+    <WebView
+        android:id="@+id/webview_privacy_policy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
 
 </LinearLayout>

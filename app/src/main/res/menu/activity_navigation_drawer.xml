@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="none">
         <item
             android:id="@+id/nav_about_us"
             android:icon="@drawable/ic_about_us"
@@ -14,6 +14,10 @@
             android:id="@+id/nav_terms_policy"
             android:icon="@drawable/ic_terms_ofuse"
             android:title="@string/nav_terms_policy" />
+        <item
+            android:id="@+id/nav_privacy_policy"
+            android:icon="@drawable/ic_feedback"
+            android:title="@string/privacy_policy_heading"/>
         <item
             android:id="@+id/nav_share"
             android:icon="@drawable/ic_share"

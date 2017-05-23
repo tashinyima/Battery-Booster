@@ -116,9 +116,9 @@ public class SuccessOptimizerActivity extends AppCompatActivity {
     }
 
     private void setupToolBar(String title) {
-
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(getSupportActionBar()!=null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         TextView textViewTitle = (TextView) toolbar.findViewById(R.id.textViewTitle);
         textViewTitle.setText(title);
     }
