@@ -80,53 +80,6 @@ public class MainActivity extends AppCompatActivity {
         //start screen listener service
         startService(new Intent(this, ScreenListenerService.class));
 
-        AppsFlyerLib.getInstance().startTracking(this.getApplication(), getString(R.string.apps_flyer_dev_key));
-        /*
-         #AppsFlyer: registerConversionListener implements the collection of attribution (conversion) data
-         Please refer to this documentation to view all the available attribution parameters:
-         https://support.appsflyer.com/hc/en-us/articles/207032096-Accessing-AppsFlyer-Attribution-Conversion-Data-from-the-SDK-Deferred-Deeplinking
-         */
-        AppsFlyerLib.getInstance().registerConversionListener(this, new AppsFlyerConversionListener() {
-            @Override
-            public void onInstallConversionDataLoaded(Map<String, String> conversionData) {
-                for (String attrName : conversionData.keySet()) {
-                    Log.d(AppsFlyerLib.LOG_TAG, "attribute: " + attrName + " = " +
-                            conversionData.get(attrName));
-                }
-
-                // ATTRIBUTION VALUES
-                final String install_type = "Install Type: " + conversionData.get(INSTALL_TYPE);
-                final String media_source = "Media Source: " + conversionData.get(MEDIA_SOURCE);
-                final String install_time = "Install Time(GMT): " + conversionData.get(INSTALL_TIME);
-                final String click_time = "Click Time(GMT): " + conversionData.get(CLICK_TIME);
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        Log.d("INSTALL_TYPE", install_type);
-                        Log.d("MEDIA_SOURCE", media_source);
-                        Log.d("INSTALL_TIME", install_time);
-                        Log.d("CLICK_TIME", click_time);
-                        /*((TextView) findViewById(R.id.logView)).setText(install_type + "\n" + media_source + "\n" + click_time + "\n" + install_time);*/
-                    }
-                });
-
-            }
-
-            @Override
-            public void onInstallConversionFailure(String errorMessage) {
-                Log.d(AppsFlyerLib.LOG_TAG, "error getting conversion data: " + errorMessage);
-                /*((TextView) findViewById(R.id.logView)).setText(errorMessage);*/
-            }
-
-            @Override
-            public void onAppOpenAttribution(Map<String, String> conversionData) {
-            }
-
-            @Override
-            public void onAttributionFailure(String errorMessage) {
-                Log.d(AppsFlyerLib.LOG_TAG, "error onAttributionFailure : " + errorMessage);
-            }
-        });
-
         findViewsById();
 
         fetchUserDetails();
