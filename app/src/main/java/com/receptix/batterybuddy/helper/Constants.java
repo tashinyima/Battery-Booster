@@ -180,6 +180,12 @@ public class Constants {
         public static final String CLICK_TIME = "click_time";
         public static final String INSTALL_CAMPAIGN = "campaign";
         public static final String AGENCY = "agency";
+        public static final String CLICK_ID="clickid";
+        public static final String CHANNEL="af_channel";
+
+
+
+
     }
 
 }
