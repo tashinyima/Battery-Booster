@@ -241,4 +241,12 @@ We want to inform users of this Service that these third parties have access to 
     <string name="privacy_policy_heading">Privacy Policy</string>
     <string name="www_receptix_com">www.receptix.com</string>
     <string name="terms_and_conditions">Terms and Conditions</string>
+    <string name="aboutusContent">BatteryBuddy is an application to solve all the problems related to your battery. It’s a simple app to extend the life of your battery and phone speed.  Now track your battery performance, power consumption and control applications to increased  your battery life of up to 40% and phone speed up to 30%.  The app has a very simple interface with the option to optimize your battery usage simply by the click of a button.</string>
+    <string name="features">Features:</string>
+    <string name="featurelist">• Accurate Estimation of Remaining Battery Time</string>
+    <string name="featurelist1"><![CDATA[• Power Saver & Monitor]]></string>
+    <string name="featurelist2">• Memory Manager</string>
+    <string name="featurelist3">• List Information on the battery usage of device software and hardware</string>
+    <string name="featurelist4">• Customized power saver mode</string>
+    <string name="featurelist5">• Power Protection</string>
 </resources>
