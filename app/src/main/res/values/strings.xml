@@ -155,7 +155,7 @@
     <string name="andtext">and</string>
     <string name="privacynoticetext">Privacy Policy</string>
     <string name="acceptandcontinue"><![CDATA[ACCEPT & CONTINUE]]></string>
-    <string name="privacynotice"><![CDATA[<!DOCTYPE html>
+    <string name="privacynotice" formatted="false"><![CDATA[<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="UTF-8">
@@ -187,7 +187,7 @@ Log Data
 																											<p>We want to inform you that whenever you use our Service, in a case of an error in the app we collect data and information (through third party products) on your phone called Log Data. This Log Data may include information such as your device Internet Protocol (“IP”) address, device name, operating system version, the configuration of the app when utilizing our Service, the time and date of your use of the Service, and other statistics.</p>
 																											<h3>Cookies</h3>
 																											<p>Cookies are files with small amount of data that is commonly used an anonymous unique identifier. These are sent to your browser from the website that you visit and are stored on your device internal memory.
-This Service does not use these “cookies” explicitly. However, the app may use third party code and libraries that use “cookies” to collection information and to improve their services. You have the option to either accept or refuse these cookies and know when a cookie is being sent to your device. If you choose to refuse our cookies, you may not be able to use some portions of this Service.</p>
+This Service does not use these cookies explicitly. However, the app may use third party code and libraries that use cookies to collection information and to improve their services. You have the option to either accept or refuse these cookies and know when a cookie is being sent to your device. If you choose to refuse our cookies, you may not be able to use some portions of this Service.</p>
 																											<h3>Service Providers</h3>
 																											<p>
     We may employ third-party companies and individuals due to the following reasons:
@@ -244,7 +244,7 @@ We want to inform users of this Service that these third parties have access to 
     <string name="about_us_content" formatted="false"><![CDATA[<!DOCTYPE html>
 <html>
     <body>
-BatteryBuddy is an application to solve all the problems related to your battery. It’s a simple app to extend the life of your battery and phone speed.
+BatteryBuddy is an application to solve all the problems related to your battery. It is a simple app to extend the life of your battery and phone speed.
 
 
 

@@ -11,10 +11,6 @@
             android:icon="@drawable/ic_feedback"
             android:title="@string/navfeedback" />
         <item
-            android:id="@+id/nav_terms_policy"
-            android:icon="@drawable/ic_terms_ofuse"
-            android:title="@string/nav_terms_policy" />
-        <item
             android:id="@+id/nav_privacy_policy"
             android:icon="@drawable/ic_feedback"
             android:title="@string/privacy_policy_heading"/>

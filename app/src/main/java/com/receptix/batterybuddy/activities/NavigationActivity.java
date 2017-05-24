@@ -230,10 +230,14 @@ public class NavigationActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+
+        // ABOUT US
         if (id == R.id.nav_about_us) {
             startActivity(new Intent(NavigationActivity.this, AboutUsActivity.class));
             overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
-        } else if (id == R.id.nav_feedback) {
+        }
+        // FEEDBACK
+        else if (id == R.id.nav_feedback) {
             Intent intent = new Intent(Intent.ACTION_SENDTO);
             //always pass String array to intent for "To" Email Address
             String[] emailAddress = {URL_EMAIL_ADDRESS_SUPPORT};
@@ -242,15 +246,16 @@ public class NavigationActivity extends AppCompatActivity
             if (intent.resolveActivity(getPackageManager()) != null) {
                 startActivity(intent);
             }
-        } else if (id == R.id.nav_terms_policy) {
-            startActivity(new Intent(NavigationActivity.this, TermsPolicyActivity.class));
-            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
         }
+
+        // PRIVACY POLICY
         else if( id == R.id.nav_privacy_policy)
         {
             startActivity(new Intent(NavigationActivity.this, PrivacyActivity.class));
             overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
         }
+
+        // SHARE PLAY STORE LINK
         else if (id == R.id.nav_share) {
             String url ="https://play.google.com/store/apps/details?id="+getApplicationContext().getPackageName()+"&hl=en";
             Intent share = new Intent(android.content.Intent.ACTION_SEND);
