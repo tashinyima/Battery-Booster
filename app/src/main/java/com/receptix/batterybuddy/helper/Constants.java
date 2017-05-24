@@ -134,6 +134,7 @@ public class Constants {
         public static final String INTENT_ACTION_UPDATE_WIDGET_BATTERY_SERVICE = "INTENT_ACTION_UPDATE_WIDGET_BATTERY_SERVICE";
 
         public static final String USED_RAM_PERCENTAGE = "usedRamPercentage";
+        public static final String STATUS_SUCCESS ="success";
 
     }
 
@@ -170,6 +171,7 @@ public class Constants {
     public static class Urls
     {
         public static final String URL_OZOCK = "http://www.ozock.com/";
+        public static final String URL_TRACKING_OZOCK=URL_OZOCK+"data=";
     }
 
     public static class APPS_FLYER_ATTRIBUTES
