@@ -235,8 +235,10 @@ public class NavigationActivity extends AppCompatActivity
             overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
         } else if (id == R.id.nav_feedback) {
             Intent intent = new Intent(Intent.ACTION_SENDTO);
+            //always pass String array to intent for "To" Email Address
+            String[] emailAddress = {URL_EMAIL_ADDRESS_SUPPORT};
             intent.setData(Uri.parse("mailto:")); // only email apps should handle this
-            intent.putExtra(Intent.EXTRA_EMAIL, URL_EMAIL_ADDRESS_SUPPORT);
+            intent.putExtra(Intent.EXTRA_EMAIL, emailAddress);
             if (intent.resolveActivity(getPackageManager()) != null) {
                 startActivity(intent);
             }
