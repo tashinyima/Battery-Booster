@@ -248,6 +248,7 @@ public class TermsAndConditionsActivity extends AppCompatActivity implements Vie
     public void onClick(View v) {
        if(v.getId()==R.id.textview_privacy_policy){
              startActivity(new Intent(TermsAndConditionsActivity.this, PrivacyActivity.class));
+            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
         }else if(v.getId()==R.id.useragreeBtn){
             startActivity(new Intent(TermsAndConditionsActivity.this,NavigationActivity.class));
             userSessionManager.setIsFirstTime(false);

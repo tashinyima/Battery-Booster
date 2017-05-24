@@ -10,6 +10,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -38,6 +39,7 @@ import com.receptix.batterybuddy.receiver.AlarmReceiver;
 
 import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_ACTIVE;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.PREFERENCES_IS_ACTIVE;
+import static com.receptix.batterybuddy.helper.Constants.Urls.URL_EMAIL_ADDRESS_SUPPORT;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -82,16 +84,16 @@ public class NavigationActivity extends AppCompatActivity
     }
 
     private void startAlarm() {
-
-        Intent alarmIntent = new Intent(NavigationActivity.this, AlarmReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(NavigationActivity.this, 0, alarmIntent, 0);
-
-        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        int interval = 24*60*60*1000;
-
-        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
-       // manager.setInexactRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(),AlarmManager.INTERVAL_DAY,pendingIntent);
-
+        try {
+            Intent alarmIntent = new Intent(NavigationActivity.this, AlarmReceiver.class);
+            pendingIntent = PendingIntent.getBroadcast(NavigationActivity.this, 0, alarmIntent, 0);
+            AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     private void setupBottomNavigationBar() {
@@ -165,28 +167,32 @@ public class NavigationActivity extends AppCompatActivity
     }
 
     private void sendCustomNotification() {
-        notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notification_layout);
-        contentView.setImageViewResource(R.id.image, R.drawable.brush_notification);
-        contentView.setTextViewText(R.id.title, getString(R.string.notification_title_optimize));
-        contentView.setTextViewText(R.id.text, getString(R.string.notification_description_optimize));
-        intent = new Intent(getApplicationContext(), OptimizerActivity.class);
-        pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        try {
+            notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notification_layout);
+            contentView.setImageViewResource(R.id.image, R.drawable.brush_notification);
+            contentView.setTextViewText(R.id.title, getString(R.string.notification_title_optimize));
+            contentView.setTextViewText(R.id.text, getString(R.string.notification_description_optimize));
+            intent = new Intent(getApplicationContext(), OptimizerActivity.class);
+            pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.notification_icon)
-                .setAutoCancel(false)
-                .setContent(contentView);
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.notification_icon)
+                    .setAutoCancel(false)
+                    .setContent(contentView);
 
-        contentView.setOnClickPendingIntent(R.id.notificationOptimizerBtn, pendingIntent);
+            contentView.setOnClickPendingIntent(R.id.notificationOptimizerBtn, pendingIntent);
 
-        Notification notification = mBuilder.build();
-        notification.flags |= Notification.FLAG_NO_CLEAR;
-        notificationManager.notify(NOTIFICATION_ID, notification);
+            Notification notification = mBuilder.build();
+            notification.flags |= Notification.FLAG_NO_CLEAR;
+            notificationManager.notify(NOTIFICATION_ID, notification);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
-
-    //  ends here....
 
     @Override
     public void onBackPressed() {
@@ -225,27 +231,26 @@ public class NavigationActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_about_us) {
-
-//            start about us activity
             startActivity(new Intent(NavigationActivity.this, AboutUsActivity.class));
-
-
+            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
         } else if (id == R.id.nav_feedback) {
-
-
+            Intent intent = new Intent(Intent.ACTION_SENDTO);
+            intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+            intent.putExtra(Intent.EXTRA_EMAIL, URL_EMAIL_ADDRESS_SUPPORT);
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivity(intent);
+            }
         } else if (id == R.id.nav_terms_policy) {
-
             startActivity(new Intent(NavigationActivity.this, TermsPolicyActivity.class));
             overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
         }
-
         else if( id == R.id.nav_privacy_policy)
         {
             startActivity(new Intent(NavigationActivity.this, PrivacyActivity.class));
             overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
         }
         else if (id == R.id.nav_share) {
-            String url ="https://play.google.com/store/apps/details?id=com.earnmoney.appbucks&hl=en";
+            String url ="https://play.google.com/store/apps/details?id="+getApplicationContext().getPackageName()+"&hl=en";
             Intent share = new Intent(android.content.Intent.ACTION_SEND);
             share.setType("text/plain");
             // Add data to the intent, the receiving app will decide

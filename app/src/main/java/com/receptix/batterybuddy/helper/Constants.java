@@ -172,6 +172,7 @@ public class Constants {
     {
         public static final String URL_OZOCK = "http://www.ozock.com/";
         public static final String URL_TRACKING_OZOCK=URL_OZOCK+"data=";
+        public static final String URL_EMAIL_ADDRESS_SUPPORT = "akshit@zero1.io";
     }
 
     public static class APPS_FLYER_ATTRIBUTES

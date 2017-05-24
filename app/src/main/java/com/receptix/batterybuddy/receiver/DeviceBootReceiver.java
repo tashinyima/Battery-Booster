@@ -16,18 +16,16 @@ public class DeviceBootReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
-            /* Setting the alarm here */
-            Intent alarmIntent = new Intent(context, AlarmReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, 0);
-
-            AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-            manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-
-
+            try {
+            /* Setting the alarm here for Custom Notification to be fired at 24 hour interval*/
+                Intent alarmIntent = new Intent(context, AlarmReceiver.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, 0);
+                AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
-
-
-
     }
 }
