@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import com.receptix.batterybuddy.helper.LogUtil;
+
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_LEVEL;
 import static com.receptix.batterybuddy.helper.Constants.Params.INTENT_ACTION_UPDATE_WIDGET_BATTERY_SERVICE;
 import static com.receptix.batterybuddy.helper.Constants.Params.USED_RAM_PERCENTAGE;

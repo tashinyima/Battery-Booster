@@ -25,9 +25,9 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
 
         try {
             String referrer = intent.getStringExtra("referrer");
-            LogUtil.releaseMessage("Referrer String", referrer);
+            Log.e("Referrer String", referrer);
             String url = URL_TRACKING_OZOCK + referrer;
-            LogUtil.d("Campaign Url", url);
+            Log.e("Campaign Url", url);
             Ion.with(context)
                     .load(url)
                     .asJsonObject()
