@@ -39,7 +39,7 @@ public class BatteryBuddyAppWidget extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
-        Log.e("intent.getAction()", intent.getAction());
+        LogUtil.e("intent.getAction()", intent.getAction());
         if (intent.getAction().equalsIgnoreCase(INTENT_ACTION_UPDATE_WIDGET_BATTERY_SERVICE)) {
             // Calculate Battery Charging Level
             int batteryLevel = intent.getIntExtra(BATTERY_LEVEL, 0);
@@ -61,7 +61,7 @@ public class BatteryBuddyAppWidget extends AppWidgetProvider {
 
     @Override
     public void onEnabled(Context context) {
-        Log.e(TAG, "onEnabled(Context context)");
+        LogUtil.e(TAG, "onEnabled(Context context)");
         // Enter relevant functionality for when the first widget is created
         //call battery update service
         /*try {

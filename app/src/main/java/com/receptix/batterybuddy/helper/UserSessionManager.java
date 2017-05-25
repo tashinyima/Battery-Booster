@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_FIRST_TIME;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_ONE_DAY_FINISHED;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_OPTIMIZED_NOW;
+import static com.receptix.batterybuddy.helper.Constants.Preferences.LAST_TIMESTAMP_LOCK_ADS;
+import static com.receptix.batterybuddy.helper.Constants.Preferences.LAST_TIMESTAMP_LOCK_ADS_POWER_CONNECTION_RECEIVER;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.PREFER_NAME;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.PRIVATE_MODE;
 
@@ -18,6 +20,7 @@ public class UserSessionManager {
     public SharedPreferences sharedPreferences;
     public SharedPreferences.Editor editor;
     Context context;
+    private long screenOnTimestamp;
 
     public UserSessionManager(Context context) {
         this.context = context;
@@ -51,6 +54,24 @@ public class UserSessionManager {
     public void setIsOneDayFinished(boolean isOneDayFinished){
 
         editor.putBoolean(IS_ONE_DAY_FINISHED,isOneDayFinished);
+        editor.commit();
+    }
+
+    public long getScreenOnTimestamp() {
+        return sharedPreferences.getLong(LAST_TIMESTAMP_LOCK_ADS, 0);
+    }
+
+    public void setScreenOnTimestamp(long screenOnTimestamp) {
+        editor.putLong(LAST_TIMESTAMP_LOCK_ADS, screenOnTimestamp);
+        editor.commit();
+    }
+
+    public long getScreenOnTimestampPowerConnectionReceiver() {
+        return sharedPreferences.getLong(LAST_TIMESTAMP_LOCK_ADS_POWER_CONNECTION_RECEIVER, 0);
+    }
+
+    public void setScreenOnTimestampPowerConnectionReceiver(long screenOnTimestampPowerConnectionReceiver) {
+        editor.putLong(LAST_TIMESTAMP_LOCK_ADS_POWER_CONNECTION_RECEIVER, screenOnTimestampPowerConnectionReceiver);
         editor.commit();
     }
 }

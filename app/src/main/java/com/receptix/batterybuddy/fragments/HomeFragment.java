@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.receptix.batterybuddy.R;
 import com.receptix.batterybuddy.databinding.FragmentHomeBinding;
+import com.receptix.batterybuddy.helper.LogUtil;
 import com.receptix.batterybuddy.helper.UserSessionManager;
 import com.receptix.batterybuddy.activities.OptimalStateActivity;
 import com.receptix.batterybuddy.activities.OptimizerActivity;
@@ -177,8 +178,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 homeBinding.textviewBatteryTechnology.setText(batteryTechnology);
 
                 Bundle bundle = intent.getExtras();
-                Log.d(TAG_HOME_FRAGMENT, bundle.toString());
-                Log.d(TAG_HOME_FRAGMENT, "Technology=" + batteryTechnology + "batteryVoltage=" + batteryVoltage + "Temperature=" + batteryTemperature);
+                LogUtil.d(TAG_HOME_FRAGMENT, bundle.toString());
+                LogUtil.d(TAG_HOME_FRAGMENT, "Technology=" + batteryTechnology + "batteryVoltage=" + batteryVoltage + "Temperature=" + batteryTemperature);
             } else {
                 showMessage(getString(R.string.no_battery_present));
             }
@@ -264,7 +265,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private void getDeviceRingerMode() {
 
         audioCurrentMode = audioManagerMode.getRingerMode();
-        Log.d(TAG_HOME_FRAGMENT, "Audio mode" + String.valueOf(audioCurrentMode));
+        LogUtil.d(TAG_HOME_FRAGMENT, "Audio mode" + String.valueOf(audioCurrentMode));
 
         switch (audioCurrentMode) {
 
@@ -300,7 +301,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         int inWhichIndexMinutes;
 
         lockScreenTimeOut = Settings.System.getInt(context.getContentResolver(), Settings.System.SCREEN_OFF_TIMEOUT, DELAY);
-        Log.d(TAG_HOME_FRAGMENT, "Timeout=" + String.valueOf(lockScreenTimeOut));
+        LogUtil.d(TAG_HOME_FRAGMENT, "Timeout=" + String.valueOf(lockScreenTimeOut));
 
         inWhichIndexSeconds = lockScreenTimeOut / 1000;
 
@@ -366,7 +367,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             }
         }
 
-        Log.d("Bluetooth", String.valueOf(isBluetoothOn));
+        LogUtil.d("Bluetooth", String.valueOf(isBluetoothOn));
 
     }
 
@@ -376,7 +377,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         screenBrightness = Settings.System.getInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, BRIGHTNESS_DEFAULT_VALUE);
 
-        Log.d(TAG_HOME_FRAGMENT, "The brightness is: " + screenBrightness);
+        LogUtil.d(TAG_HOME_FRAGMENT, "The brightness is: " + screenBrightness);
 
         screenBrightnessLevel = screenBrightness;
         String brightnessTextViewString = "";

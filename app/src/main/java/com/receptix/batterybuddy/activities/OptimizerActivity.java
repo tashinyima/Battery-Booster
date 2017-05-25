@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 import com.receptix.batterybuddy.R;
 import com.receptix.batterybuddy.adapter.MyOptimizerAdapter;
+import com.receptix.batterybuddy.helper.LogUtil;
 import com.receptix.batterybuddy.model.OptimizerData;
 
 import java.util.ArrayList;
@@ -124,7 +125,7 @@ public class OptimizerActivity extends AppCompatActivity {
     }
 
     private void performOptimization() {
-        Log.e(TAG, "performOptimization");
+        LogUtil.e(TAG, "performOptimization");
         KillAllProcess();
         removeRecyclerItems();
         new Handler().postDelayed(new Runnable() {
@@ -165,7 +166,7 @@ public class OptimizerActivity extends AppCompatActivity {
     }
 
     private void showListOfInstalledApps() {
-        Log.e(TAG, "showListOfInstalledApps");
+        LogUtil.e(TAG, "showListOfInstalledApps");
         List<ApplicationInfo> applicationInfoList = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
         for (ApplicationInfo applicationInfo : applicationInfoList) {
             // list only NON-SYSTEM apps
@@ -179,7 +180,7 @@ public class OptimizerActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 OptimizerData singleApplicationData = new OptimizerData(appicon, packageName, packageLabel);
-                Log.d("Label", singleApplicationData.getPackageLable());
+                LogUtil.d("Label", singleApplicationData.getPackageLable());
                 // add all applications to list besides our application
                 if (!packageName.equalsIgnoreCase(context.getPackageName())) {
                     optimizerDataArrayList.add(singleApplicationData);
@@ -203,7 +204,7 @@ public class OptimizerActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         OptimizerData singleApplicationData = new OptimizerData(appicon, packageName, packageLabel);
-                        Log.d("Label", singleApplicationData.getPackageLable());
+                        LogUtil.d("Label", singleApplicationData.getPackageLable());
                         // add all applications to list besides our application
                         if (!packageName.equalsIgnoreCase(context.getPackageName())) {
                             optimizerDataArrayList.add(singleApplicationData);
@@ -322,7 +323,7 @@ public class OptimizerActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(IS_ACTIVE, isActive);
         editor.commit();
-        Log.e(TAG, "isActive = "+isActive);
+        LogUtil.e(TAG, "isActive = "+isActive);
     }
 
 }

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.inmobi.ads.InMobiBanner;
 import com.inmobi.sdk.InMobiSdk;
 import com.receptix.batterybuddy.R;
+import com.receptix.batterybuddy.helper.LogUtil;
 
 import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_ACTIVE;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.PREFERENCES_IS_ACTIVE;
@@ -96,7 +97,7 @@ public class AfterOptimizerActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(IS_ACTIVE, isActive);
         editor.commit();
-        Log.e(TAG, "isActive = "+isActive);
+        LogUtil.e(TAG, "isActive = "+isActive);
     }
 
 }

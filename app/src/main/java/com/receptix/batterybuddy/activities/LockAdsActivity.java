@@ -28,6 +28,7 @@ import com.inmobi.ads.InMobiBanner;
 import com.inmobi.sdk.InMobiSdk;
 import com.receptix.batterybuddy.R;
 import com.receptix.batterybuddy.databinding.ActivityLockAdsBinding;
+import com.receptix.batterybuddy.helper.LogUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -101,7 +102,7 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
             binding.lockramArcProgress.setProgress(usedRamPercentage);
         }
 
-        Log.d(TAG, "MEM=" + String.valueOf(availableDeviceMemory) + "Total Ram=" + String.valueOf(totalDeviceMemory) + "Percentage=" + usedRamPercentage);
+        LogUtil.d(TAG, "MEM=" + String.valueOf(availableDeviceMemory) + "Total Ram=" + String.valueOf(totalDeviceMemory) + "Percentage=" + usedRamPercentage);
 
     }
 

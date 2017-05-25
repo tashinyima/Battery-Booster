@@ -16,6 +16,8 @@ public class Constants {
         public static final String PREFERENCES_IS_ACTIVE = "pref_is_active";
         public static final String IS_ACTIVE = "is_active";
         public static final String IS_ONE_DAY_FINISHED="is_one_day_finished";
+        public static final String LAST_TIMESTAMP_LOCK_ADS = "lastTimestamp";
+        public static final String LAST_TIMESTAMP_LOCK_ADS_POWER_CONNECTION_RECEIVER = "lastTimestampPowerConnectionReceiver";
     }
 
 
@@ -125,6 +127,7 @@ public class Constants {
         public static final int MINIMUM_INSTALLED_APPS = 10;
         public static final int NUMBER_OF_SYSTEM_APPS_TO_SHOW = 12;
         public static final int COUNTDOWN_TIMER_VALUE = 1800000; //30 minutes before we show ISSUES with the phone again (to Optimize)
+        public static final int SCREEN_LOCK_ADS_TIMER_VALUE_MINUTES = 1440; //24 hours have 1440 minutes
         public static final String APP_PACKAGE_NAME = "com.receptix.batterybuddy";
 
         public static final String FROM = "from";

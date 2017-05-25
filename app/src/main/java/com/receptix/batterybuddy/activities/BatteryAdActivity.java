@@ -26,6 +26,7 @@ import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.inmobi.ads.InMobiBanner;
 import com.inmobi.sdk.InMobiSdk;
 import com.receptix.batterybuddy.R;
+import com.receptix.batterybuddy.helper.LogUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -72,11 +73,11 @@ public class BatteryAdActivity extends AppCompatActivity implements View.OnClick
         InitializeSystemData();
 
         if (mTempSensor == null) {
-            Log.d(TAG, "There is no sensor in it");
+            LogUtil.d(TAG, "There is no sensor in it");
 
         } else {
 
-            Log.d(TAG, "CPU Temperature" + String.valueOf(mTempSensor));
+            LogUtil.d(TAG, "CPU Temperature" + String.valueOf(mTempSensor));
         }
 
 
@@ -198,7 +199,7 @@ public class BatteryAdActivity extends AppCompatActivity implements View.OnClick
         }
 
 
-        Log.d(TAG, "MEM=" + String.valueOf(blabla) + "Total Ram=" + String.valueOf(total) + "Percentage=" + rampercentage);
+        LogUtil.d(TAG, "MEM=" + String.valueOf(blabla) + "Total Ram=" + String.valueOf(total) + "Percentage=" + rampercentage);
 
 
     }
@@ -237,7 +238,7 @@ public class BatteryAdActivity extends AppCompatActivity implements View.OnClick
         if (event.sensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE) {
 
             String valsss = String.valueOf(event.values[0]);
-            Log.d(TAG, "CPU Temperature" + valsss);
+            LogUtil.d(TAG, "CPU Temperature" + valsss);
         }
 
     }
@@ -245,7 +246,7 @@ public class BatteryAdActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
-        Log.d(TAG, "AccuracuTem=" + String.valueOf(accuracy));
+        LogUtil.d(TAG, "AccuracuTem=" + String.valueOf(accuracy));
 
 
     }

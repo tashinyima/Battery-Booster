@@ -30,6 +30,7 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.receptix.batterybuddy.R;
 import com.receptix.batterybuddy.ScreenListenerService;
+import com.receptix.batterybuddy.helper.LogUtil;
 import com.receptix.batterybuddy.helper.UserSessionManager;
 import com.receptix.batterybuddy.helper.Utils;
 
@@ -185,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
         jsonObject.addProperty(COUNTRY, country);
         jsonObject.add(INSTALLED_APPS, installedAppsList);
         jsonObject.add(EMAILS, userAccounts);
-        Log.d(REQUEST_OBJECT, jsonObject.toString());
+        LogUtil.d(REQUEST_OBJECT, jsonObject.toString());
 
 
         Ion.with(context)
@@ -195,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
-                        Log.d(RESPONSE_OBJECT, String.valueOf(result));
+                        LogUtil.d(RESPONSE_OBJECT, String.valueOf(result));
                     }
                 });
 

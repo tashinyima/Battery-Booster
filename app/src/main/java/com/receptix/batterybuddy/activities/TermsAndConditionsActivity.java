@@ -27,6 +27,7 @@ import com.google.gson.JsonPrimitive;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.receptix.batterybuddy.R;
+import com.receptix.batterybuddy.helper.LogUtil;
 import com.receptix.batterybuddy.helper.UserSessionManager;
 import com.receptix.batterybuddy.helper.Utils;
 
@@ -86,7 +87,7 @@ public class TermsAndConditionsActivity extends AppCompatActivity implements Vie
 
     public void ShareDataWithServer(){
 
-        Log.d("Output",jsonObject.toString());
+        LogUtil.d("Output",jsonObject.toString());
 
         Ion.with(context)
                 .load(URL_OZOCK)
@@ -95,7 +96,7 @@ public class TermsAndConditionsActivity extends AppCompatActivity implements Vie
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
-                        Log.d(RESPONSE_OBJECT, String.valueOf(result));
+                        LogUtil.d(RESPONSE_OBJECT, String.valueOf(result));
                     }
                 });
 
@@ -108,7 +109,7 @@ public class TermsAndConditionsActivity extends AppCompatActivity implements Vie
             @Override
             public void onInstallConversionDataLoaded(Map<String, String> conversionData) {
                 for (String attrName : conversionData.keySet()) {
-                    Log.d("conversionData ->", "attribute: " + attrName + " = " +
+                    LogUtil.d("conversionData ->", "attribute: " + attrName + " = " +
                             conversionData.get(attrName));
                 }
 
@@ -132,7 +133,7 @@ public class TermsAndConditionsActivity extends AppCompatActivity implements Vie
 
             @Override
             public void onInstallConversionFailure(String errorMessage) {
-                Log.d(AppsFlyerLib.LOG_TAG, "error getting conversion data: " + errorMessage);
+                LogUtil.d(AppsFlyerLib.LOG_TAG, "error getting conversion data: " + errorMessage);
                 /*((TextView) findViewById(R.id.logView)).setText(errorMessage);*/
             }
 
@@ -144,7 +145,7 @@ public class TermsAndConditionsActivity extends AppCompatActivity implements Vie
 
             @Override
             public void onAttributionFailure(String errorMessage) {
-                Log.d(AppsFlyerLib.LOG_TAG, "error onAttributionFailure : " + errorMessage);
+                LogUtil.d(AppsFlyerLib.LOG_TAG, "error onAttributionFailure : " + errorMessage);
             }
         });
     }
@@ -227,7 +228,7 @@ public class TermsAndConditionsActivity extends AppCompatActivity implements Vie
         jsonObject.add(INSTALLED_APPS, installedAppsList);
         jsonObject.add(EMAILS, userAccounts);
 
-        Log.d(REQUEST_OBJECT, jsonObject.toString());
+        LogUtil.d(REQUEST_OBJECT, jsonObject.toString());
 
         ShareDataWithServer();
 

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.receptix.batterybuddy.R;
+import com.receptix.batterybuddy.helper.LogUtil;
 
 import java.lang.reflect.Method;
 
@@ -95,7 +96,7 @@ public class ChargeFragment extends Fragment {
                         int batteryCapacityLeftToCharge = (int) (percentageRemaining * totalBatteryCapacity) / 100;
                         // time left to charge = capacity left to charge / current delivered
                         double timeLeftToCharge = (double) batteryCapacityLeftToCharge / currentDelivered;
-                        Log.e("timeLeftToCharge", timeLeftToCharge + "");
+                        LogUtil.e("timeLeftToCharge", timeLeftToCharge + "");
                         int hours = (int) timeLeftToCharge;
                         //obtain actual number of minutes from double value of Hours
                         String stringminutes = String.valueOf(String.format("%.2f", timeLeftToCharge));

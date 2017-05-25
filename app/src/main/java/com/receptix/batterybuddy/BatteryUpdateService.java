@@ -10,6 +10,8 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 
+import com.receptix.batterybuddy.helper.LogUtil;
+
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_LEVEL;
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_SCALE;
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_TEMPERATURE;
@@ -41,7 +43,7 @@ public class BatteryUpdateService extends IntentService{
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
             //send broadcast
-        Log.e("BatteryUpdateService", "onHandleIntent()");
+        LogUtil.e("BatteryUpdateService", "onHandleIntent()");
         getBatteryInformation(getApplicationContext());
     }
 

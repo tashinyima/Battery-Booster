@@ -35,6 +35,7 @@ import com.receptix.batterybuddy.R;
 import com.receptix.batterybuddy.fragments.ChargeFragment;
 import com.receptix.batterybuddy.fragments.HomeFragment;
 import com.receptix.batterybuddy.fragments.RankFragment;
+import com.receptix.batterybuddy.helper.LogUtil;
 import com.receptix.batterybuddy.receiver.AlarmReceiver;
 
 import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_ACTIVE;
@@ -163,7 +164,7 @@ public class NavigationActivity extends AppCompatActivity
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(IS_ACTIVE, isActive);
         editor.commit();
-        Log.e(TAG, "isActive = "+isActive);
+        LogUtil.e(TAG, "isActive = "+isActive);
     }
 
     private void sendCustomNotification() {

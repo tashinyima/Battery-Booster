@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.receptix.batterybuddy.R;
+import com.receptix.batterybuddy.helper.LogUtil;
 
 import java.util.Random;
 
@@ -162,7 +163,7 @@ public class SuccessOptimizerActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(IS_ACTIVE, isActive);
         editor.commit();
-        Log.e(TAG, "isActive = "+isActive);
+        LogUtil.e(TAG, "isActive = "+isActive);
     }
 
 }

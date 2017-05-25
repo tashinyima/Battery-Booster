@@ -11,9 +11,13 @@ import android.widget.Toast;
 
 import com.receptix.batterybuddy.activities.BatteryAdActivity;
 import com.receptix.batterybuddy.activities.LockAdsActivity;
+import com.receptix.batterybuddy.helper.LogUtil;
 import com.receptix.batterybuddy.helper.UserSessionManager;
 
+import java.util.Date;
+
 import static android.content.Context.MODE_PRIVATE;
+import static com.receptix.batterybuddy.helper.Constants.Params.SCREEN_LOCK_ADS_TIMER_VALUE_MINUTES;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_ACTIVE;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.PREFERENCES_IS_ACTIVE;
 
@@ -24,21 +28,18 @@ import static com.receptix.batterybuddy.helper.Constants.Preferences.PREFERENCES
 public class PowerConnectionReceiver extends BroadcastReceiver {
     private static final String TAG = "PowerConnectionReceiver";
     Context context;
-    boolean isScreenOn = false;
     KeyguardManager keyguardManager;
+    UserSessionManager userSessionManager;
 
     @Override
     public void onReceive(final Context context, Intent intent) {
-
-
-        if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
-            isScreenOn = true;
-        }
         try {
-            Log.d(TAG, "isScreenOn = " + String.valueOf(isScreenOn));
             keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
             boolean isLockedScreen = keyguardManager.inKeyguardRestrictedInputMode();
-            Log.d(TAG, "isLockedScreen : " + isLockedScreen);
+
+            userSessionManager = new UserSessionManager(context);
+
+            LogUtil.d(TAG, "isLockedScreen : " + isLockedScreen);
 
             SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCES_IS_ACTIVE, MODE_PRIVATE);
             if(sharedPreferences!=null)
@@ -46,43 +47,66 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
                 boolean isActive = sharedPreferences.getBoolean(IS_ACTIVE, false);
                 if(!isActive)
                 {
-                    if (!isLockedScreen) {
-                        new Handler().postDelayed(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                Intent i = new Intent(context, BatteryAdActivity.class);
-                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                context.startActivity(i);
-                            }
-                        }, 2000);
-                    } else {
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent i = new Intent(context, LockAdsActivity.class);
-                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                context.startActivity(i);
-                            }
-                        }, 2000);
+                    long lastScreenOnTimestamp = userSessionManager.getScreenOnTimestampPowerConnectionReceiver();
+                    if(lastScreenOnTimestamp!=0)
+                    {
+                        LogUtil.e("Last TimeStamp (PCR)", lastScreenOnTimestamp+"");
+                        LogUtil.e("Current Timestamp (PCR)", System.currentTimeMillis()+"");
+                        long currentTimeStamp = System.currentTimeMillis();
+                        Date lastDate = new Date();
+                        Date currentDate = new Date();
+                        lastDate.setTime(lastScreenOnTimestamp);
+                        currentDate.setTime(currentTimeStamp);
+                        long diffMs = currentDate.getTime() - lastDate.getTime();
+                        long diffSec = diffMs / 1000;
+                        long elapsedMinutesSinceLastScreenOn = diffSec / 60;
+                        long elapsedSecondsSinceLastScreenOn = diffSec % 60;
+                        LogUtil.e("Difference is", elapsedMinutesSinceLastScreenOn+" mins, "+elapsedSecondsSinceLastScreenOn + " seconds");
+                        if(elapsedMinutesSinceLastScreenOn >= SCREEN_LOCK_ADS_TIMER_VALUE_MINUTES) //24 hours have 1440 minutes
+                        {
+                            showScreen(isLockedScreen);
+                        }
                     }
+                    else
+                    {
+                        showScreen(isLockedScreen);
+                    }
+                    long currentTimeStamp = System.currentTimeMillis();
+                    //save timestamp to SharedPreferences
+                    userSessionManager.setScreenOnTimestampPowerConnectionReceiver(currentTimeStamp);
                 }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         this.context = context;
-
-        /*PackageManager pm = context.getPackageManager();
-        Intent launchIntent = pm.getLaunchIntentForPackage(APP_PACKAGE_NAME);
-        launchIntent.putExtra(FROM, BROADCAST_RECEIVER);
-        launchIntent.putExtra(IS_SCREEN_ON, isScreenOn);
-        context.startActivity(launchIntent);*/
-
-        /*showMessage("charging"+ isScreenOn);*/
     }
 
-    private void showMessage(String charging) {
-        Toast.makeText(context, charging, Toast.LENGTH_SHORT).show();
+    /**
+     * Show Activity depending on whether or not screen is locked.
+     * @param isLockedScreen true if Screen Locked (Keyguard enabled), false otherwise.
+     */
+    private void showScreen(boolean isLockedScreen)
+    {
+        if (!isLockedScreen) {
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    Intent i = new Intent(context, BatteryAdActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(i);
+                }
+            }, 2000);
+        } else {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent i = new Intent(context, LockAdsActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(i);
+                }
+            }, 2000);
+        }
     }
 }

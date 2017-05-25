@@ -22,6 +22,7 @@ import android.widget.ImageView;
 
 import com.receptix.batterybuddy.R;
 import com.receptix.batterybuddy.adapter.RankAdapter;
+import com.receptix.batterybuddy.helper.LogUtil;
 import com.receptix.batterybuddy.model.RankData;
 
 import net.bohush.geometricprogressview.GeometricProgressView;
@@ -95,7 +96,7 @@ public class RankFragment extends Fragment {
     private void LoadSystemApps(View view) {
         List<ApplicationInfo> list = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
         int si = list.size();
-        Log.d(TAG, "Total App=" + si);
+        LogUtil.d(TAG, "Total App=" + si);
         // print Contents of Hashmap (Maximum RAM Usage First)
         for (Map.Entry<String, Integer> entry : hashMap_packageRamUsage.entrySet()) {
             int type=1;
@@ -120,7 +121,7 @@ public class RankFragment extends Fragment {
             // percentage of memory used by service = memory used by service * 100 / total memory
             int valueInMb = memoryUsedByPackage/1024;
             int percentageUsed = (valueInMb*100)/totalMemoryInMb;
-           /* Log.e(packageName+"\t","\t" + memoryUsedByPackage/1024 + "Mb \t ==> "+ percentageUsed + "%");*/
+           /* LogUtil.e(packageName+"\t","\t" + memoryUsedByPackage/1024 + "Mb \t ==> "+ percentageUsed + "%");*/
             // show only those apps which are using memory > 0 %
             if(percentageUsed >0 ){
                 if(!applicationName.equalsIgnoreCase(getString(R.string.app_name)))
@@ -180,17 +181,17 @@ public class RankFragment extends Fragment {
             }
         }
 
-        /*Log.e("getAllProcessesMemoryInfo()", "pidList obtained");*/
+        /*LogUtil.e("getAllProcessesMemoryInfo()", "pidList obtained");*/
 
         int[] pidIntegerArray = new int[pidList.size()];
 
-        Log.e("pidListSize", pidList.size() + "");
+        LogUtil.e("pidListSize", pidList.size() + "");
 
         for(int i=0, len = pidList.size(); i < len; i++)
             pidIntegerArray[i] = pidList.get(i);
 
         Debug.MemoryInfo[] memoryInfo = activityManager.getProcessMemoryInfo(pidIntegerArray);
-        /*Log.e("getAllProcessesMemoryInfo()", "getProcessMemoryInfo");*/
+        /*LogUtil.e("getAllProcessesMemoryInfo()", "getProcessMemoryInfo");*/
 
         for(int i=0; i<memoryInfo.length; i++)
         {
@@ -199,7 +200,7 @@ public class RankFragment extends Fragment {
             hashMap.put(processNameList.get(i), memoryInfo[i].getTotalPrivateDirty());
         }
 
-        /*Log.e("getAllProcessesMemoryInfo()", "hashMap obtained");*/
+        /*LogUtil.e("getAllProcessesMemoryInfo()", "hashMap obtained");*/
 
        /* ActivityManager.MemoryInfo ramInfo = new ActivityManager.MemoryInfo();
         activityManager.getMemoryInfo(ramInfo);*/
@@ -217,7 +218,7 @@ public class RankFragment extends Fragment {
             int valueInMb = value/1024;
             int percentageUsed = (valueInMb*100)/totalMemoryInMb;
 
-            Log.e(key+"\t","\t" + value/1024 + "Mb \t ==> "+ percentageUsed + "%");
+            LogUtil.e(key+"\t","\t" + value/1024 + "Mb \t ==> "+ percentageUsed + "%");
         }*/
     }
 
@@ -250,7 +251,7 @@ public class RankFragment extends Fragment {
                     .duration(1000)
                     .repeat(10)
                     .playOn(imageView_systemAnalyzerProgress);*/
-            Log.e("LoadRankData", "onPreExecute()");
+            LogUtil.e("LoadRankData", "onPreExecute()");
             // hello
         }
 
@@ -258,7 +259,7 @@ public class RankFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... params) {
             // get total memory
-            Log.e("LoadRankData", "doInBackground()");
+            LogUtil.e("LoadRankData", "doInBackground()");
             ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
             ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
             activityManager.getMemoryInfo(memoryInfo);
@@ -273,7 +274,7 @@ public class RankFragment extends Fragment {
 
             if(isAdded())
             {
-                Log.e("LoadRankData", "onPostExecute()");
+                LogUtil.e("LoadRankData", "onPostExecute()");
                 if (progressBar != null)
                     progressBar.setVisibility(View.GONE);
 
