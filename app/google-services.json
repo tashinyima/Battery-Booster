@@ -1,35 +1,52 @@
 {
   "project_info": {
-    "project_number": "743250649602",
-    "project_id": "firebase-batterybuddy"
+    "project_number": "123618804022",
+    "firebase_url": "https://batterybuddy-e9799.firebaseio.com",
+    "project_id": "batterybuddy-e9799",
+    "storage_bucket": "batterybuddy-e9799.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:743250649602:android:8d45247bc90f4b62",
+        "mobilesdk_app_id": "1:123618804022:android:8d45247bc90f4b62",
         "android_client_info": {
           "package_name": "com.receptix.batterybuddy"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "123618804022-g78kkqdd7i8bvupapukjhi0u5qv2huu2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.receptix.batterybuddy",
+            "certificate_hash": "ccd0344746035db557aba07f90d6a76fbdb688f2"
+          }
+        },
+        {
+          "client_id": "123618804022-ol38npjh5ln6nhmalbfe55348bff07eq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyB3DnARkKhEzkltlnhxo-OcCqc5uLdPlc4"
+          "current_key": "AIzaSyDNsqZMF49wKvV6I-z3ynrtoqS8X61_qmw"
         }
       ],
       "services": {
         "analytics_service": {
-          "status": 2,
-          "analytics_property": {
-            "tracking_id": "UA-99375641-2"
-          }
+          "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123618804022-ol38npjh5ln6nhmalbfe55348bff07eq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }

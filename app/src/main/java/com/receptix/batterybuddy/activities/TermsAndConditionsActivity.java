@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.appsflyer.AppsFlyerConversionListener;
 import com.appsflyer.AppsFlyerLib;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -63,6 +64,7 @@ public class TermsAndConditionsActivity extends AppCompatActivity implements Vie
     Context context;
     Button agreeBtn;
     JsonObject jsonObject = new JsonObject();
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +73,8 @@ public class TermsAndConditionsActivity extends AppCompatActivity implements Vie
          context = getApplicationContext();
          userSessionManager = new UserSessionManager(context);
 
-
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         AppsFlyerLib.getInstance().startTracking(this.getApplication(), getString(R.string.apps_flyer_dev_key));
         /*
          #AppsFlyer: registerConversionListener implements the collection of attribution (conversion) data
