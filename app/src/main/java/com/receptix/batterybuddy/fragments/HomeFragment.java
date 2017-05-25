@@ -226,6 +226,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             homeBinding.textviewIssueCount.setVisibility(View.INVISIBLE);
             TerminateSession();
         } else {
+            homeBinding.textviewProblemsDetected.setText(getString(R.string.problemText));
             homeBinding.buttonOptimizeBattery.setBackgroundResource(R.drawable.optimizerbuttonbgcolor);
             homeBinding.textviewProblemsDetected.setTextColor(ContextCompat.getColor(context, R.color.buttonColor));
             homeBinding.textviewIssueCount.setVisibility(View.VISIBLE);

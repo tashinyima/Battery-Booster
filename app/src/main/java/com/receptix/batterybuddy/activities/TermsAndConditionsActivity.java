@@ -108,7 +108,7 @@ public class TermsAndConditionsActivity extends AppCompatActivity implements Vie
             @Override
             public void onInstallConversionDataLoaded(Map<String, String> conversionData) {
                 for (String attrName : conversionData.keySet()) {
-                    Log.d("ResultNow", "attribute: " + attrName + " = " +
+                    Log.d("conversionData ->", "attribute: " + attrName + " = " +
                             conversionData.get(attrName));
                 }
 

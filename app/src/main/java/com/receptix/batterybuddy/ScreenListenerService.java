@@ -23,11 +23,6 @@ public class ScreenListenerService extends Service {
                 Intent i = new Intent(context, LockAdsActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(i);
-            } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
-                Log.e("ScreenListenerService", "ACTION_SCREEN_OFF");
-                Intent i = new Intent(context, LockAdsActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                /*context.startActivity(i);*/
             }
         }
     };
