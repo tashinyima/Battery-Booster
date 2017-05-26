@@ -10,11 +10,15 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.inmobi.ads.InMobiAdRequestStatus;
 import com.inmobi.ads.InMobiBanner;
 import com.inmobi.sdk.InMobiSdk;
 import com.receptix.batterybuddy.R;
 import com.receptix.batterybuddy.helper.LogUtil;
 
+import java.util.Map;
+
+import static com.receptix.batterybuddy.helper.Constants.BannerPlacementIds.INMOBI_ACCOUNT_ID;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_ACTIVE;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.PREFERENCES_IS_ACTIVE;
 
@@ -32,7 +36,7 @@ public class AfterOptimizerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        InMobiSdk.init(AfterOptimizerActivity.this, INMOBI_ACCOUNT_ID);
         setContentView(R.layout.activity_after_optimizer);
         context =getApplicationContext();
 
@@ -60,6 +64,42 @@ public class AfterOptimizerActivity extends AppCompatActivity {
         extentedTextViewAfter.setText(extendedTime+" Minutes");
         inMobiBanner = (InMobiBanner) findViewById(R.id.banner);
         inMobiBanner.load();
+        inMobiBanner.setListener(new InMobiBanner.BannerAdListener() {
+            @Override
+            public void onAdLoadSucceeded(InMobiBanner inMobiBanner) {
+
+            }
+
+            @Override
+            public void onAdLoadFailed(InMobiBanner inMobiBanner, InMobiAdRequestStatus inMobiAdRequestStatus) {
+                LogUtil.e("onAdLoadFailed", inMobiAdRequestStatus.getMessage());
+            }
+
+            @Override
+            public void onAdDisplayed(InMobiBanner inMobiBanner) {
+
+            }
+
+            @Override
+            public void onAdDismissed(InMobiBanner inMobiBanner) {
+
+            }
+
+            @Override
+            public void onAdInteraction(InMobiBanner inMobiBanner, Map<Object, Object> map) {
+
+            }
+
+            @Override
+            public void onUserLeftApplication(InMobiBanner inMobiBanner) {
+
+            }
+
+            @Override
+            public void onAdRewardActionCompleted(InMobiBanner inMobiBanner, Map<Object, Object> map) {
+
+            }
+        });
     }
 
     @Override

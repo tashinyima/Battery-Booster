@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.inmobi.ads"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/lib/com.inmobi.ads"
     xmlns:tools="http://schemas.android.com/tools"
@@ -53,20 +59,18 @@
 
     </LinearLayout>
 
-    <LinearLayout
-
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <com.inmobi.ads.InMobiBanner
-            android:id="@+id/banner"
-            ads:placementId="1494843277765"
-            android:layout_width="match_parent"
-            android:layout_height="150dp">
-
-        </com.inmobi.ads.InMobiBanner>
-
-
-    </LinearLayout>
 
 
 </LinearLayout>
+
+
+    <com.inmobi.ads.InMobiBanner
+        android:id="@+id/banner"
+        ads:placementId="1494642457622"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_height="250dp">
+    </com.inmobi.ads.InMobiBanner>
+
+
+</RelativeLayout>

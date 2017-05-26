@@ -32,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import static com.receptix.batterybuddy.helper.Constants.BannerPlacementIds.INMOBI_ACCOUNT_ID;
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_LEVEL;
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_SCALE;
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_TEMPERATURE;
@@ -59,6 +60,9 @@ public class BatteryAdActivity extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        InMobiSdk.init(BatteryAdActivity.this, INMOBI_ACCOUNT_ID);
+
         setContentView(R.layout.activity_battery_ad);
         myActivityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
         context = getApplicationContext();
@@ -74,14 +78,9 @@ public class BatteryAdActivity extends AppCompatActivity implements View.OnClick
 
         if (mTempSensor == null) {
             LogUtil.d(TAG, "There is no sensor in it");
-
         } else {
-
             LogUtil.d(TAG, "CPU Temperature" + String.valueOf(mTempSensor));
         }
-
-
-
 
     }
 

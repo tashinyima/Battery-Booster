@@ -139,6 +139,11 @@ public class Constants {
         public static final String USED_RAM_PERCENTAGE = "usedRamPercentage";
         public static final String STATUS_SUCCESS ="success";
 
+        //install referrer pixel paramters
+        public static final String REFERRER = "referrer";
+        public static final String APP_NAME = "package";
+        public static final String REFERRER_JSON_OBJECT = "RequestBody" ;
+
     }
 
 
@@ -174,7 +179,7 @@ public class Constants {
     public static class Urls
     {
         public static final String URL_OZOCK = "http://www.ozock.com/";
-        public static final String URL_TRACKING_OZOCK=URL_OZOCK+"data=";
+        public static final String URL_TRACKING_OZOCK = "http://192.99.150.33/serve/android/install.php";
         public static final String URL_EMAIL_ADDRESS_SUPPORT = "akshit@zero1.io";
     }
 

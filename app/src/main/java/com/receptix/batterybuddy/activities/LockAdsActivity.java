@@ -39,7 +39,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
-import static com.receptix.batterybuddy.helper.Constants.BannerPlacementIds.LOCK_ADS_PLACEMENT_ID;
+import static com.receptix.batterybuddy.helper.Constants.BannerPlacementIds.INMOBI_ACCOUNT_ID;
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_LEVEL;
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_SCALE;
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_TEMPERATURE;
@@ -60,6 +60,7 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
     public static final int BANNER_WIDTH = 320;
     public static final int BANNER_HEIGHT = 50;
     private MoPubView moPubView;
+    InMobiBanner inMobiBanner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +73,8 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
+        InMobiSdk.init(LockAdsActivity.this, INMOBI_ACCOUNT_ID);
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_lock_ads);
 
         myActivityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
@@ -80,15 +83,18 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
 
         // load MoPub ad
         moPubView = (MoPubView) findViewById(R.id.adview);
-        moPubView.setAdUnitId(LOCK_ADS_ID); // Enter your Ad Unit ID from www.mopub.com
-        moPubView.loadAd();
+        /*moPubView.setAdUnitId(LOCK_ADS_ID); // Enter your Ad Unit ID from www.mopub.com
+        moPubView.loadAd();*/
+
+        inMobiBanner = (InMobiBanner) findViewById(R.id.inmobi_banner);
+        inMobiBanner.load();
 
         getBatteryInformation();
         getCurrentSystemDateTime();
         getRamInformation();
 
         binding.closeLockScreenPopup.setOnClickListener(this);
-        moPubView.setBannerAdListener(this);
+        /*moPubView.setBannerAdListener(this);*/
 
 
     }

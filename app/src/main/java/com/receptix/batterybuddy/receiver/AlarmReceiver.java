@@ -12,6 +12,8 @@ import android.widget.RemoteViews;
 import com.receptix.batterybuddy.R;
 import com.receptix.batterybuddy.activities.OptimizerActivity;
 
+import static com.receptix.batterybuddy.helper.Constants.Params.REFERRER_JSON_OBJECT;
+
 /**
  * Created by hello on 5/22/2017.
  */
@@ -26,9 +28,14 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        // send custom notification...
         sendCustomNotification(context);
 
+        if(intent!=null && intent.getExtras()!=null)
+        {
+            //get referrerJsonObject
+            String referrerJsonObject = intent.getExtras().getString(REFERRER_JSON_OBJECT, null);
+
+        }
 
     }
 

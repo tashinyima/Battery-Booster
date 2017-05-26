@@ -174,9 +174,19 @@
         </LinearLayout>
 
 
+        <!-- InMobi Ad -->
+        <com.inmobi.ads.InMobiBanner
+            android:id="@+id/inmobi_banner"
+            ads:placementId="1496191677809"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_height="250dp">
+        </com.inmobi.ads.InMobiBanner>
+
         <!-- InMobi Ad at the bottom of the lock screen -->
             <com.mopub.mobileads.MoPubView
                 android:id="@+id/adview"
+                android:visibility="gone"
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
                 android:layout_width="match_parent"
