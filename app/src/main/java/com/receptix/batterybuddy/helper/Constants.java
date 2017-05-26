@@ -188,10 +188,17 @@ public class Constants {
         public static final String AGENCY = "agency";
         public static final String CLICK_ID="clickid";
         public static final String CHANNEL="af_channel";
+    }
 
+    public static class BannerPlacementIds
+    {
+        public static final String INMOBI_ACCOUNT_ID = "4a38c3c40747428fa346cb0456d9034f";
+        public static final String LOCK_ADS_PLACEMENT_ID = "1496191677809";
+    }
 
-
-
+    public static class MoPubAdIds
+    {
+        public static final String LOCK_ADS_ID = "9868b50964e34c6faa88914bc7c91d05";
     }
 
 }

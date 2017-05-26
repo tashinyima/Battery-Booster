@@ -36,8 +36,6 @@ public class AfterOptimizerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_after_optimizer);
         context =getApplicationContext();
 
-        InMobiSdk.init(context,"4a38c3c40747428fa346cb0456d9034f");
-
         Intent intent = getIntent();
         extendedTime = intent.getIntExtra("extendedTime",0);
 
@@ -62,9 +60,6 @@ public class AfterOptimizerActivity extends AppCompatActivity {
         extentedTextViewAfter.setText(extendedTime+" Minutes");
         inMobiBanner = (InMobiBanner) findViewById(R.id.banner);
         inMobiBanner.load();
-
-
-
     }
 
     @Override

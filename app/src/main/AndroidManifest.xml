@@ -15,19 +15,21 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- Permissions required for MoPub Ads -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
 
     <meta-data
         android:name="com.google.android.gms.version"
         android:value="@integer/google_play_services_version" />
-
-    <!-- Permissions required for InMobi Ads and AppsFlyer -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name=".MyApplication"
@@ -43,7 +45,6 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -52,13 +53,13 @@
             android:name=".activities.BatteryAdActivity"
             android:screenOrientation="portrait" />
 
-
         <activity
             android:name=".activities.LockAdsActivity"
             android:screenOrientation="portrait"
             android:showForAllUsers="true"
             android:showOnLockScreen="true"
-            tools:targetApi="m" />
+            tools:targetApi="m">
+            </activity>
 
 
         <!-- Optimizer Module -->
@@ -78,6 +79,8 @@
             android:name=".activities.OptimalStateActivity"
             android:screenOrientation="portrait" />
 
+
+        <!-- About us, Terms and Conditions, Privacy Policy -->
         <activity android:name=".activities.AboutUsActivity"
             android:screenOrientation="portrait" />
 
@@ -93,6 +96,14 @@
         <activity android:name=".activities.NavigationActivity"
             android:screenOrientation="portrait" />
 
+        <!-- MoPub Activities (not directly instantiated) -->
+        <activity android:name="com.mopub.mobileads.MoPubActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity android:name="com.mopub.mobileads.MraidActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity android:name="com.mopub.common.MoPubBrowser" android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity android:name="com.mopub.mobileads.MraidVideoPlayerActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity android:name="com.mopub.mobileads.RewardedMraidActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
+
+        <!-- InMobi install attribution receiver -->
         <receiver
             android:name="com.inmobi.commons.core.utilities.uid.ImIdShareBroadCastReceiver"
             android:enabled="true"
@@ -107,8 +118,6 @@
         invoke this receiver every time user does one of the following things -
         1) Disconnect charger
         2) Connect charger
-        3) Turn Screen off
-        4) Turn Screen on
         -->
         <receiver
             android:name=".receiver.PowerConnectionReceiver"
@@ -121,6 +130,7 @@
         </receiver>
 
 
+        <!-- App Widget -->
         <receiver android:name=".BatteryBuddyAppWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -176,6 +186,7 @@
             </intent-filter>
         </receiver>
 
+        <!-- Widget Updater Service -->
         <service android:name="com.receptix.batterybuddy.BatteryUpdateService"
             android:exported="false"
             />

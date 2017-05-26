@@ -65,8 +65,8 @@ public class BatteryAdActivity extends AppCompatActivity implements View.OnClick
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mTempSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
         mSensorManager.registerListener(this, mTempSensor, SensorManager.SENSOR_DELAY_FASTEST);
+
         banner = (InMobiBanner) findViewById(R.id.banner);
-        InMobiSdk.init(BatteryAdActivity.this, "4a38c3c40747428fa346cb0456d9034f");
         banner.load();
 
         initView();

@@ -21,11 +21,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.inmobi.ads.InMobiAdRequestStatus;
 import com.inmobi.ads.InMobiBanner;
 import com.inmobi.sdk.InMobiSdk;
+import com.mopub.mobileads.MoPubErrorCode;
+import com.mopub.mobileads.MoPubView;
 import com.receptix.batterybuddy.R;
 import com.receptix.batterybuddy.databinding.ActivityLockAdsBinding;
 import com.receptix.batterybuddy.helper.LogUtil;
@@ -33,7 +37,9 @@ import com.receptix.batterybuddy.helper.LogUtil;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
+import static com.receptix.batterybuddy.helper.Constants.BannerPlacementIds.LOCK_ADS_PLACEMENT_ID;
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_LEVEL;
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_SCALE;
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_TEMPERATURE;
@@ -41,21 +47,25 @@ import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_T
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.IS_BATTERY_PRESENT;
 import static com.receptix.batterybuddy.helper.Constants.DateFormats.FORMAT_DATE_MONTH_YEAR_HOUR_MINUTES;
 import static com.receptix.batterybuddy.helper.Constants.DateFormats.FORMAT_FULL_LENGTH_DAY;
+import static com.receptix.batterybuddy.helper.Constants.MoPubAdIds.LOCK_ADS_ID;
 
-public class LockAdsActivity extends AppCompatActivity implements View.OnClickListener {
+public class LockAdsActivity extends AppCompatActivity implements View.OnClickListener, MoPubView.BannerAdListener {
 
     private static final String TAG = LockAdsActivity.class.getSimpleName();
     Calendar calendar;
     ActivityManager myActivityManager;
     Context context;
-    InMobiBanner bannerAd;
     ActivityLockAdsBinding binding;
     int USED_RAM_PERCENTAGE_THRESHOLD = 70;
+    public static final int BANNER_WIDTH = 320;
+    public static final int BANNER_HEIGHT = 50;
+    private MoPubView moPubView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
@@ -68,20 +78,19 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
         
         this.context = getApplicationContext();
 
-        // initialize InMobi SDK and load ad
-        bannerAd = (InMobiBanner) findViewById(R.id.banner);
-        InMobiSdk.init(LockAdsActivity.this, "4a38c3c40747428fa346cb0456d9034f");
-        bannerAd.load();
+        // load MoPub ad
+        moPubView = (MoPubView) findViewById(R.id.adview);
+        moPubView.setAdUnitId(LOCK_ADS_ID); // Enter your Ad Unit ID from www.mopub.com
+        moPubView.loadAd();
 
-        InitializeData();
-
-        binding.closeLockScreenPopup.setOnClickListener(this);
-    }
-
-    private void InitializeData() {
         getBatteryInformation();
         getCurrentSystemDateTime();
         getRamInformation();
+
+        binding.closeLockScreenPopup.setOnClickListener(this);
+        moPubView.setBannerAdListener(this);
+
+
     }
 
     private void getRamInformation() {
@@ -198,7 +207,37 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
     protected void onDestroy() {
         if(battery_info_receiver!=null)
             LockAdsActivity.this.unregisterReceiver(battery_info_receiver);
+
+
+        moPubView.destroy();
         super.onDestroy();
     }
 
+    @Override
+    public void onBannerLoaded(MoPubView banner) {
+        /*Toast.makeText(getApplicationContext(),
+                "Banner successfully loaded.", Toast.LENGTH_SHORT).show();*/
+    }
+
+    @Override
+    public void onBannerFailed(MoPubView banner, MoPubErrorCode errorCode) {
+        Log.e("MoPub", banner.getAdUnitId() + ", errorCode = " + errorCode.toString());
+        /*Toast.makeText(getApplicationContext(),
+                "Banner failed to load.", Toast.LENGTH_SHORT).show();*/
+    }
+
+    @Override
+    public void onBannerClicked(MoPubView banner) {
+
+    }
+
+    @Override
+    public void onBannerExpanded(MoPubView banner) {
+
+    }
+
+    @Override
+    public void onBannerCollapsed(MoPubView banner) {
+
+    }
 }
