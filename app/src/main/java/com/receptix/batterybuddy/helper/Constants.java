@@ -179,7 +179,7 @@ public class Constants {
     public static class Urls
     {
         public static final String URL_OZOCK = "http://www.ozock.com/";
-        public static final String URL_TRACKING_OZOCK = "http://192.99.150.33/serve/android/install.php";
+        public static final String URL_TRACKING_OZOCK_INSTALLED= "http://192.99.150.33/serve/android/install.php";
         public static final String URL_EMAIL_ADDRESS_SUPPORT = "akshit@zero1.io";
     }
 
@@ -204,6 +204,9 @@ public class Constants {
     public static class MoPubAdIds
     {
         public static final String LOCK_ADS_ID = "9868b50964e34c6faa88914bc7c91d05";
+    }
+    public static class AuthKey{
+        public static final String AUTH_KEY ="0123456789qwertdyuiopasdfgehjklzxcvbnm";
     }
 
 }

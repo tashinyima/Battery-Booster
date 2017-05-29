@@ -18,6 +18,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
+import android.util.Base64;
 import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -35,9 +36,17 @@ import com.receptix.batterybuddy.R;
 import com.receptix.batterybuddy.fragments.ChargeFragment;
 import com.receptix.batterybuddy.fragments.HomeFragment;
 import com.receptix.batterybuddy.fragments.RankFragment;
+import com.receptix.batterybuddy.helper.AppKey;
 import com.receptix.batterybuddy.helper.LogUtil;
+import com.receptix.batterybuddy.helper.MCrypt;
 import com.receptix.batterybuddy.receiver.AlarmReceiver;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import static com.receptix.batterybuddy.helper.Constants.AuthKey.AUTH_KEY;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_ACTIVE;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.PREFERENCES_IS_ACTIVE;
 import static com.receptix.batterybuddy.helper.Constants.Urls.URL_EMAIL_ADDRESS_SUPPORT;
@@ -90,9 +99,7 @@ public class NavigationActivity extends AppCompatActivity
             pendingIntent = PendingIntent.getBroadcast(NavigationActivity.this, 0, alarmIntent, 0);
             AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
             manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -150,21 +157,23 @@ public class NavigationActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         setIsActive(true);
+
     }
+
 
     @Override
     protected void onStop() {
         super.onStop();
         setIsActive(false);
+
     }
 
-    private void setIsActive(boolean isActive)
-    {
+    private void setIsActive(boolean isActive) {
         SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES_IS_ACTIVE, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(IS_ACTIVE, isActive);
         editor.commit();
-        LogUtil.e(TAG, "isActive = "+isActive);
+        LogUtil.e(TAG, "isActive = " + isActive);
     }
 
     private void sendCustomNotification() {
@@ -187,9 +196,7 @@ public class NavigationActivity extends AppCompatActivity
             Notification notification = mBuilder.build();
             notification.flags |= Notification.FLAG_NO_CLEAR;
             notificationManager.notify(NOTIFICATION_ID, notification);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -250,15 +257,14 @@ public class NavigationActivity extends AppCompatActivity
         }
 
         // PRIVACY POLICY
-        else if( id == R.id.nav_privacy_policy)
-        {
+        else if (id == R.id.nav_privacy_policy) {
             startActivity(new Intent(NavigationActivity.this, PrivacyActivity.class));
             overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
         }
 
         // SHARE PLAY STORE LINK
         else if (id == R.id.nav_share) {
-            String url ="https://play.google.com/store/apps/details?id="+getApplicationContext().getPackageName()+"&hl=en";
+            String url = "https://play.google.com/store/apps/details?id=" + getApplicationContext().getPackageName() + "&hl=en";
             Intent share = new Intent(android.content.Intent.ACTION_SEND);
             share.setType("text/plain");
             // Add data to the intent, the receiving app will decide
@@ -267,9 +273,7 @@ public class NavigationActivity extends AppCompatActivity
             share.putExtra(Intent.EXTRA_TEXT, url);
             try {
                 startActivity(Intent.createChooser(share, "Share link!"));
-            }
-            catch (ActivityNotFoundException ae)
-            {
+            } catch (ActivityNotFoundException ae) {
                 // No Activity found to Handle Intent
                 ae.printStackTrace();
                 Toast.makeText(this, "No Activity found to share URL", Toast.LENGTH_SHORT).show();

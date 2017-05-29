@@ -80,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
 
         findViewsById();
 
-      /*  fetchUserDetails();*/
 
         new Handler().postDelayed(new Runnable() {
 
@@ -109,113 +108,6 @@ public class MainActivity extends AppCompatActivity {
                 .playOn(findViewById(R.id.imageview_splash_screen));*/
     }
 
-    private void fetchUserDetails() {
-
-        String country = "india";
-        String location = "delhi";
-
-        // get user location and country...
-        boolean gps_enabled = false;
-        boolean network_enabled = false;
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        try {
-            gps_enabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-            network_enabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        // get device id
-        String userDeviceId = Settings.Secure.ANDROID_ID;
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty(DEVICE_ID, userDeviceId);
-
-        // get list of installed apps on user device
-        JsonArray installedAppsList = new JsonArray();
-        List<PackageInfo> packList = getPackageManager().getInstalledPackages(0);
-        for (int i = 0; i < packList.size(); i++) {
-            PackageInfo packInfo = packList.get(i);
-            if ((packInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
-                String appName = packInfo.applicationInfo.loadLabel(getPackageManager()).toString();
-                JsonPrimitive jsonPrimitive = new JsonPrimitive(appName);
-                installedAppsList.add(jsonPrimitive);
-            }
-        }
-
-        // get user device information
-        StringBuilder deviceInfoStringBuilder = new StringBuilder();
-        deviceInfoStringBuilder.append("Android Version : ").append(Build.VERSION.RELEASE);
-
-        Field[] fields = Build.VERSION_CODES.class.getFields();
-        String osName = fields[Build.VERSION.SDK_INT].getName();
-        deviceInfoStringBuilder.append(" OS Name :").append(osName);
-
-        String deviceIpAddress = Utils.getIPAddress(true);
-        String deviceMacAddress = Utils.getMACAddress(WLAN);
-        if (deviceMacAddress.length() == 0) {
-            deviceMacAddress = Utils.getMACAddress(ETHERNET);
-        }
-
-        // get the default launcher
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        ResolveInfo defaultLauncher = getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        String defaultLauncherStr = defaultLauncher.activityInfo.packageName;
-
-
-        // Get user account (synced accounts on device)
-        Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
-        Account[] accounts = AccountManager.get(context).getAccounts();
-        JsonArray userAccounts = new JsonArray();
-
-        for (Account account : accounts) {
-            if (emailPattern.matcher(account.name).matches()) {
-                String possibleEmail = account.name;
-                JsonPrimitive jsonPrimitive = new JsonPrimitive(possibleEmail);
-                userAccounts.add(jsonPrimitive);
-            }
-        }
-
-        // create final JSONObject to be sent to server
-        jsonObject.addProperty(DEVICE_INFO, deviceInfoStringBuilder.toString());
-        jsonObject.addProperty(IP_ADDRESS, deviceIpAddress);
-        jsonObject.addProperty(MAC_ADDRESS, deviceMacAddress);
-        jsonObject.addProperty(DEFAULT_LAUNCHER, defaultLauncherStr);
-        jsonObject.addProperty(LOCATION, location);
-        jsonObject.addProperty(COUNTRY, country);
-        jsonObject.add(INSTALLED_APPS, installedAppsList);
-        jsonObject.add(EMAILS, userAccounts);
-        LogUtil.d(REQUEST_OBJECT, jsonObject.toString());
-
-
-        Ion.with(context)
-                .load(URL_OZOCK)
-                .setJsonObjectBody(jsonObject)
-                .asJsonObject()
-                .setCallback(new FutureCallback<JsonObject>() {
-                    @Override
-                    public void onCompleted(Exception e, JsonObject result) {
-                        LogUtil.d(RESPONSE_OBJECT, String.valueOf(result));
-                    }
-                });
-
-
-    }
-
-    public void showSettingAlert() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-        alertDialog.setTitle("GPS Setting")
-                .setMessage("Enable GPS Now")
-                .setPositiveButton("On", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent("android.location.GPS_ENABLED_CHANGE");
-                        intent.putExtra("enabled", true);
-                        sendBroadcast(intent);
-                    }
-                });
-    }
 
     @Override
     public void onBackPressed() {

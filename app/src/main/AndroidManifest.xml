@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -24,8 +24,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <meta-data
         android:name="com.google.android.gms.version"
@@ -39,84 +38,85 @@
         android:roundIcon="@mipmap/ic_battery_buddy_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".activities.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activities.BatteryAdActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activities.LockAdsActivity"
             android:screenOrientation="portrait"
             android:showForAllUsers="true"
             android:showOnLockScreen="true"
-            tools:targetApi="m">
-            </activity>
-
+            tools:targetApi="m"></activity>
 
         <!-- Optimizer Module -->
         <activity
             android:name=".activities.OptimizerActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activities.AfterOptimizerActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activities.SuccessOptimizerActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activities.OptimalStateActivity"
             android:screenOrientation="portrait" />
 
-
         <!-- About us, Terms and Conditions, Privacy Policy -->
-        <activity android:name=".activities.AboutUsActivity"
+        <activity
+            android:name=".activities.AboutUsActivity"
             android:screenOrientation="portrait" />
-
-        <activity android:name=".activities.TermsPolicyActivity"
-            android:screenOrientation="portrait"  />
-
-        <activity android:name=".activities.TermsAndConditionsActivity"
-            android:screenOrientation="portrait"  />
-
-        <activity android:name=".activities.PrivacyActivity"
+        <activity
+            android:name=".activities.TermsPolicyActivity"
             android:screenOrientation="portrait" />
-
-        <activity android:name=".activities.NavigationActivity"
+        <activity
+            android:name=".activities.TermsAndConditionsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.PrivacyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.NavigationActivity"
             android:screenOrientation="portrait" />
 
         <!-- MoPub Activities (not directly instantiated) -->
-        <activity android:name="com.mopub.mobileads.MoPubActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
-        <activity android:name="com.mopub.mobileads.MraidActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
-        <activity android:name="com.mopub.common.MoPubBrowser" android:configChanges="keyboardHidden|orientation|screenSize"/>
-        <activity android:name="com.mopub.mobileads.MraidVideoPlayerActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
-        <activity android:name="com.mopub.mobileads.RewardedMraidActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
-
+        <activity
+            android:name="com.mopub.mobileads.MoPubActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+            android:name="com.mopub.mobileads.MraidActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+            android:name="com.mopub.common.MoPubBrowser"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+            android:name="com.mopub.mobileads.MraidVideoPlayerActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+            android:name="com.mopub.mobileads.RewardedMraidActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
 
         <!-- Must-Have Activity and Service for InMobi -->
         <activity
             android:name="com.inmobi.rendering.InMobiAdActivity"
             android:configChanges="keyboardHidden|orientation|keyboard|smallestScreenSize|screenSize|screenLayout"
-            android:resizeableActivity="false"
             android:hardwareAccelerated="true"
+            android:resizeableActivity="false"
             android:theme="@android:style/Theme.NoTitleBar"
-            tools:ignore="UnusedAttribute"
-            />
+            tools:ignore="UnusedAttribute" />
 
         <service
             android:name="com.inmobi.signals.activityrecognition.ActivityRecognitionManager"
-            android:enabled="true"/>
+            android:enabled="true" />
 
         <!-- InMobi install attribution receiver -->
         <receiver
@@ -143,40 +143,47 @@
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".receiver.UninstallReceiver">
+            <intent-filter android:priority="0">
+                <action android:name="android.intent.action.QUERY_PACKAGE_RESTART" />
 
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
 
         <!-- App Widget -->
         <receiver android:name=".BatteryBuddyAppWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="INTENT_ACTION_UPDATE_WIDGET_BATTERY_SERVICE"/>
+                <action android:name="INTENT_ACTION_UPDATE_WIDGET_BATTERY_SERVICE" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/battery_buddy_app_widget_info" />
         </receiver>
-
-
-        <receiver android:name=".receiver.DeviceBootReceiver" android:enabled="false">
+        <receiver
+            android:name=".receiver.DeviceBootReceiver"
+            android:enabled="false">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
-            </receiver>
-
+        </receiver>
         <receiver android:name=".receiver.AlarmReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
-            </receiver>
+        </receiver>
 
         <!-- Analytics Campaign Tracking Service -->
-        <service android:name="com.google.android.gms.analytics.CampaignTrackingService"
+        <service
+            android:name="com.google.android.gms.analytics.CampaignTrackingService"
             android:enabled="true"
             android:exported="false" />
 
-        <!-- Used for Google Play Store Campaign Measurement-->
-        <receiver android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"
+        <!-- Used for Google Play Store Campaign Measurement -->
+        <receiver
+            android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -185,14 +192,16 @@
         </receiver>
 
         <!-- AppsFlyer Install Referrer Tracking -->
-        <receiver android:name="com.appsflyer.MultipleInstallBroadcastReceiver" android:exported="true">
+        <receiver
+            android:name="com.appsflyer.MultipleInstallBroadcastReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
 
+        <service android:name="com.google.android.gms.tagmanager.InstallReferrerService" />
 
-        <service android:name="com.google.android.gms.tagmanager.InstallReferrerService"/>
         <receiver
             android:name=".receiver.InstallReferrerReceiver"
             android:exported="true">
@@ -202,16 +211,15 @@
         </receiver>
 
         <!-- Widget Updater Service -->
-        <service android:name="com.receptix.batterybuddy.BatteryUpdateService"
-            android:exported="false"
-            />
-
+        <service
+            android:name=".BatteryUpdateService"
+            android:exported="false" />
         <service
             android:name=".ScreenListenerService"
             android:enabled="true"
-            android:exported="false">
-        </service>
+            android:exported="false"></service>
 
+        <activity android:name=".activities.ListenActivities"></activity>
     </application>
 
 </manifest>
