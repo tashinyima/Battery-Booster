@@ -14,6 +14,7 @@ import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
+import android.widget.Toast;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -83,14 +84,15 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
                     .setCallback(new FutureCallback<JsonObject>() {
                         @Override
                         public void onCompleted(Exception e, JsonObject result) {
-                            if (result != null) {
-                                String status = result.get("status").toString();
-                                if (status.equalsIgnoreCase(STATUS_SUCCESS)) {
-                                    LogUtil.d("Install_Referrer", "Success");
 
-
-                                }
-                            }
+//                            if (result != null) {
+//                                String status = result.get("status").toString();
+//                                if (status.equalsIgnoreCase(STATUS_SUCCESS)) {
+//                                    LogUtil.d("Install_Referrer", "Success");
+//
+//
+//                                }
+//                            }
                         }
                     });
 

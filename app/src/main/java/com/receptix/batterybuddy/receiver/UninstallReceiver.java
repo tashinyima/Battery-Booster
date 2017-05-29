@@ -4,8 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.receptix.batterybuddy.activities.ListenActivities;
-
 /**
  * Created by hello on 5/29/2017.
  */
@@ -21,7 +19,7 @@ public class UninstallReceiver extends BroadcastReceiver {
                 if(packageName!=null && packageName.equals("YOUR_APPLICATION_PACKAGE_NAME")){
                     // User has selected our application under the Manage Apps settings
                     // now initiating background thread to watch for activity
-                    new ListenActivities(context).start();
+                    // failed
 
                 }
             }
