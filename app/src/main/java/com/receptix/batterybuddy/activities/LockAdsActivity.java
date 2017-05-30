@@ -1,29 +1,19 @@
 package com.receptix.batterybuddy.activities;
 
-import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.KeyguardManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.BatteryManager;
-import android.provider.Settings;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GestureDetectorCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.inmobi.ads.InMobiAdRequestStatus;
 import com.inmobi.ads.InMobiBanner;
@@ -47,20 +37,52 @@ import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_T
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.IS_BATTERY_PRESENT;
 import static com.receptix.batterybuddy.helper.Constants.DateFormats.FORMAT_DATE_MONTH_YEAR_HOUR_MINUTES;
 import static com.receptix.batterybuddy.helper.Constants.DateFormats.FORMAT_FULL_LENGTH_DAY;
-import static com.receptix.batterybuddy.helper.Constants.MoPubAdIds.LOCK_ADS_ID;
 
 public class LockAdsActivity extends AppCompatActivity implements View.OnClickListener, MoPubView.BannerAdListener {
 
+    public static final int BANNER_WIDTH = 320;
+    public static final int BANNER_HEIGHT = 50;
     private static final String TAG = LockAdsActivity.class.getSimpleName();
     Calendar calendar;
     ActivityManager myActivityManager;
     Context context;
     ActivityLockAdsBinding binding;
     int USED_RAM_PERCENTAGE_THRESHOLD = 70;
-    public static final int BANNER_WIDTH = 320;
-    public static final int BANNER_HEIGHT = 50;
-    private MoPubView moPubView;
     InMobiBanner inMobiBanner;
+    private MoPubView moPubView;
+    private BroadcastReceiver battery_info_receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            boolean isPresent = intent.getBooleanExtra(IS_BATTERY_PRESENT, false);
+            if (isPresent) {
+
+                // Calculate Battery Temperature (currently unused)
+                int temperature = intent.getIntExtra(BATTERY_TEMPERATURE, 0);
+                double temperatureInDouble = temperature * BATTERY_TEMPERATURE_CONVERSION_UNIT;
+                int batteryTemperature = (int) temperatureInDouble;
+
+                // Calculate Battery Charging Level
+                int level = intent.getIntExtra(BATTERY_LEVEL, 0);
+                int scale = intent.getIntExtra(BATTERY_SCALE, 0);
+                float percentage = level / (float) scale;
+                int batteryLevel = (int) ((percentage) * 100);
+                binding.lockbatteryArcProgress.setSuffixText(getString(R.string.percentage_symbol));
+                binding.lockbatteryArcProgress.setProgress(batteryLevel);
+                String batteryLevelString = batteryLevel + getString(R.string.percentage_symbol);
+                binding.lockBatteryLevelTextView.setText(batteryLevelString);
+
+                if (isChargerConnected(context)) {
+                    binding.lockbatteryChargingStatusTextView.setText(R.string.charging);
+                    binding.lockbatteryChargingStatusTextView.setVisibility(View.VISIBLE);
+                } else {
+                    binding.lockbatteryChargingStatusTextView.setText(R.string.discharging);
+                    binding.lockbatteryChargingStatusTextView.setVisibility(View.VISIBLE);
+                }
+            }
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +100,7 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
         binding = DataBindingUtil.setContentView(this, R.layout.activity_lock_ads);
 
         myActivityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
-        
+
         this.context = getApplicationContext();
 
         // load MoPub ad
@@ -166,59 +188,21 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
             Date date = new Date();
             String dayName = sdf_.format(date);
             binding.lockdatetv.setText("" + dayName + " " + currentDate + "");
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void getBatteryInformation() {
         IntentFilter intentfilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        if(battery_info_receiver!=null)
+        if (battery_info_receiver != null)
             LockAdsActivity.this.registerReceiver(battery_info_receiver, intentfilter);
     }
 
-    private BroadcastReceiver battery_info_receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            boolean isPresent = intent.getBooleanExtra(IS_BATTERY_PRESENT, false);
-            if (isPresent) {
-
-                // Calculate Battery Temperature (currently unused)
-                int temperature = intent.getIntExtra(BATTERY_TEMPERATURE, 0);
-                double temperatureInDouble = temperature * BATTERY_TEMPERATURE_CONVERSION_UNIT;
-                int batteryTemperature = (int) temperatureInDouble;
-
-                // Calculate Battery Charging Level
-                int level = intent.getIntExtra(BATTERY_LEVEL, 0);
-                int scale = intent.getIntExtra(BATTERY_SCALE, 0);
-                float percentage = level / (float) scale;
-                int batteryLevel = (int) ((percentage) * 100);
-                binding.lockbatteryArcProgress.setSuffixText(getString(R.string.percentage_symbol));
-                binding.lockbatteryArcProgress.setProgress(batteryLevel);
-                String batteryLevelString = batteryLevel + getString(R.string.percentage_symbol);
-                binding.lockBatteryLevelTextView.setText(batteryLevelString);
-
-                if (isChargerConnected(context)) {
-                    binding.lockbatteryChargingStatusTextView.setText(R.string.charging);
-                    binding.lockbatteryChargingStatusTextView.setVisibility(View.VISIBLE);
-                } else {
-                    binding.lockbatteryChargingStatusTextView.setText(R.string.discharging);
-                    binding.lockbatteryChargingStatusTextView.setVisibility(View.VISIBLE);
-                }
-            }
-
-        }
-    };
-
     private boolean isChargerConnected(Context context) {
-        if(context!=null)
-        {
+        if (context != null) {
             Intent intent = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-            if(intent!=null)
-            {
+            if (intent != null) {
                 int plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
                 return plugged == BatteryManager.BATTERY_PLUGGED_AC || plugged == BatteryManager.BATTERY_PLUGGED_USB;
             }
@@ -229,8 +213,7 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        if(v==binding.closeLockScreenPopup)
-        {
+        if (v == binding.closeLockScreenPopup) {
             finish();
             overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
         }
@@ -247,7 +230,7 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     protected void onDestroy() {
-        if(battery_info_receiver!=null)
+        if (battery_info_receiver != null)
             LockAdsActivity.this.unregisterReceiver(battery_info_receiver);
 
 

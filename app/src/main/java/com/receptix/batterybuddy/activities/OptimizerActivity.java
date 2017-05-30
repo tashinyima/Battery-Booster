@@ -19,7 +19,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
@@ -55,12 +54,22 @@ public class OptimizerActivity extends AppCompatActivity {
     Drawable appicon;
     Toolbar toolbar;
     NotificationManager notificationManager;
-    private long mShortAnimationDuration = 300;
-    private boolean isOptimizationInProgress = false;
     TextView textView_analysisProgressIndicator;
     TextView textView_estimatedExtendedTime;
     int receivedBatteryLevel = 0;
     ImageView batteryImageView;
+    private long mShortAnimationDuration = 300;
+    private boolean isOptimizationInProgress = false;
+
+    private static int getRandomNumberInRange(int min, int max) {
+
+        if (min >= max) {
+            throw new IllegalArgumentException("max must be greater than min");
+        }
+
+        Random r = new Random();
+        return r.nextInt((max - min) + 1) + min;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,21 +108,16 @@ public class OptimizerActivity extends AppCompatActivity {
 
     }
 
-    private void handleIntent(Intent intent)
-    {
-        if(intent!=null)
-        {
-            if(intent.getExtras() != null)
-            {
+    private void handleIntent(Intent intent) {
+        if (intent != null) {
+            if (intent.getExtras() != null) {
                 int batteryLevel = intent.getExtras().getInt(BATTERY_LEVEL, 0);
-                if(batteryLevel!=0)
-                {
+                if (batteryLevel != 0) {
                     receivedBatteryLevel = batteryLevel;
                 }
             }
         }
     }
-
 
     private void setupToolBar(String title) {
         setSupportActionBar(toolbar);
@@ -257,10 +261,10 @@ public class OptimizerActivity extends AppCompatActivity {
         batteryImageView = (ImageView) findViewById(R.id.batteryImageView);
         AnimationDrawable animation = new AnimationDrawable();
 
-        animation.addFrame(ContextCompat.getDrawable(context,R.drawable.batterylevel1),100);
-        animation.addFrame(ContextCompat.getDrawable(context,R.drawable.batterylevel2),200);
-        animation.addFrame(ContextCompat.getDrawable(context,R.drawable.batterylevel3),300);
-        animation.addFrame(ContextCompat.getDrawable(context,R.drawable.batterylevel4),400);
+        animation.addFrame(ContextCompat.getDrawable(context, R.drawable.batterylevel1), 100);
+        animation.addFrame(ContextCompat.getDrawable(context, R.drawable.batterylevel2), 200);
+        animation.addFrame(ContextCompat.getDrawable(context, R.drawable.batterylevel3), 300);
+        animation.addFrame(ContextCompat.getDrawable(context, R.drawable.batterylevel4), 400);
         animation.setOneShot(false);
         batteryImageView.setImageDrawable(animation);
         animation.start();
@@ -269,35 +273,21 @@ public class OptimizerActivity extends AppCompatActivity {
         int startRange = 0;
         int endRange = 0;
 
-        if(receivedBatteryLevel<=10)
-        {
+        if (receivedBatteryLevel <= 10) {
             startRange = 10;
             endRange = 15;
         }
-        if(receivedBatteryLevel>10 && receivedBatteryLevel<=30)
-        {
+        if (receivedBatteryLevel > 10 && receivedBatteryLevel <= 30) {
             startRange = 20;
             endRange = 35;
         }
-        if(receivedBatteryLevel>30)
-        {
+        if (receivedBatteryLevel > 30) {
             startRange = 40;
             endRange = 50;
         }
-        int randomExtendedTimePeriod = getRandomNumberInRange(startRange,endRange);
+        int randomExtendedTimePeriod = getRandomNumberInRange(startRange, endRange);
         textView_estimatedExtendedTime.setText(" " + randomExtendedTimePeriod + " " + MINUTES);
     }
-
-    private static int getRandomNumberInRange(int min, int max) {
-
-        if (min >= max) {
-            throw new IllegalArgumentException("max must be greater than min");
-        }
-
-        Random r = new Random();
-        return r.nextInt((max - min) + 1) + min;
-    }
-
 
     @Override
     public void onBackPressed() {
@@ -317,13 +307,12 @@ public class OptimizerActivity extends AppCompatActivity {
         setIsActive(false);
     }
 
-    private void setIsActive(boolean isActive)
-    {
+    private void setIsActive(boolean isActive) {
         SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES_IS_ACTIVE, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(IS_ACTIVE, isActive);
         editor.commit();
-        LogUtil.e(TAG, "isActive = "+isActive);
+        LogUtil.e(TAG, "isActive = " + isActive);
     }
 
 }

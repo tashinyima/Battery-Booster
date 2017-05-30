@@ -1,7 +1,7 @@
 package com.receptix.batterybuddy.activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -24,7 +24,7 @@ public class TermsPolicyActivity extends AppCompatActivity {
 
     private void setupToolBar(String title) {
         setSupportActionBar(toolbar);
-        if(getSupportActionBar()!=null)
+        if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         TextView textViewTitle = (TextView) toolbar.findViewById(R.id.textViewTitle);
         textViewTitle.setText(title);

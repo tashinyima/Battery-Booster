@@ -1,10 +1,9 @@
 package com.receptix.batterybuddy.activities;
 
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.receptix.batterybuddy.R;
@@ -50,12 +49,11 @@ public class OptimalStateActivity extends AppCompatActivity {
         setIsActive(false);
     }
 
-    private void setIsActive(boolean isActive)
-    {
+    private void setIsActive(boolean isActive) {
         SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCES_IS_ACTIVE, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(IS_ACTIVE, isActive);
         editor.commit();
-        LogUtil.e(TAG, "isActive = "+isActive);
+        LogUtil.e(TAG, "isActive = " + isActive);
     }
 }

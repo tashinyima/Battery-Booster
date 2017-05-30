@@ -4,7 +4,6 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.AlarmManager;
 import android.app.KeyguardManager;
-import android.app.NativeActivity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -22,18 +21,18 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
-import android.util.Base64;
-import android.util.Log;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,18 +49,11 @@ import com.receptix.batterybuddy.R;
 import com.receptix.batterybuddy.fragments.ChargeFragment;
 import com.receptix.batterybuddy.fragments.HomeFragment;
 import com.receptix.batterybuddy.fragments.RankFragment;
-import com.receptix.batterybuddy.helper.AppKey;
 import com.receptix.batterybuddy.helper.LogUtil;
-import com.receptix.batterybuddy.helper.MCrypt;
 import com.receptix.batterybuddy.helper.Utils;
 import com.receptix.batterybuddy.receiver.AlarmReceiver;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -95,10 +87,10 @@ public class NavigationActivity extends AppCompatActivity
     Toolbar toolbar;
     int NOTIFICATION_ID = 999;
     int currentSelectedFragment = 0;
-    private Fragment fragment;
-    private FragmentManager fragmentManager;
     JsonObject jsonObject;
     Context context;
+    private Fragment fragment;
+    private FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +114,7 @@ public class NavigationActivity extends AppCompatActivity
         setupBottomNavigationBar();
         startAlarm();
 
-         //call fetchUserDetails here to avoid NPE when calling getContentResolver() on Context.
+        //call fetchUserDetails here to avoid NPE when calling getContentResolver() on Context.
         fetchUserDetails(context);
 
     }
@@ -199,8 +191,8 @@ public class NavigationActivity extends AppCompatActivity
 
         String userDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         jsonObject.addProperty(DEVICE_ID, userDeviceId);
-        String encrypted = Base64.encodeToString(userDeviceId.getBytes(), Base64.NO_WRAP |Base64.URL_SAFE);
-        jsonObject.addProperty("authkey",encrypted);
+        String encrypted = Base64.encodeToString(userDeviceId.getBytes(), Base64.NO_WRAP | Base64.URL_SAFE);
+        jsonObject.addProperty("authkey", encrypted);
 
 
         // get list of installed apps on user device

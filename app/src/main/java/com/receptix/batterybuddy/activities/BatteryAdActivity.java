@@ -10,10 +10,9 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.BatteryManager;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -23,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.lzyzsd.circleprogress.ArcProgress;
+import com.inmobi.ads.InMobiAdRequestStatus;
 import com.inmobi.ads.InMobiBanner;
 import com.inmobi.sdk.InMobiSdk;
 import com.receptix.batterybuddy.R;
@@ -31,14 +31,13 @@ import com.receptix.batterybuddy.helper.LogUtil;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
 import static com.receptix.batterybuddy.helper.Constants.BannerPlacementIds.INMOBI_ACCOUNT_ID;
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_LEVEL;
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_SCALE;
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_TEMPERATURE;
-import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_TEMPERATURE_CONVERSION_UNIT;
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_VOLTAGE;
-import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_VOLTAGE_CONVERSION_UNIT;
 
 public class BatteryAdActivity extends AppCompatActivity implements View.OnClickListener, SensorEventListener {
     private static final String TAG = "AdsActivity";
@@ -48,12 +47,51 @@ public class BatteryAdActivity extends AppCompatActivity implements View.OnClick
     ArcProgress arcProgress_Ram, arcProgress_Battery;
     TextView dateTextView;
     Calendar calendar;
+    ProgressBar batteryProgressbar;
+    TextView batteryLevelTextView, batteryChargingStatusTextView;
+    InMobiBanner banner;
     private SensorManager mSensorManager;
     private Sensor mTempSensor;
-    ProgressBar batteryProgressbar;
-    TextView batteryLevelTextView,batteryChargingStatusTextView;
-    InMobiBanner banner;
+    private BroadcastReceiver battery_info_receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
 
+            boolean isPresent = intent.getBooleanExtra("present", false);
+            if (isPresent) {
+
+
+                int temperature = intent.getIntExtra("temperature", 0);
+                double doubletemp = temperature * 0.1;
+                int progresint = (int) doubletemp;
+                int level = intent.getIntExtra(BATTERY_LEVEL, 0);
+                int scale = intent.getIntExtra(BATTERY_SCALE, 0);
+                int batteryVoltage = intent.getIntExtra(BATTERY_VOLTAGE, 0);
+                int batteryTemperature = intent.getIntExtra(BATTERY_TEMPERATURE, 0);
+
+                /*double voltageValueInDouble = batteryVoltage * BATTERY_VOLTAGE_CONVERSION_UNIT;
+                double temperatureValueInDouble = batteryTemperature * BATTERY_TEMPERATURE_CONVERSION_UNIT;*/
+
+                // Calculate the battery charged percentage
+                float percentage = level / (float) scale;
+                // Update the progress bar to display current battery charged percentage
+                int batteryPercentageProgress = (int) ((percentage) * 100);
+                arcProgress_Battery.setSuffixText(getString(R.string.percentage_symbol));
+                arcProgress_Battery.setProgress(batteryPercentageProgress);
+
+                batteryProgressbar.setProgress(batteryPercentageProgress);
+                batteryLevelTextView.setText(String.valueOf(batteryPercentageProgress) + "%");
+                batteryChargingStatusTextView.setVisibility(View.VISIBLE);
+                if (isChargerConnected(context)) {
+                    batteryChargingStatusTextView.setText(R.string.charging);
+                } else {
+                    batteryChargingStatusTextView.setText(R.string.discharging);
+                }
+            } else {
+                showMessage("There is no battery");
+            }
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +110,42 @@ public class BatteryAdActivity extends AppCompatActivity implements View.OnClick
 
         banner = (InMobiBanner) findViewById(R.id.banner);
         banner.load();
+        banner.setListener(new InMobiBanner.BannerAdListener() {
+            @Override
+            public void onAdLoadSucceeded(InMobiBanner inMobiBanner) {
+
+            }
+
+            @Override
+            public void onAdLoadFailed(InMobiBanner inMobiBanner, InMobiAdRequestStatus inMobiAdRequestStatus) {
+                LogUtil.e("onAdLoadFailed", inMobiAdRequestStatus.getMessage());
+            }
+
+            @Override
+            public void onAdDisplayed(InMobiBanner inMobiBanner) {
+
+            }
+
+            @Override
+            public void onAdDismissed(InMobiBanner inMobiBanner) {
+
+            }
+
+            @Override
+            public void onAdInteraction(InMobiBanner inMobiBanner, Map<Object, Object> map) {
+
+            }
+
+            @Override
+            public void onUserLeftApplication(InMobiBanner inMobiBanner) {
+
+            }
+
+            @Override
+            public void onAdRewardActionCompleted(InMobiBanner inMobiBanner, Map<Object, Object> map) {
+
+            }
+        });
 
         initView();
         InitializeSystemData();
@@ -83,7 +157,6 @@ public class BatteryAdActivity extends AppCompatActivity implements View.OnClick
         }
 
     }
-
 
     private void InitializeSystemData() {
         getRamInfo();
@@ -97,51 +170,6 @@ public class BatteryAdActivity extends AppCompatActivity implements View.OnClick
         IntentFilter intentfilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         context.registerReceiver(battery_info_receiver, intentfilter);
     }
-
-    private BroadcastReceiver battery_info_receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            boolean isPresent = intent.getBooleanExtra("present", false);
-            if (isPresent) {
-
-
-                int temperature = intent.getIntExtra("temperature", 0);
-                double doubletemp = temperature * 0.1;
-                int progresint = (int) doubletemp;
-                int level = intent.getIntExtra(BATTERY_LEVEL, 0);
-                int scale = intent.getIntExtra(BATTERY_SCALE, 0);
-                int batteryVoltage = intent.getIntExtra(BATTERY_VOLTAGE, 0);
-                int batteryTemperature = intent.getIntExtra(BATTERY_TEMPERATURE, 0);
-                double voltageValueInDouble = batteryVoltage * BATTERY_VOLTAGE_CONVERSION_UNIT;
-                double temperatureValueInDouble = batteryTemperature * BATTERY_TEMPERATURE_CONVERSION_UNIT;
-
-                // Calculate the battery charged percentage
-                float percentage = level / (float) scale;
-                // Update the progress bar to display current battery charged percentage
-                int batteryPercentageProgress = (int) ((percentage) * 100);
-
-                arcProgress_Battery.setProgress(batteryTemperature);
-
-                arcProgress_Battery.setSuffixText((char) 0x00b0 + "C");
-
-                batteryProgressbar.setProgress(batteryPercentageProgress);
-                batteryLevelTextView.setText(String.valueOf(batteryPercentageProgress) + "%");
-                if(isChargerConnected(context)){
-
-
-                    batteryChargingStatusTextView.setText("Charging");
-                    batteryChargingStatusTextView.setVisibility(View.VISIBLE);
-                }
-
-
-            } else {
-
-                showMessage("There is no battery");
-            }
-
-        }
-    };
 
     private void showMessage(String s) {
         Toast.makeText(context, s, Toast.LENGTH_LONG).show();
@@ -215,7 +243,7 @@ public class BatteryAdActivity extends AppCompatActivity implements View.OnClick
 
         batteryProgressbar = (ProgressBar) findViewById(R.id.batteryProgressBar);
         batteryLevelTextView = (TextView) findViewById(R.id.batteryLevelTextView);
-        batteryChargingStatusTextView= (TextView) findViewById(R.id.batteryChargingStatusTextView);
+        batteryChargingStatusTextView = (TextView) findViewById(R.id.batteryChargingStatusTextView);
 
     }
 
