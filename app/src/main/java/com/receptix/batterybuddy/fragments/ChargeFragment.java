@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,11 +75,13 @@ public class ChargeFragment extends Fragment {
                     waveLoadingView.pauseAnimation();
                     textViewChargeTimeRemaining.setVisibility(View.GONE);
                     textViewEtaHeading.setVisibility(View.GONE);
-                    waveLoadingView.setWaveColor(getContext().getResources().getColor(android.R.color.holo_green_dark));
+//          waveLoadingView.setWaveColor(getContext().getResources().getColor(android.R.color.holo_green_dark));
+              waveLoadingView.setWaveColor(ContextCompat.getColor(context,android.R.color.holo_green_dark));
                 }
                 else {
                     waveLoadingView.resumeAnimation();
-                    waveLoadingView.setWaveColor(getContext().getResources().getColor(R.color.colorGreen));
+                  //   waveLoadingView.setWaveColor(getContext().getResources().getColor(R.color.colorGreen));  Depreciated getcolor
+                    waveLoadingView.setWaveColor(ContextCompat.getColor(context,R.color.colorGreen));
 
                     try {
                         int chargePlug = batteryStatus.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
