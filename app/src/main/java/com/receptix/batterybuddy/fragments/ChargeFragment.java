@@ -106,7 +106,7 @@ public class ChargeFragment extends Fragment {
                         String lasttwo = stringminutes.substring(stringminutes.length() - 2);
                         int minute = Integer.parseInt(lasttwo);
                         int realminutes = (minute * 60) / 100;
-                        String valueGreaterThanEqualToOneHour = String.valueOf(hours) + HOURS + " " + String.valueOf(realminutes) + " " + MINUTES;
+                        String valueGreaterThanEqualToOneHour = String.valueOf(hours) + " " + HOURS + " " + String.valueOf(realminutes) + " " + MINUTES;
                         String valueLessThanOneHour = String.valueOf(realminutes) + " " + MINUTES;
                         textViewChargeTimeRemaining.setVisibility(View.VISIBLE);
                         textViewEtaHeading.setVisibility(View.VISIBLE);
