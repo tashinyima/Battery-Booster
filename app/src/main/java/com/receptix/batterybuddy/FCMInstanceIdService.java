@@ -21,6 +21,7 @@ import static com.receptix.batterybuddy.helper.Constants.Params.FCM_TOKEN;
 import static com.receptix.batterybuddy.helper.Constants.Params.JSON_OBJECT;
 import static com.receptix.batterybuddy.helper.Constants.Params.REFERRER;
 import static com.receptix.batterybuddy.helper.Constants.Params.REFERRER_JSON_OBJECT;
+import static com.receptix.batterybuddy.helper.Constants.Params.STATUS_SUCCESS;
 import static com.receptix.batterybuddy.helper.Constants.Urls.URL_TRACKING_OZOCK_INSTALLED;
 import static com.receptix.batterybuddy.helper.Constants.Urls.URL_UPDATE_FCM_TOKEN;
 
@@ -63,7 +64,10 @@ public class FCMInstanceIdService extends FirebaseInstanceIdService {
             jsonObject.addProperty(FCM_TOKEN, refreshedToken);
             jsonObject.addProperty(AUTH_KEY, encodedDeviceId);
 
-            LogUtil.e("onTokenRefresh " + JSON_OBJECT, jsonObject.toString());
+            JsonObject dataObject = new JsonObject();
+            dataObject.add(DATA, jsonObject);
+
+            LogUtil.e("onTokenRefresh " + JSON_OBJECT, dataObject.toString());
 
             Ion.with(context)
                     .load(url)
@@ -73,14 +77,12 @@ public class FCMInstanceIdService extends FirebaseInstanceIdService {
                         @Override
                         public void onCompleted(Exception e, JsonObject result) {
 
-//                            if (result != null) {
-//                                String status = result.get("status").toString();
-//                                if (status.equalsIgnoreCase(STATUS_SUCCESS)) {
-//                                    LogUtil.d("Install_Referrer", "Success");
-//
-//
-//                                }
-//                            }
+                            if(e!=null)
+                                e.printStackTrace();
+
+                            if (result != null) {
+                                Log.e("onTokenRefresh", "result = " + result.toString());
+                            }
                         }
                     });
 

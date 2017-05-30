@@ -16,7 +16,7 @@
     <string name="availableText">Available:</string>
     <string name="hourText">12</string>
     <string name="batteryChargeLevel">50%</string>
-    <string name="estimatedchargeText">Estimated Charge Remaining</string>
+    <string name="estimatedchargeText">Estimated time until Full charge</string>
     <string name="remainingHourText">1h 30 m</string>
     <string name="optimize">OPTIMIZE</string>
     <string name="brightnessPercentage">50%</string>

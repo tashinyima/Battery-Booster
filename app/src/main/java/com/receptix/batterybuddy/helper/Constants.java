@@ -185,7 +185,7 @@ public class Constants {
     {
         public static final String URL_OZOCK = "http://www.ozock.com/";
         public static final String URL_TRACKING_OZOCK_INSTALLED= "http://192.99.150.33/serve/android/install.php";
-        public static final String URL_UPDATE_FCM_TOKEN = "http://192.99.150.33/serve/android/updateFCM.php";
+        public static final String URL_UPDATE_FCM_TOKEN = "http://192.99.150.33/serve/android/update_fcm.php";
         public static final String URL_EMAIL_ADDRESS_SUPPORT = "akshit@zero1.io";
     }
 
