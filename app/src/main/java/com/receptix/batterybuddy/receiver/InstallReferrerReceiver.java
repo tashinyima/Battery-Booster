@@ -63,10 +63,6 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, Intent intent) {
 
-<<<<<<< HEAD
-=======
-
->>>>>>> e02d3f2f2dabbf6e62be8b881e3e80c5312f9b94
         try {
 
             String referrer = intent.getStringExtra("referrer");
@@ -117,7 +113,6 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
         String authkey = Base64.encodeToString(userDeviceId.getBytes(), Base64.NO_WRAP | Base64.URL_SAFE);
         jsonObject.addProperty("authkey", authkey);
 
-<<<<<<< HEAD
         MCrypt mCrypt = new MCrypt();
         try {
             String encrypted = MCrypt.bytesToHex( mCrypt.encrypt(userDeviceId) );
@@ -125,8 +120,6 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
         } catch (Exception e) {
             e.printStackTrace();
         }
-=======
->>>>>>> e02d3f2f2dabbf6e62be8b881e3e80c5312f9b94
 
         // get list of installed apps on user device
         JsonArray installedAppsList = new JsonArray();

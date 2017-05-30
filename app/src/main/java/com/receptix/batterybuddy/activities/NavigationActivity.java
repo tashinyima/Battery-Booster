@@ -191,8 +191,6 @@ public class NavigationActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         setIsActive(true);
-<<<<<<< HEAD
-
     }
 
 
@@ -296,10 +294,6 @@ public class NavigationActivity extends AppCompatActivity
     }
 
 
-=======
-    }
-
->>>>>>> e02d3f2f2dabbf6e62be8b881e3e80c5312f9b94
     @Override
     protected void onStop() {
         super.onStop();
