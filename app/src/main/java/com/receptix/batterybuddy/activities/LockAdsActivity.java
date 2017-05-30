@@ -49,7 +49,7 @@ import static com.receptix.batterybuddy.helper.Constants.DateFormats.FORMAT_DATE
 import static com.receptix.batterybuddy.helper.Constants.DateFormats.FORMAT_FULL_LENGTH_DAY;
 import static com.receptix.batterybuddy.helper.Constants.MoPubAdIds.LOCK_ADS_ID;
 
-public class LockAdsActivity extends AppCompatActivity implements View.OnClickListener, MoPubView.BannerAdListener {
+public class LockAdsActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = LockAdsActivity.class.getSimpleName();
     Calendar calendar;
@@ -81,10 +81,6 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
         
         this.context = getApplicationContext();
 
-        // load MoPub ad
-        moPubView = (MoPubView) findViewById(R.id.adview);
-        /*moPubView.setAdUnitId(LOCK_ADS_ID); // Enter your Ad Unit ID from www.mopub.com
-        moPubView.loadAd();*/
 
         inMobiBanner = (InMobiBanner) findViewById(R.id.inmobi_banner);
         inMobiBanner.load();
@@ -251,35 +247,8 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
             LockAdsActivity.this.unregisterReceiver(battery_info_receiver);
 
 
-        moPubView.destroy();
+
         super.onDestroy();
     }
 
-    @Override
-    public void onBannerLoaded(MoPubView banner) {
-        /*Toast.makeText(getApplicationContext(),
-                "Banner successfully loaded.", Toast.LENGTH_SHORT).show();*/
-    }
-
-    @Override
-    public void onBannerFailed(MoPubView banner, MoPubErrorCode errorCode) {
-        Log.e("MoPub", banner.getAdUnitId() + ", errorCode = " + errorCode.toString());
-        /*Toast.makeText(getApplicationContext(),
-                "Banner failed to load.", Toast.LENGTH_SHORT).show();*/
-    }
-
-    @Override
-    public void onBannerClicked(MoPubView banner) {
-
-    }
-
-    @Override
-    public void onBannerExpanded(MoPubView banner) {
-
-    }
-
-    @Override
-    public void onBannerCollapsed(MoPubView banner) {
-
-    }
 }

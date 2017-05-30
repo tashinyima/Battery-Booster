@@ -183,14 +183,5 @@
             android:layout_height="250dp">
         </com.inmobi.ads.InMobiBanner>
 
-        <!-- InMobi Ad at the bottom of the lock screen -->
-            <com.mopub.mobileads.MoPubView
-                android:id="@+id/adview"
-                android:visibility="gone"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentBottom="true"
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                />
     </RelativeLayout>
 </layout>

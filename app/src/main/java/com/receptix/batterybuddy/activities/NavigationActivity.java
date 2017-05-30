@@ -123,7 +123,7 @@ public class NavigationActivity extends AppCompatActivity
         startAlarm();
 
          //call fetchUserDetails here to avoid NPE when calling getContentResolver() on Context.
-        fetchUserDetails(context);
+        // fetchUserDetails(context);
 
     }
 
