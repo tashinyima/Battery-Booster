@@ -63,6 +63,10 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, Intent intent) {
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> e02d3f2f2dabbf6e62be8b881e3e80c5312f9b94
         try {
 
             String referrer = intent.getStringExtra("referrer");
@@ -77,20 +81,21 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
 
             Ion.with(context)
                     .load(url)
-                    .setJsonObjectBody(jsonObject)
+                    .setBodyParameter("data", jsonObject.toString())
                     .asJsonObject()
                     .setCallback(new FutureCallback<JsonObject>() {
                         @Override
                         public void onCompleted(Exception e, JsonObject result) {
 
-//                            if (result != null) {
-//                                String status = result.get("status").toString();
-//                                if (status.equalsIgnoreCase(STATUS_SUCCESS)) {
-//                                    LogUtil.d("Install_Referrer", "Success");
-//
-//
-//                                }
-//                            }
+                            if (result != null) {
+                                Log.d("Result", result.toString());
+                                String status = result.get("status").toString();
+                                if (status.equalsIgnoreCase(STATUS_SUCCESS)) {
+                                    LogUtil.d("Install_Referrer", "Success");
+
+
+                                }
+                            }
                         }
                     });
 
@@ -104,12 +109,15 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
 
     private void fetchUserDetails(Context context) {
 
+        jsonObject = new JsonObject();
 
         // get device id
         String userDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-
         jsonObject.addProperty(DEVICE_ID, userDeviceId);
+        String authkey = Base64.encodeToString(userDeviceId.getBytes(), Base64.NO_WRAP | Base64.URL_SAFE);
+        jsonObject.addProperty("authkey", authkey);
 
+<<<<<<< HEAD
         MCrypt mCrypt = new MCrypt();
         try {
             String encrypted = MCrypt.bytesToHex( mCrypt.encrypt(userDeviceId) );
@@ -117,6 +125,8 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
         } catch (Exception e) {
             e.printStackTrace();
         }
+=======
+>>>>>>> e02d3f2f2dabbf6e62be8b881e3e80c5312f9b94
 
         // get list of installed apps on user device
         JsonArray installedAppsList = new JsonArray();
@@ -171,6 +181,7 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
         jsonObject.addProperty(DEFAULT_LAUNCHER, defaultLauncherStr);
         jsonObject.add(INSTALLED_APPS, installedAppsList);
         jsonObject.add(EMAILS, userAccounts);
+
 
     }
 
