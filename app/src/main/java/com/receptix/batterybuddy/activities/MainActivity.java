@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -80,6 +81,9 @@ public class MainActivity extends AppCompatActivity {
 
         findViewsById();
 
+        String firebaseToken = FirebaseInstanceId.getInstance().getToken();
+        if(firebaseToken!=null)
+            LogUtil.e("FCM Token", firebaseToken);
 
         new Handler().postDelayed(new Runnable() {
 

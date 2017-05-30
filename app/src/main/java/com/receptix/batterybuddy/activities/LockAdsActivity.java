@@ -88,6 +88,42 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
 
         inMobiBanner = (InMobiBanner) findViewById(R.id.inmobi_banner);
         inMobiBanner.load();
+        inMobiBanner.setListener(new InMobiBanner.BannerAdListener() {
+            @Override
+            public void onAdLoadSucceeded(InMobiBanner inMobiBanner) {
+
+            }
+
+            @Override
+            public void onAdLoadFailed(InMobiBanner inMobiBanner, InMobiAdRequestStatus inMobiAdRequestStatus) {
+                Log.e("onAdLoadFailed", inMobiAdRequestStatus.getMessage());
+            }
+
+            @Override
+            public void onAdDisplayed(InMobiBanner inMobiBanner) {
+
+            }
+
+            @Override
+            public void onAdDismissed(InMobiBanner inMobiBanner) {
+
+            }
+
+            @Override
+            public void onAdInteraction(InMobiBanner inMobiBanner, Map<Object, Object> map) {
+
+            }
+
+            @Override
+            public void onUserLeftApplication(InMobiBanner inMobiBanner) {
+
+            }
+
+            @Override
+            public void onAdRewardActionCompleted(InMobiBanner inMobiBanner, Map<Object, Object> map) {
+
+            }
+        });
 
         getBatteryInformation();
         getCurrentSystemDateTime();

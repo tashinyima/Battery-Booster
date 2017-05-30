@@ -16,6 +16,7 @@ import android.util.Log;
 import android.util.Patterns;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -34,7 +35,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static com.receptix.batterybuddy.helper.Constants.AuthKey.AUTH_KEY;
+import static com.receptix.batterybuddy.helper.Constants.JsonProperties.AUTH_KEY;
 import static com.receptix.batterybuddy.helper.Constants.JsonProperties.DEFAULT_LAUNCHER;
 import static com.receptix.batterybuddy.helper.Constants.JsonProperties.DEVICE_ID;
 import static com.receptix.batterybuddy.helper.Constants.JsonProperties.DEVICE_INFO;
@@ -62,15 +63,12 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, Intent intent) {
 
-
-
         try {
 
             String referrer = intent.getStringExtra("referrer");
             Log.e("Referrer", referrer);
 
             String url = URL_TRACKING_OZOCK_INSTALLED;
-
             jsonObject.addProperty(REFERRER, referrer);
             jsonObject.addProperty(APP_NAME, context.getPackageName());
             LogUtil.d(REFERRER_JSON_OBJECT, jsonObject.toString());
@@ -115,7 +113,7 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
         MCrypt mCrypt = new MCrypt();
         try {
             String encrypted = MCrypt.bytesToHex( mCrypt.encrypt(userDeviceId) );
-            jsonObject.addProperty("authkey",encrypted);
+            jsonObject.addProperty(AUTH_KEY,encrypted);
         } catch (Exception e) {
             e.printStackTrace();
         }

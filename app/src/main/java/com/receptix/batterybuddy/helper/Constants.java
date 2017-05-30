@@ -127,7 +127,7 @@ public class Constants {
         public static final int MINIMUM_INSTALLED_APPS = 10;
         public static final int NUMBER_OF_SYSTEM_APPS_TO_SHOW = 12;
         public static final int COUNTDOWN_TIMER_VALUE = 1800000; //30 minutes before we show ISSUES with the phone again (to Optimize)
-        public static final int SCREEN_LOCK_ADS_TIMER_VALUE_MINUTES = 1440; //24 hours have 1440 minutes
+        public static final int SCREEN_LOCK_ADS_TIMER_VALUE_MINUTES = 1; //24 hours have 1440 minutes
         public static final String APP_PACKAGE_NAME = "com.receptix.batterybuddy";
 
         public static final String FROM = "from";
@@ -143,6 +143,8 @@ public class Constants {
         public static final String REFERRER = "referrer";
         public static final String APP_NAME = "package";
         public static final String REFERRER_JSON_OBJECT = "RequestBody" ;
+        public static final String JSON_OBJECT = "JsonObject" ;
+        public static final String FCM_TOKEN = "fcm_token";
 
     }
 
@@ -161,6 +163,7 @@ public class Constants {
     }
 
     public static class JsonProperties {
+        public static final String DATA = "data";
         public static final String DEVICE_INFO = "deviceInfo";
         public static final String DEVICE_ID = "deviceId";
         public static final String IP_ADDRESS = "ipaddress";
@@ -174,12 +177,15 @@ public class Constants {
         public static final String INSTALLED_APPS = "installedapps";
         public static final String REQUEST_OBJECT = "requestObject";
         public static final String RESPONSE_OBJECT = "responseObject";
+
+        public static final String AUTH_KEY = "authkey";
     }
 
     public static class Urls
     {
         public static final String URL_OZOCK = "http://www.ozock.com/";
         public static final String URL_TRACKING_OZOCK_INSTALLED= "http://192.99.150.33/serve/android/install.php";
+        public static final String URL_UPDATE_FCM_TOKEN = "http://192.99.150.33/serve/android/updateFCM.php";
         public static final String URL_EMAIL_ADDRESS_SUPPORT = "akshit@zero1.io";
     }
 
@@ -206,7 +212,6 @@ public class Constants {
         public static final String LOCK_ADS_ID = "9868b50964e34c6faa88914bc7c91d05";
     }
     public static class AuthKey{
-        public static final String AUTH_KEY ="0123456789qwertdyuiopasdfgehjklzxcvbnm";
     }
 
 }

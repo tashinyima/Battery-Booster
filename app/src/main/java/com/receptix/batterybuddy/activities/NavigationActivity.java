@@ -64,7 +64,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static com.receptix.batterybuddy.helper.Constants.AuthKey.AUTH_KEY;
 import static com.receptix.batterybuddy.helper.Constants.JsonProperties.DEFAULT_LAUNCHER;
 import static com.receptix.batterybuddy.helper.Constants.JsonProperties.DEVICE_ID;
 import static com.receptix.batterybuddy.helper.Constants.JsonProperties.DEVICE_INFO;
@@ -106,7 +105,7 @@ public class NavigationActivity extends AppCompatActivity
         setContentView(R.layout.activity_navigation);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        context = getApplicationContext();
+        context = this;
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -122,6 +121,8 @@ public class NavigationActivity extends AppCompatActivity
         setupBottomNavigationBar();
         startAlarm();
 
+         //call fetchUserDetails here to avoid NPE when calling getContentResolver() on Context.
+        fetchUserDetails(context);
 
     }
 
@@ -189,7 +190,6 @@ public class NavigationActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         setIsActive(true);
-        fetchUserDetails(context);
 
     }
 
@@ -197,8 +197,6 @@ public class NavigationActivity extends AppCompatActivity
     private void fetchUserDetails(Context context) {
         jsonObject = new JsonObject();
 
-
-        // get device id
         String userDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         jsonObject.addProperty(DEVICE_ID, userDeviceId);
         String encrypted = Base64.encodeToString(userDeviceId.getBytes(), Base64.NO_WRAP |Base64.URL_SAFE);
