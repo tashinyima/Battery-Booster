@@ -1,18 +1,12 @@
 package com.receptix.batterybuddy.helper;
 
 import java.security.NoSuchAlgorithmException;
-
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-/**
- * Created by hello on 5/29/2017.
- */
-
 public class MCrypt {
-
 
     private String iv = "zyso7kjQkv6affg";//
     private IvParameterSpec ivspec;
@@ -74,6 +68,8 @@ public class MCrypt {
         return decrypted;
     }
 
+
+
     public static String bytesToHex(byte[] data)
     {
         if (data==null)
@@ -124,5 +120,4 @@ public class MCrypt {
 
         return source;
     }
-
 }

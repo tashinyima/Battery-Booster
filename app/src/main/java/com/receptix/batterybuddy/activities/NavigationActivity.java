@@ -58,6 +58,7 @@ import com.receptix.batterybuddy.receiver.AlarmReceiver;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -189,112 +190,7 @@ public class NavigationActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         setIsActive(true);
-        fetchUserDetails(context);
-
     }
-
-
-    private void fetchUserDetails(Context context) {
-        jsonObject = new JsonObject();
-
-
-        // get device id
-        String userDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-        jsonObject.addProperty(DEVICE_ID, userDeviceId);
-        String encrypted = Base64.encodeToString(userDeviceId.getBytes(), Base64.NO_WRAP |Base64.URL_SAFE);
-        jsonObject.addProperty("authkey",encrypted);
-
-
-        // get list of installed apps on user device
-        JsonArray installedAppsList = new JsonArray();
-        List<PackageInfo> packList = context.getPackageManager().getInstalledPackages(0);
-        for (int i = 0; i < packList.size(); i++) {
-            PackageInfo packInfo = packList.get(i);
-            if ((packInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
-                String appName = packInfo.applicationInfo.loadLabel(context.getPackageManager()).toString();
-                JsonPrimitive jsonPrimitive = new JsonPrimitive(appName);
-                installedAppsList.add(jsonPrimitive);
-            }
-        }
-
-        // get user device information
-        StringBuilder deviceInfoStringBuilder = new StringBuilder();
-        deviceInfoStringBuilder.append("Android Version : ").append(Build.VERSION.RELEASE);
-
-        Field[] fields = Build.VERSION_CODES.class.getFields();
-        String osName = fields[Build.VERSION.SDK_INT + 1].getName();
-        deviceInfoStringBuilder.append(" OS Name :").append(osName);
-
-        String deviceIpAddress = Utils.getIPAddress(true);
-        String deviceMacAddress = Utils.getMACAddress(WLAN);
-        if (deviceMacAddress.length() == 0) {
-            deviceMacAddress = Utils.getMACAddress(ETHERNET);
-        }
-
-        // get the default launcher
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        ResolveInfo defaultLauncher = context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        String defaultLauncherStr = defaultLauncher.activityInfo.packageName;
-
-
-        // Get user account (synced accounts on device)
-        Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
-        Account[] accounts = AccountManager.get(context).getAccounts();
-        JsonArray userAccounts = new JsonArray();
-
-        for (Account account : accounts) {
-            if (emailPattern.matcher(account.name).matches()) {
-                String possibleEmail = account.name;
-                JsonPrimitive jsonPrimitive = new JsonPrimitive(possibleEmail);
-                userAccounts.add(jsonPrimitive);
-            }
-        }
-
-        // create final JSONObject to be sent to server
-        jsonObject.addProperty(DEVICE_INFO, deviceInfoStringBuilder.toString());
-        jsonObject.addProperty(IP_ADDRESS, deviceIpAddress);
-        jsonObject.addProperty(MAC_ADDRESS, deviceMacAddress);
-        jsonObject.addProperty(DEFAULT_LAUNCHER, defaultLauncherStr);
-        jsonObject.add(INSTALLED_APPS, installedAppsList);
-        jsonObject.add(EMAILS, userAccounts);
-
-        String url = URL_TRACKING_OZOCK_INSTALLED;
-        Log.d("Data", jsonObject.toString());
-
-
-        Ion.with(context)
-                .load(url)
-                .setBodyParameter("data", jsonObject.toString())
-                .asJsonObject()
-                .setCallback(new FutureCallback<JsonObject>() {
-                    @Override
-                    public void onCompleted(Exception e, JsonObject result) {
-                        if (e != null) {
-                            Log.d("Data", e.getStackTrace().toString());
-                            //  Toast.makeText(getApplicationContext(), "Data : " + e.getStackTrace(), Toast.LENGTH_LONG).show();
-
-                        } else {
-
-                            Toast.makeText(getApplicationContext(), "Pickup added successfully! We will contact you soon.", Toast.LENGTH_LONG).show();
-
-                        }
-
-
-                        if (result != null) {
-                            Log.d("Result", result.toString());
-                            String status = result.get("status").toString();
-                            if (status.equalsIgnoreCase(STATUS_SUCCESS)) {
-                                LogUtil.d("Install_Referrer", "Success");
-
-
-                            }
-                        }
-                    }
-                });
-
-    }
-
 
     @Override
     protected void onStop() {
