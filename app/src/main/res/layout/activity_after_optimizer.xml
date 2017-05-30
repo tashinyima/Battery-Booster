@@ -59,18 +59,18 @@
 
     </LinearLayout>
 
+    <com.inmobi.ads.InMobiBanner
+        android:id="@+id/banner"
+        ads:placementId="1494843277765"
+        android:layout_width="match_parent"
+        android:layout_height="250dp">
+    </com.inmobi.ads.InMobiBanner>
 
 
 </LinearLayout>
 
 
-    <com.inmobi.ads.InMobiBanner
-        android:id="@+id/banner"
-        ads:placementId="1494642457622"
-        android:layout_width="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_height="250dp">
-    </com.inmobi.ads.InMobiBanner>
+
 
 
 </RelativeLayout>

@@ -114,8 +114,8 @@ public class NavigationActivity extends AppCompatActivity
         setupBottomNavigationBar();
         startAlarm();
 
-        //call fetchUserDetails here to avoid NPE when calling getContentResolver() on Context.
-        fetchUserDetails(context);
+         //call fetchUserDetails here to avoid NPE when calling getContentResolver() on Context.
+        // fetchUserDetails(context);
 
     }
 
