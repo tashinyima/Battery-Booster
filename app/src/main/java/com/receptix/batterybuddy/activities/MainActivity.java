@@ -8,6 +8,9 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
+import com.clevertap.android.sdk.CleverTapAPI;
+import com.clevertap.android.sdk.exceptions.CleverTapMetaDataNotFoundException;
+import com.clevertap.android.sdk.exceptions.CleverTapPermissionsNotSatisfied;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.receptix.batterybuddy.R;
 import com.receptix.batterybuddy.ScreenListenerService;
@@ -22,13 +25,27 @@ public class MainActivity extends AppCompatActivity {
     UserSessionManager userSessionManager;
     Context context;
     private ImageView imageView_splashScreen;
-
+    private CleverTapAPI ct = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = getApplicationContext();
+        try {
+            // CleverTap
+            CleverTapAPI.setDebugLevel(1); // optional
+            ct = CleverTapAPI.getInstance(getApplicationContext());
+
+        } catch (CleverTapMetaDataNotFoundException e) {
+            // handle appropriately
+            e.printStackTrace();
+
+        } catch (CleverTapPermissionsNotSatisfied e) {
+            // handle appropriately
+            e.printStackTrace();
+        }
+
         userSessionManager = new UserSessionManager(context);
 
         //start screen listener service
