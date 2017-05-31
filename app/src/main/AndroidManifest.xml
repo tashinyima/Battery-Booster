@@ -227,6 +227,7 @@
             android:name=".receiver.InstallReferrerReceiver"
             android:exported="true">
             <intent-filter>
+
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>

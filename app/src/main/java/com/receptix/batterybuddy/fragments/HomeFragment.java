@@ -2,6 +2,10 @@ package com.receptix.batterybuddy.fragments;
 
 
 import android.annotation.TargetApi;
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,25 +17,31 @@ import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RemoteViews;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.receptix.batterybuddy.R;
+import com.receptix.batterybuddy.activities.NavigationActivity;
 import com.receptix.batterybuddy.databinding.FragmentHomeBinding;
 import com.receptix.batterybuddy.helper.LogUtil;
 import com.receptix.batterybuddy.helper.UserSessionManager;
 import com.receptix.batterybuddy.activities.OptimalStateActivity;
 import com.receptix.batterybuddy.activities.OptimizerActivity;
+import com.receptix.batterybuddy.receiver.AlarmReceiver;
 
 import java.lang.reflect.Method;
+import java.util.Calendar;
 
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_LEVEL;
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_SCALE;
@@ -115,6 +125,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     BluetoothAdapter bluetoothAdapter;
     AudioManager audioManagerMode = null;
+    NotificationManager notificationManager;
 
     int audioCurrentMode = 0;
     int inWhichSoundIndex;
@@ -124,6 +135,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private int mProgressStatus = 0;
     private int screenBrightness = 0;
+    PendingIntent pendingIntent;
+    Intent intent;
+    int NOTIFICATION_ID = 999;
 
     FragmentHomeBinding homeBinding;
 
@@ -194,7 +208,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = getActivity();
+        context = getContext();
     }
 
     @Override
@@ -206,33 +220,59 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 inflater, R.layout.fragment_home, container, false);
         view = homeBinding.getRoot();
 
-        context = getActivity();
         audioManagerMode = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         userSessionManager = new UserSessionManager(context);
-
-        setOnClickListeners();
-
-        getSystemData();
         isOptimizedCheck();
+        setOnClickListeners();
+        getSystemData();
+
 
         return view;
     }
 
     private void isOptimizedCheck() {
+
         if (userSessionManager.isOptimized()) {
 
             homeBinding.buttonOptimizeBattery.setBackgroundResource(R.drawable.optimizedbuttonbgcolor);
             homeBinding.textviewProblemsDetected.setText(getString(R.string.noproblemdetected));
             homeBinding.textviewProblemsDetected.setTextColor(ContextCompat.getColor(context, R.color.optimizedbtncolor));
             homeBinding.textviewIssueCount.setVisibility(View.INVISIBLE);
-            TerminateSession();
+
         } else {
             homeBinding.textviewProblemsDetected.setText(getString(R.string.problemText));
             homeBinding.buttonOptimizeBattery.setBackgroundResource(R.drawable.optimizerbuttonbgcolor);
             homeBinding.textviewProblemsDetected.setTextColor(ContextCompat.getColor(context, R.color.buttonColor));
             homeBinding.textviewIssueCount.setVisibility(View.VISIBLE);
+            sendCustomNotification();
         }
     }
+
+    private void sendCustomNotification() {
+        try {
+            notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.notification_layout);
+            contentView.setImageViewResource(R.id.image, R.drawable.brush_notification);
+            contentView.setTextViewText(R.id.title, getString(R.string.notification_title_optimize));
+            contentView.setTextViewText(R.id.text, getString(R.string.notification_description_optimize));
+            intent = new Intent(getContext(), OptimizerActivity.class);
+            pendingIntent = PendingIntent.getActivity(getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+                    .setSmallIcon(R.drawable.notification_icon)
+                    .setAutoCancel(false)
+                    .setContent(contentView);
+
+            contentView.setOnClickPendingIntent(R.id.notificationOptimizerBtn, pendingIntent);
+
+            Notification notification = mBuilder.build();
+            notification.flags |= Notification.FLAG_NO_CLEAR;
+            notificationManager.notify(NOTIFICATION_ID, notification);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public void onResume() {
@@ -480,14 +520,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         // BUTTON - OPTIMIZE
         if (v == homeBinding.buttonOptimizeBattery) {
+
             if (!userSessionManager.isOptimized()) {
+
                 userSessionManager.setIsOptimized(true);
-                TerminateSession();
-                Intent optintent = new Intent(context, OptimizerActivity.class);
+                Intent optintent = new Intent(getContext(), OptimizerActivity.class);
                 optintent.putExtra(BATTERY_LEVEL, batteryLevel);
                 context.startActivity(optintent);
+
             } else {
-                TerminateSession();
+
                 Intent nointent = new Intent(context, OptimalStateActivity.class);
                 context.startActivity(nointent);
             }
@@ -529,10 +571,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             }
 
             public void onFinish() {
-                userSessionManager.setIsOptimized(false);
+//                userSessionManager.setIsOptimized(false);
             }
         }.start();
     }
+
+    // alarm start at wrong time....
+
 
     private void SoundStatusChange() {
         new MaterialDialog.Builder(context)

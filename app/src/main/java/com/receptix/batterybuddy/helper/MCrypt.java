@@ -8,11 +8,11 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class MCrypt {
 
-    private String iv = "zyso7kjQkv6affg";//
+    private String iv = "e6IloOQFGjgO8lrY";//
     private IvParameterSpec ivspec;
     private SecretKeySpec keyspec;
     private Cipher cipher;
-    private String SecretKey = "oAFz38fKzjPq7AH";// Can change
+    private String SecretKey = "usgKz4LzgAjf6RT9";// Can change
 
     public MCrypt()
     {

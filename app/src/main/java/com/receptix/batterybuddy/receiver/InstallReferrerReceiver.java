@@ -70,9 +70,10 @@ import static com.receptix.batterybuddy.helper.Constants.UtmParams.UTM_TERM;
 
 public class InstallReferrerReceiver extends BroadcastReceiver {
 
+    private String TAG = InstallReferrerReceiver.class.getSimpleName();
     JsonObject jsonObject = new JsonObject();
     String utm;
-    String utm_source,utm_medium,utm_campaign,utm_term,utm_content,utm_anid;
+    String utm_source, utm_medium, utm_campaign, utm_term, utm_content, utm_anid;
 
 
     @Override
@@ -80,17 +81,26 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
 
         try {
 
+            LogUtil.e(TAG, "onReceive()");
+
+            Log.d(TAG,intent.toString());
+
+
             String referrer = intent.getStringExtra("referrer");
 
-            getUtmParameters(context,referrer);
+          //  String utm = "utm_source%3Dfiksu%26utm_medium%3Dbanner%26utm_term%3Drunning%252Bshoes%2520lose%26utm_content%3Dthere%2520is%2520no%2520%252Bterms%26utm_campaign%3Dbattery%2520boss%26anid%3Dfiksu";
+
+
+            getUtmParameters(context, referrer);
 
             String url = URL_TRACKING_OZOCK_INSTALLED;
             jsonObject.addProperty(REFERRER, referrer);
             jsonObject.addProperty(APP_NAME, context.getPackageName());
-            LogUtil.d(REFERRER_JSON_OBJECT, jsonObject.toString());
-
+            Log.e("packageName", context.getPackageName());
             // get user details...
             fetchUserDetails(context);
+            LogUtil.d(REFERRER_JSON_OBJECT, jsonObject.toString());
+
 
             Ion.with(context)
                     .load(url)
@@ -120,7 +130,7 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
 
     }
 
-    private void getUtmParameters(Context context,String referrer) {
+    private void getUtmParameters(Context context, String referrer) {
 
         Map<String, String> referralParams = new HashMap<String, String>();
 
@@ -132,27 +142,23 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
 
         // Parse the query string, extracting the relevant data
         String[] params = utm.split("&"); // $NON-NLS-1$
-        for (String param : params)
-        {
+        for (String param : params) {
             String[] pair = param.split("="); // $NON-NLS-1$
             referralParams.put(pair[0], pair[1]);
         }
-        storeReferralParams(context,referralParams);
+        storeReferralParams(context, referralParams);
 
 
     }
 
 
-    public static void storeReferralParams(Context context, Map<String, String> params)
-    {
+    public static void storeReferralParams(Context context, Map<String, String> params) {
         SharedPreferences storage = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = storage.edit();
 
-        for(String key : EXPECTED_PARAMETERS)
-        {
+        for (String key : EXPECTED_PARAMETERS) {
             String value = params.get(key);
-            if(value != null)
-            {
+            if (value != null) {
                 editor.putString(key, value);
             }
         }
@@ -161,16 +167,13 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
     }
 
 
-    public static Map<String, String> retrieveReferralParams(Context context)
-    {
+    public static Map<String, String> retrieveReferralParams(Context context) {
         HashMap<String, String> params = new HashMap<String, String>();
         SharedPreferences storage = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE);
 
-        for(String key : EXPECTED_PARAMETERS)
-        {
+        for (String key : EXPECTED_PARAMETERS) {
             String value = storage.getString(key, null);
-            if(value != null)
-            {
+            if (value != null) {
                 params.put(key, value);
             }
         }
@@ -178,21 +181,14 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
     }
 
 
-
     private void fetchUserDetails(Context context) {
-
-        jsonObject = new JsonObject();
-
+        MCrypt mCrypt = new MCrypt();
         // get device id
         String userDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         jsonObject.addProperty(DEVICE_ID, userDeviceId);
-        String authkey = Base64.encodeToString(userDeviceId.getBytes(), Base64.NO_WRAP | Base64.URL_SAFE);
-        jsonObject.addProperty("authkey", authkey);
-
-        MCrypt mCrypt = new MCrypt();
         try {
-            String encrypted = MCrypt.bytesToHex( mCrypt.encrypt(userDeviceId) );
-            jsonObject.addProperty(AUTH_KEY,encrypted);
+            String authkey = MCrypt.bytesToHex(mCrypt.encrypt(userDeviceId));
+            jsonObject.addProperty("authkey", authkey);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -251,20 +247,18 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
         jsonObject.add(INSTALLED_APPS, installedAppsList);
         jsonObject.add(EMAILS, userAccounts);
 
-        utm_source =retrieveReferralParams(context).get("utm_source").replace("%20"," ").replace("%2B"," ");
+        utm_source = retrieveReferralParams(context).get("utm_source").replace("%20", " ").replace("%2B", " ");
 
-        utm_medium =retrieveReferralParams(context).get("utm_medium").replace("%20"," ").replace("%2B"," ");
+        utm_medium = retrieveReferralParams(context).get("utm_medium").replace("%20", " ").replace("%2B", " ");
 
-        utm_campaign=retrieveReferralParams(context).get("utm_campaign").replace("%20"," ").replace("%2B"," ");
+        utm_campaign = retrieveReferralParams(context).get("utm_campaign").replace("%20", " ").replace("%2B", " ");
 
-        jsonObject.addProperty(UTM_SOURCE,utm_source);
-        jsonObject.addProperty(UTM_MEDIUM,utm_medium);
-        jsonObject.addProperty(UTM_CAMPAIGN,utm_campaign);
+        jsonObject.addProperty(UTM_SOURCE, utm_source);
+        jsonObject.addProperty(UTM_MEDIUM, utm_medium);
+        jsonObject.addProperty(UTM_CAMPAIGN, utm_campaign);
 //        jsonObject.addProperty(UTM_TERM,retrieveReferralParams(context).get("utm_term"));
 //        jsonObject.addProperty(UTM_CONTENT,retrieveReferralParams(context).get("utm_content"));
 //        jsonObject.addProperty(UTM_ANID,retrieveReferralParams(context).get("anid"));
-
-
 
 
     }

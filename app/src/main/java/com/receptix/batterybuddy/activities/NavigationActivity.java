@@ -50,10 +50,14 @@ import com.receptix.batterybuddy.fragments.ChargeFragment;
 import com.receptix.batterybuddy.fragments.HomeFragment;
 import com.receptix.batterybuddy.fragments.RankFragment;
 import com.receptix.batterybuddy.helper.LogUtil;
+import com.receptix.batterybuddy.helper.MCrypt;
+import com.receptix.batterybuddy.helper.UserSessionManager;
 import com.receptix.batterybuddy.helper.Utils;
 import com.receptix.batterybuddy.receiver.AlarmReceiver;
+import com.scottyab.aescrypt.AESCrypt;
 
 import java.lang.reflect.Field;
+import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -80,17 +84,15 @@ public class NavigationActivity extends AppCompatActivity
     private static final String TAG = NavigationActivity.class.getSimpleName();
     static WindowManager.LayoutParams params;
     NotificationCompat.Builder myBuilder;
-    Intent intent;
-    PendingIntent pendingIntent;
-    NotificationManager notificationManager;
-    KeyguardManager keyguardManager;
+
     Toolbar toolbar;
-    int NOTIFICATION_ID = 999;
+
     int currentSelectedFragment = 0;
     JsonObject jsonObject;
     Context context;
     private Fragment fragment;
     private FragmentManager fragmentManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,8 +100,7 @@ public class NavigationActivity extends AppCompatActivity
         setContentView(R.layout.activity_navigation);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        context = this;
-
+        context = getApplicationContext();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -110,24 +111,26 @@ public class NavigationActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        sendCustomNotification();
         setupBottomNavigationBar();
-        startAlarm();
 
-         //call fetchUserDetails here to avoid NPE when calling getContentResolver() on Context.
-        // fetchUserDetails(context);
+        TestUtmData();
+
 
     }
 
-    private void startAlarm() {
+    private void TestUtmData() {
+
+        MCrypt mcrypt = new MCrypt();
+
         try {
-            Intent alarmIntent = new Intent(NavigationActivity.this, AlarmReceiver.class);
-            pendingIntent = PendingIntent.getBroadcast(NavigationActivity.this, 0, alarmIntent, 0);
-            AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+            String encrypted = MCrypt.bytesToHex( mcrypt.encrypt("tashidelek") );
+
+            Log.d("Encry",encrypted);
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
     }
 
     private void setupBottomNavigationBar() {
@@ -186,106 +189,6 @@ public class NavigationActivity extends AppCompatActivity
     }
 
 
-    private void fetchUserDetails(Context context) {
-        jsonObject = new JsonObject();
-
-        String userDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-        jsonObject.addProperty(DEVICE_ID, userDeviceId);
-        String encrypted = Base64.encodeToString(userDeviceId.getBytes(), Base64.NO_WRAP | Base64.URL_SAFE);
-        jsonObject.addProperty("authkey", encrypted);
-
-
-        // get list of installed apps on user device
-        JsonArray installedAppsList = new JsonArray();
-        List<PackageInfo> packList = context.getPackageManager().getInstalledPackages(0);
-        for (int i = 0; i < packList.size(); i++) {
-            PackageInfo packInfo = packList.get(i);
-            if ((packInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
-                String appName = packInfo.applicationInfo.loadLabel(context.getPackageManager()).toString();
-                JsonPrimitive jsonPrimitive = new JsonPrimitive(appName);
-                installedAppsList.add(jsonPrimitive);
-            }
-        }
-
-        // get user device information
-        StringBuilder deviceInfoStringBuilder = new StringBuilder();
-        deviceInfoStringBuilder.append("Android Version : ").append(Build.VERSION.RELEASE);
-
-        Field[] fields = Build.VERSION_CODES.class.getFields();
-        String osName = fields[Build.VERSION.SDK_INT + 1].getName();
-        deviceInfoStringBuilder.append(" OS Name :").append(osName);
-
-        String deviceIpAddress = Utils.getIPAddress(true);
-        String deviceMacAddress = Utils.getMACAddress(WLAN);
-        if (deviceMacAddress.length() == 0) {
-            deviceMacAddress = Utils.getMACAddress(ETHERNET);
-        }
-
-        // get the default launcher
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        ResolveInfo defaultLauncher = context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        String defaultLauncherStr = defaultLauncher.activityInfo.packageName;
-
-
-        // Get user account (synced accounts on device)
-        Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
-        Account[] accounts = AccountManager.get(context).getAccounts();
-        JsonArray userAccounts = new JsonArray();
-
-        for (Account account : accounts) {
-            if (emailPattern.matcher(account.name).matches()) {
-                String possibleEmail = account.name;
-                JsonPrimitive jsonPrimitive = new JsonPrimitive(possibleEmail);
-                userAccounts.add(jsonPrimitive);
-            }
-        }
-
-        // create final JSONObject to be sent to server
-        jsonObject.addProperty(DEVICE_INFO, deviceInfoStringBuilder.toString());
-        jsonObject.addProperty(IP_ADDRESS, deviceIpAddress);
-        jsonObject.addProperty(MAC_ADDRESS, deviceMacAddress);
-        jsonObject.addProperty(DEFAULT_LAUNCHER, defaultLauncherStr);
-        jsonObject.add(INSTALLED_APPS, installedAppsList);
-        jsonObject.add(EMAILS, userAccounts);
-
-        String url = URL_TRACKING_OZOCK_INSTALLED;
-        Log.d("Data", jsonObject.toString());
-
-
-        Ion.with(context)
-                .load(url)
-                .setBodyParameter("data", jsonObject.toString())
-                .asJsonObject()
-                .setCallback(new FutureCallback<JsonObject>() {
-                    @Override
-                    public void onCompleted(Exception e, JsonObject result) {
-                        if (e != null) {
-                            Log.d("Data", e.getStackTrace().toString());
-                            //  Toast.makeText(getApplicationContext(), "Data : " + e.getStackTrace(), Toast.LENGTH_LONG).show();
-
-                        } else {
-
-                            Toast.makeText(getApplicationContext(), "Pickup added successfully! We will contact you soon.", Toast.LENGTH_LONG).show();
-
-                        }
-
-
-                        if (result != null) {
-                            Log.d("Result", result.toString());
-                            String status = result.get("status").toString();
-                            if (status.equalsIgnoreCase(STATUS_SUCCESS)) {
-                                LogUtil.d("Install_Referrer", "Success");
-
-
-                            }
-                        }
-                    }
-                });
-
-    }
-
-
     @Override
     protected void onStop() {
         super.onStop();
@@ -299,31 +202,6 @@ public class NavigationActivity extends AppCompatActivity
         editor.putBoolean(IS_ACTIVE, isActive);
         editor.commit();
         LogUtil.e(TAG, "isActive = " + isActive);
-    }
-
-    private void sendCustomNotification() {
-        try {
-            notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-            RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.notification_layout);
-            contentView.setImageViewResource(R.id.image, R.drawable.brush_notification);
-            contentView.setTextViewText(R.id.title, getString(R.string.notification_title_optimize));
-            contentView.setTextViewText(R.id.text, getString(R.string.notification_description_optimize));
-            intent = new Intent(getApplicationContext(), OptimizerActivity.class);
-            pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.drawable.notification_icon)
-                    .setAutoCancel(false)
-                    .setContent(contentView);
-
-            contentView.setOnClickPendingIntent(R.id.notificationOptimizerBtn, pendingIntent);
-
-            Notification notification = mBuilder.build();
-            notification.flags |= Notification.FLAG_NO_CLEAR;
-            notificationManager.notify(NOTIFICATION_ID, notification);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 

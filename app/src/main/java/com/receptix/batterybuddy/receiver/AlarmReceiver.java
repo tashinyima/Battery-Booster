@@ -7,10 +7,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.receptix.batterybuddy.R;
 import com.receptix.batterybuddy.activities.OptimizerActivity;
+import com.receptix.batterybuddy.helper.UserSessionManager;
 
 import static com.receptix.batterybuddy.helper.Constants.Params.REFERRER_JSON_OBJECT;
 
@@ -24,22 +26,28 @@ public class AlarmReceiver extends BroadcastReceiver {
     Intent intent;
     PendingIntent pendingIntent;
     final  static int NOTIFICATION_ID = 999;
+    UserSessionManager userSessionManager;
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
         sendCustomNotification(context);
+        userSessionManager = new UserSessionManager(context);
+        userSessionManager.setIsOptimized(false);
+        Log.d("Tashi", String.valueOf(userSessionManager.isOptimized()));
 
         if(intent!=null && intent.getExtras()!=null)
         {
             //get referrerJsonObject
             String referrerJsonObject = intent.getExtras().getString(REFERRER_JSON_OBJECT, null);
 
+
         }
 
     }
 
     private void sendCustomNotification(Context context) {
+
 
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.notification_layout);

@@ -1,5 +1,7 @@
 package com.receptix.batterybuddy.activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +15,9 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.JsonObject;
 import com.receptix.batterybuddy.R;
 import com.receptix.batterybuddy.helper.UserSessionManager;
+import com.receptix.batterybuddy.receiver.AlarmReceiver;
+
+import java.util.Calendar;
 
 public class TermsAndConditionsActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -22,6 +27,8 @@ public class TermsAndConditionsActivity extends AppCompatActivity implements Vie
     Button agreeBtn;
     JsonObject jsonObject = new JsonObject();
     private FirebaseAnalytics mFirebaseAnalytics;
+    PendingIntent pendingIntent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +47,24 @@ public class TermsAndConditionsActivity extends AppCompatActivity implements Vie
          */
 
         initView();
+        startAlarm();
 
 
     }
+
+    private void startAlarm() {
+        try {
+            AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            Intent alarmIntent = new Intent(TermsAndConditionsActivity.this, AlarmReceiver.class);
+            pendingIntent = PendingIntent.getBroadcast(TermsAndConditionsActivity.this, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(System.currentTimeMillis());
+            manager.setInexactRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),AlarmManager.INTERVAL_HALF_DAY, pendingIntent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void initView() {
 
