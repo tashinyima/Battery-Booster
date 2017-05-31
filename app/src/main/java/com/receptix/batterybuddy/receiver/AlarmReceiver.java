@@ -22,6 +22,7 @@ import static com.receptix.batterybuddy.helper.Constants.Params.REFERRER_JSON_OB
 
 public class AlarmReceiver extends BroadcastReceiver {
 
+    private String TAG = AlarmReceiver.class.getSimpleName();
     NotificationManager notificationManager;
     Intent intent;
     PendingIntent pendingIntent;
@@ -30,24 +31,13 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
         sendCustomNotification(context);
         userSessionManager = new UserSessionManager(context);
         userSessionManager.setIsOptimized(false);
-        Log.d("Tashi", String.valueOf(userSessionManager.isOptimized()));
-
-        if(intent!=null && intent.getExtras()!=null)
-        {
-            //get referrerJsonObject
-            String referrerJsonObject = intent.getExtras().getString(REFERRER_JSON_OBJECT, null);
-
-
-        }
-
+        Log.d(TAG, "onReceive");
     }
 
     private void sendCustomNotification(Context context) {
-
 
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.notification_layout);

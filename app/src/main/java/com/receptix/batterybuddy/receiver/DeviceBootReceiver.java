@@ -7,6 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
+import com.receptix.batterybuddy.activities.TermsAndConditionsActivity;
+
+import java.util.Calendar;
+
 /**
  * Created by hello on 5/22/2017.
  */
@@ -14,15 +18,17 @@ import android.widget.Toast;
 public class DeviceBootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
             try {
             /* Setting the alarm here for Custom Notification to be fired at 24 hour interval*/
-                Intent alarmIntent = new Intent(context, AlarmReceiver.class);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, 0);
                 AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-            }catch (Exception e)
+                Intent alarmIntent = new Intent(context, AlarmReceiver.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(System.currentTimeMillis());
+                manager.setInexactRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),AlarmManager.INTERVAL_HALF_DAY, pendingIntent);
+            }
+            catch (Exception e)
             {
                 e.printStackTrace();
             }

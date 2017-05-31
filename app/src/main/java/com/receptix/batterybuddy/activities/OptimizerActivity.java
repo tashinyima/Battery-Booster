@@ -60,6 +60,7 @@ public class OptimizerActivity extends AppCompatActivity {
     ImageView batteryImageView;
     private long mShortAnimationDuration = 300;
     private boolean isOptimizationInProgress = false;
+    private static final int NOTIFICATION_ID = 999;
 
     private static int getRandomNumberInRange(int min, int max) {
 
@@ -77,10 +78,14 @@ public class OptimizerActivity extends AppCompatActivity {
         context = this;
         view_optimize = getLayoutInflater().inflate(R.layout.activity_optimizer, null);
         setContentView(view_optimize);
+
         packageManager = this.getPackageManager();
         handleIntent(getIntent());
+
+        //cancel notification
         notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(999);
+        notificationManager.cancel(NOTIFICATION_ID);
+
         initView();
         setupToolBar(getString(R.string.poweroptimization));
 
