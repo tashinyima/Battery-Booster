@@ -114,6 +114,27 @@
             android:theme="@android:style/Theme.NoTitleBar"
             tools:ignore="UnusedAttribute" />
 
+
+
+        <activity
+            android:name="com.clevertap.android.sdk.InAppNotificationActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:configChanges="orientation|keyboardHidden"/>
+
+        <!-- uncomment below block to ensure in-app notification isn't shown on a splash screen -->
+         <meta-data
+            android:name="CLEVERTAP_INAPP_EXCLUDE"
+            android:value=".MainActivity"/>
+
+        <!-- Clever Tap Credentials -->
+        <meta-data
+            android:name="CLEVERTAP_ACCOUNT_ID"
+            android:value="48Z-5RZ-694Z"/>
+        <meta-data
+            android:name="CLEVERTAP_TOKEN"
+            android:value="125-1b4"/>
+
+
         <service
             android:name="com.inmobi.signals.activityrecognition.ActivityRecognitionManager"
             android:enabled="true" />
@@ -210,6 +231,15 @@
             </intent-filter>
         </receiver>
 
+
+        <receiver
+            android:name="com.clevertap.android.sdk.InstallReferrerBroadcastReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER"/>
+            </intent-filter>
+        </receiver>
+
         <!-- Widget Updater Service -->
         <service
             android:name=".BatteryUpdateService"
@@ -235,6 +265,22 @@
             <action android:name="com.google.firebase.MESSAGING_EVENT"/>
         </intent-filter>
         </service>
+
+        <!-- Clever Tap Uninstall Service -->
+        <service
+            android:name="com.clevertap.android.sdk.FcmTokenListenerService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <service
+            android:name="com.clevertap.android.sdk.FcmMessageListenerService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
 
     </application>
 
