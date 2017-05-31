@@ -212,5 +212,26 @@ public class Constants {
     }
     public static class AuthKey{
     }
+    public static class UtmParams{
+
+        public final static String PREFS_FILE_NAME = "ReferralParamsFile";
+        public final static String[] EXPECTED_PARAMETERS = {
+                "utm_source",
+                "utm_medium",
+                "utm_term",
+                "utm_content",
+                "utm_campaign",
+                "anid"
+        };
+
+        public static final String UTM_SOURCE="utm_source";
+        public static final String UTM_MEDIUM="utm_medium";
+        public static final String UTM_TERM="utm_term";
+        public static final String UTM_CONTENT="umt_content";
+        public static final String UTM_CAMPAIGN="utm_campaign";
+        public static final String UTM_ANID="utm_anid";
+    }
+
+
 
 }

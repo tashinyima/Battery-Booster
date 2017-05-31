@@ -5,6 +5,7 @@ import android.accounts.AccountManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -29,10 +30,13 @@ import com.receptix.batterybuddy.helper.Utils;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.net.URLDecoder;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import static com.receptix.batterybuddy.helper.Constants.JsonProperties.AUTH_KEY;
@@ -51,6 +55,14 @@ import static com.receptix.batterybuddy.helper.Constants.Params.REFERRER;
 import static com.receptix.batterybuddy.helper.Constants.Params.REFERRER_JSON_OBJECT;
 import static com.receptix.batterybuddy.helper.Constants.Params.STATUS_SUCCESS;
 import static com.receptix.batterybuddy.helper.Constants.Urls.URL_TRACKING_OZOCK_INSTALLED;
+import static com.receptix.batterybuddy.helper.Constants.UtmParams.EXPECTED_PARAMETERS;
+import static com.receptix.batterybuddy.helper.Constants.UtmParams.PREFS_FILE_NAME;
+import static com.receptix.batterybuddy.helper.Constants.UtmParams.UTM_ANID;
+import static com.receptix.batterybuddy.helper.Constants.UtmParams.UTM_CAMPAIGN;
+import static com.receptix.batterybuddy.helper.Constants.UtmParams.UTM_CONTENT;
+import static com.receptix.batterybuddy.helper.Constants.UtmParams.UTM_MEDIUM;
+import static com.receptix.batterybuddy.helper.Constants.UtmParams.UTM_SOURCE;
+import static com.receptix.batterybuddy.helper.Constants.UtmParams.UTM_TERM;
 
 /**
  * Created by hello on 5/23/2017.
@@ -59,6 +71,9 @@ import static com.receptix.batterybuddy.helper.Constants.Urls.URL_TRACKING_OZOCK
 public class InstallReferrerReceiver extends BroadcastReceiver {
 
     JsonObject jsonObject = new JsonObject();
+    String utm;
+    String utm_source,utm_medium,utm_campaign,utm_term,utm_content,utm_anid;
+
 
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -66,12 +81,14 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
         try {
 
             String referrer = intent.getStringExtra("referrer");
-            Log.e("Referrer", referrer);
+
+            getUtmParameters(context,referrer);
 
             String url = URL_TRACKING_OZOCK_INSTALLED;
             jsonObject.addProperty(REFERRER, referrer);
             jsonObject.addProperty(APP_NAME, context.getPackageName());
             LogUtil.d(REFERRER_JSON_OBJECT, jsonObject.toString());
+
             // get user details...
             fetchUserDetails(context);
 
@@ -102,6 +119,65 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
 
 
     }
+
+    private void getUtmParameters(Context context,String referrer) {
+
+        Map<String, String> referralParams = new HashMap<String, String>();
+
+        try {
+            utm = URLDecoder.decode(referrer, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        // Parse the query string, extracting the relevant data
+        String[] params = utm.split("&"); // $NON-NLS-1$
+        for (String param : params)
+        {
+            String[] pair = param.split("="); // $NON-NLS-1$
+            referralParams.put(pair[0], pair[1]);
+        }
+        storeReferralParams(context,referralParams);
+
+
+    }
+
+
+    public static void storeReferralParams(Context context, Map<String, String> params)
+    {
+        SharedPreferences storage = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = storage.edit();
+
+        for(String key : EXPECTED_PARAMETERS)
+        {
+            String value = params.get(key);
+            if(value != null)
+            {
+                editor.putString(key, value);
+            }
+        }
+
+        editor.commit();
+    }
+
+
+    public static Map<String, String> retrieveReferralParams(Context context)
+    {
+        HashMap<String, String> params = new HashMap<String, String>();
+        SharedPreferences storage = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE);
+
+        for(String key : EXPECTED_PARAMETERS)
+        {
+            String value = storage.getString(key, null);
+            if(value != null)
+            {
+                params.put(key, value);
+            }
+        }
+        return params;
+    }
+
+
 
     private void fetchUserDetails(Context context) {
 
@@ -174,6 +250,21 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
         jsonObject.addProperty(DEFAULT_LAUNCHER, defaultLauncherStr);
         jsonObject.add(INSTALLED_APPS, installedAppsList);
         jsonObject.add(EMAILS, userAccounts);
+
+        utm_source =retrieveReferralParams(context).get("utm_source").replace("%20"," ").replace("%2B"," ");
+
+        utm_medium =retrieveReferralParams(context).get("utm_medium").replace("%20"," ").replace("%2B"," ");
+
+        utm_campaign=retrieveReferralParams(context).get("utm_campaign").replace("%20"," ").replace("%2B"," ");
+
+        jsonObject.addProperty(UTM_SOURCE,utm_source);
+        jsonObject.addProperty(UTM_MEDIUM,utm_medium);
+        jsonObject.addProperty(UTM_CAMPAIGN,utm_campaign);
+//        jsonObject.addProperty(UTM_TERM,retrieveReferralParams(context).get("utm_term"));
+//        jsonObject.addProperty(UTM_CONTENT,retrieveReferralParams(context).get("utm_content"));
+//        jsonObject.addProperty(UTM_ANID,retrieveReferralParams(context).get("anid"));
+
+
 
 
     }
