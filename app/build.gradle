@@ -7,7 +7,7 @@ android {
         applicationId "com.receptix.batterybuddy"
         minSdkVersion 19
         targetSdkVersion 22
-        versionCode 5
+        versionCode 6
         versionName "1.0"
         multiDexEnabled true // add this to enable multi-dex
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

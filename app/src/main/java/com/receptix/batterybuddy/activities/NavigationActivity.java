@@ -113,25 +113,11 @@ public class NavigationActivity extends AppCompatActivity
 
         setupBottomNavigationBar();
 
-        TestUtmData();
+        /*TestUtmData();*/
 
 
     }
 
-    private void TestUtmData() {
-
-        MCrypt mcrypt = new MCrypt();
-
-        try {
-            String encrypted = MCrypt.bytesToHex( mcrypt.encrypt("tashidelek") );
-
-            Log.d("Encry",encrypted);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-    }
 
     private void setupBottomNavigationBar() {
 
@@ -289,4 +275,22 @@ public class NavigationActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
+
+    private void TestUtmData() {
+
+        MCrypt mcrypt = new MCrypt();
+
+        try {
+            String encrypted = MCrypt.bytesToHex( mcrypt.encrypt("tashidelek") );
+
+            Log.d("Encry",encrypted);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 }

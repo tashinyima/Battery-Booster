@@ -52,23 +52,28 @@ public class FCMInstanceIdService extends FirebaseInstanceIdService {
 
             String url = URL_UPDATE_FCM_TOKEN;
             JsonObject jsonObject = new JsonObject();
+
+            //add firebase token to JSON Object
+            jsonObject.addProperty(FCM_TOKEN, refreshedToken);
+            // package name
             jsonObject.addProperty(APP_NAME, context.getPackageName());
             // get device id
             String userDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
             jsonObject.addProperty(DEVICE_ID, userDeviceId);
-
-            // add encoded base64 String
-            String encodedDeviceId = Base64.encodeToString(userDeviceId.getBytes(),Base64.NO_WRAP| Base64.URL_SAFE);;
-
-            //add firebase token to JSON Object
-            jsonObject.addProperty(FCM_TOKEN, refreshedToken);
-            jsonObject.addProperty(AUTH_KEY, encodedDeviceId);
+            try {
+                // encrypt device Id to make Auth Key
+                MCrypt mCrypt = new MCrypt();
+                String authorizationKey = MCrypt.bytesToHex(mCrypt.encrypt(userDeviceId));
+                jsonObject.addProperty(AUTH_KEY, authorizationKey);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             JsonObject dataObject = new JsonObject();
             dataObject.add(DATA, jsonObject);
-
             LogUtil.e("onTokenRefresh " + JSON_OBJECT, dataObject.toString());
 
+            // send to server
             Ion.with(context)
                     .load(url)
                     .setBodyParameter(DATA, jsonObject.toString())

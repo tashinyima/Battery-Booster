@@ -229,7 +229,6 @@ public class Constants {
         public static final String UTM_TERM="utm_term";
         public static final String UTM_CONTENT="umt_content";
         public static final String UTM_CAMPAIGN="utm_campaign";
-        public static final String UTM_ANID="utm_anid";
     }
 
 

