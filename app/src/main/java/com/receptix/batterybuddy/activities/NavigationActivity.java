@@ -230,26 +230,9 @@ public class NavigationActivity extends AppCompatActivity
 
         }
 
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-
-    private void TestUtmData() {
-
-        MCrypt mcrypt = new MCrypt();
-
-        try {
-            String encrypted = MCrypt.bytesToHex(mcrypt.encrypt("tashidelek"));
-
-            Log.d("Encry", encrypted);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
     }
 
 }

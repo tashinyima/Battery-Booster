@@ -72,9 +72,9 @@
     <string name="estimatedextensiontext">Estimated Extension : </string>
     <string name="powerconsumingapptext">POWER CONSUMING APPS</string>
     <string name="dummy_time_value">1 Hour 40 mins</string>
-    <string name="optimalStateTextView">Optimal State</string>
+    <string name="optimalStateTextView">System is already in\nOptimal State</string>
     <string name="extentedTimeTextView">Extended Battery By : </string>
-    <string name="extentedhoursAfter">Extended By : </string>
+    <string name="extentedhoursAfter">Extended Battery By : </string>
     <string name="powerconsumptionToolbar">Power Consumption</string>
     <string name="poweroptimization">Power Optimization</string>
     <string name="privacy_policy">Privacy Policy</string>
@@ -88,7 +88,7 @@
     <string name="percentage_symbol">%</string>
     <string name="discharging">Discharging</string>
     <string name="notification_title_optimize">Too Many Junk Apps</string>
-    <string name="notification_description_optimize">Optimize battery draining apps </string>
+    <string name="notification_description_optimize">Optimize device now.</string>
     <string-array name="sreenlocktimer">
         <item>Immediately</item>
         <item>5 second </item>

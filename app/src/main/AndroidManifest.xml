@@ -63,7 +63,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AfterOptimizerActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activities.SuccessOptimizerActivity"
             android:screenOrientation="portrait" />
@@ -186,14 +186,6 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
-            </intent-filter>
-        </receiver>
-
-        <receiver
-            android:name="com.clevertap.android.sdk.InstallReferrerBroadcastReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER"/>
             </intent-filter>
         </receiver>
 

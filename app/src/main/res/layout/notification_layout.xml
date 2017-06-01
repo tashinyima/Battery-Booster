@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout"
     android:layout_width="match_parent"
-    android:layout_height="54dp"
+    android:layout_height="wrap_content"
     android:background="@color/bgcolormain"
     android:padding="10dp">
 
@@ -11,7 +11,7 @@
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
         android:layout_marginRight="10dp"
-        android:src="@mipmap/ic_launcher" />
+        android:src="@drawable/ic_battery_buddy" />
 
     <TextView
 
@@ -30,13 +30,15 @@
         android:layout_toRightOf="@id/image"
         android:text="Testing is awecome"
         android:textColor="@color/white"
-        android:textSize="12dp" />
+        android:textSize="13sp" />
 
     <Button
         android:id="@+id/notificationOptimizerBtn"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
+        android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_centerInParent="true"
         android:background="@drawable/optimizerbuttonbgcolor"
         android:text="@string/optimize"
         android:textColor="@color/white" />

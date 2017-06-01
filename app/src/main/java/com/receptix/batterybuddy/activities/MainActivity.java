@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void run() {
-
                 if (userSessionManager.isFirstTime()) {
                     startActivity(new Intent(MainActivity.this, TermsAndConditionsActivity.class));
                     finish();
@@ -70,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(MainActivity.this, NavigationActivity.class));
                     finish();
                 }
-
             }
         }, SPLASH_TIME_OUT);
 

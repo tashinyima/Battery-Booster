@@ -30,9 +30,10 @@
 
             <ImageView
                 android:id="@+id/imageview_successful_optimization"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/check_mark_100" />
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_optimal_state" />
             
             <TextView
                 android:layout_width="match_parent"
@@ -42,7 +43,7 @@
                 android:gravity="center"
                 android:text="@string/extentedTimeTextView"
                 android:textColor="@color/white"
-                android:textStyle="bold" />
+                android:textSize="@dimen/large_text_size" />
 
 
             <!-- Estimated Battery Extended Time -->
@@ -52,6 +53,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
+                android:textStyle="bold"
+                android:textSize="@dimen/medium_text_size"
+                android:text="12 mins"
                 android:textColor="@color/white" />
 
 

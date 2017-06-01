@@ -29,20 +29,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/backgroundcolor"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:padding="@dimen/small_margin">
 
         <!-- SIMPLE IMAGE SHOWING SUCCESSFUL OPTIMIZATION -->
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/medium_margin"
             android:contentDescription="@string/successful_optimization"
             android:src="@drawable/prize" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical">
 
             <!-- EXTENDED BY (static) -->
             <TextView
@@ -53,7 +57,10 @@
             <TextView
                 android:id="@+id/extentedTextViewAfter"
                 style="@style/TextViewResultScreen"
-                android:text="@string/dummy_time_value" />
+                android:text="@string/dummy_time_value"
+                android:textSize="@dimen/large_text_size"
+                android:textStyle="bold"
+                />
 
         </LinearLayout>
 
@@ -63,7 +70,9 @@
         android:id="@+id/banner"
         ads:placementId="1494843277765"
         android:layout_width="match_parent"
-        android:layout_height="250dp">
+        android:layout_height="250dp"
+        android:layout_marginTop="@dimen/large_margin">
+
     </com.inmobi.ads.InMobiBanner>
 
 

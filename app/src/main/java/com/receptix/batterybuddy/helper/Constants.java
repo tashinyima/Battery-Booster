@@ -145,6 +145,9 @@ public class Constants {
         public static final String JSON_OBJECT = "JsonObject";
         public static final String FCM_TOKEN = "fcm_token";
 
+        //Extended Time
+        public static final String EXTENDED_TIME = "extendedTime";
+
     }
 
 
@@ -214,16 +217,11 @@ public class Constants {
         public final static String[] EXPECTED_PARAMETERS = {
                 "utm_source",
                 "utm_medium",
-                "utm_term",
-                "utm_content",
                 "utm_campaign",
-                "anid"
         };
 
         public static final String UTM_SOURCE = "utm_source";
         public static final String UTM_MEDIUM = "utm_medium";
-        public static final String UTM_TERM = "utm_term";
-        public static final String UTM_CONTENT = "umt_content";
         public static final String UTM_CAMPAIGN = "utm_campaign";
     }
 
