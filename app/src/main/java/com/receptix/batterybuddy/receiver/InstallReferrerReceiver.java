@@ -79,6 +79,7 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
     public void onReceive(final Context context, Intent intent) {
 
         try {
+
             Log.e(TAG, "onReceive()");
             String referrer = intent.getStringExtra("referrer");
             getUtmParameters(context, referrer);
