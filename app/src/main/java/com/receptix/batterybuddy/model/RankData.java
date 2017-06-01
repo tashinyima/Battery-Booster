@@ -1,7 +1,6 @@
 package com.receptix.batterybuddy.model;
 
 import android.graphics.drawable.Drawable;
-import android.widget.ImageView;
 
 /**
  * Created by zero1 on 5/9/2017.
@@ -9,11 +8,11 @@ import android.widget.ImageView;
 
 public class RankData {
 
-    public static final int SYSTEM_TYPE =0;
-    public static final int INSTALL_TYPE=1;
+    public static final int SYSTEM_TYPE = 0;
+    public static final int INSTALL_TYPE = 1;
 
 
-    String packageName,powerUsage,packageLabel;
+    String packageName, powerUsage, packageLabel;
     Drawable packageIcon;
     int type;
 
@@ -25,12 +24,12 @@ public class RankData {
 //        this.type=type;
 //    }
 
-    public RankData(String packageName, String powerUsage,Drawable packageIcon, int type,String packageLabel) {
+    public RankData(String packageName, String powerUsage, Drawable packageIcon, int type, String packageLabel) {
         this.packageName = packageName;
         this.powerUsage = powerUsage;
         this.packageIcon = packageIcon;
         this.type = type;
-        this.packageLabel=packageLabel;
+        this.packageLabel = packageLabel;
     }
 
     public Drawable getPackageIcon() {
@@ -38,35 +37,36 @@ public class RankData {
         return packageIcon;
     }
 
+    public void setPackageIcon(Drawable packageIcon) {
+        this.packageIcon = packageIcon;
+    }
+
     public String getPackageName() {
         return packageName;
-    }
-
-    public String getPowerUsage() {
-        return powerUsage;
-    }
-    public String getPackageLabel(){
-        return packageLabel;
-    }
-
-    public int getType(){
-        return type;
     }
 
     public void setPackageName(String packageName) {
         this.packageName = packageName;
     }
 
+    public String getPowerUsage() {
+        return powerUsage;
+    }
+
     public void setPowerUsage(String powerUsage) {
         this.powerUsage = powerUsage;
+    }
+
+    public String getPackageLabel() {
+        return packageLabel;
     }
 
     public void setPackageLabel(String packageLabel) {
         this.packageLabel = packageLabel;
     }
 
-    public void setPackageIcon(Drawable packageIcon) {
-        this.packageIcon = packageIcon;
+    public int getType() {
+        return type;
     }
 
     public void setType(int type) {

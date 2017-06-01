@@ -12,7 +12,7 @@ import android.widget.TextView;
 public class RankViewHolder extends RecyclerView.ViewHolder {
 
     ImageView packageImage;
-    TextView packageName,batteryUsage;
+    TextView packageName, batteryUsage;
     int packageId;
 
     public RankViewHolder(View itemView) {

@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.receptix.batterybuddy.activities.BatteryAdActivity;
 import com.receptix.batterybuddy.activities.LockAdsActivity;
@@ -42,16 +40,13 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
             LogUtil.d(TAG, "isLockedScreen : " + isLockedScreen);
 
             SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCES_IS_ACTIVE, MODE_PRIVATE);
-            if(sharedPreferences!=null)
-            {
+            if (sharedPreferences != null) {
                 boolean isActive = sharedPreferences.getBoolean(IS_ACTIVE, false);
-                if(!isActive)
-                {
+                if (!isActive) {
                     long lastScreenOnTimestamp = userSessionManager.getScreenOnTimestampPowerConnectionReceiver();
-                    if(lastScreenOnTimestamp!=0)
-                    {
-                        LogUtil.e("Last TimeStamp (PCR)", lastScreenOnTimestamp+"");
-                        LogUtil.e("Current Timestamp (PCR)", System.currentTimeMillis()+"");
+                    if (lastScreenOnTimestamp != 0) {
+                        LogUtil.e("Last TimeStamp (PCR)", lastScreenOnTimestamp + "");
+                        LogUtil.e("Current Timestamp (PCR)", System.currentTimeMillis() + "");
                         long currentTimeStamp = System.currentTimeMillis();
                         Date lastDate = new Date();
                         Date currentDate = new Date();
@@ -61,14 +56,12 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
                         long diffSec = diffMs / 1000;
                         long elapsedMinutesSinceLastScreenOn = diffSec / 60;
                         long elapsedSecondsSinceLastScreenOn = diffSec % 60;
-                        LogUtil.e("Difference is", elapsedMinutesSinceLastScreenOn+" mins, "+elapsedSecondsSinceLastScreenOn + " seconds");
-                        if(elapsedMinutesSinceLastScreenOn >= SCREEN_LOCK_ADS_TIMER_VALUE_MINUTES) //24 hours have 1440 minutes
+                        LogUtil.e("Difference is", elapsedMinutesSinceLastScreenOn + " mins, " + elapsedSecondsSinceLastScreenOn + " seconds");
+                        if (elapsedMinutesSinceLastScreenOn >= SCREEN_LOCK_ADS_TIMER_VALUE_MINUTES) //24 hours have 1440 minutes
                         {
                             showScreen(isLockedScreen);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         showScreen(isLockedScreen);
                     }
                     long currentTimeStamp = System.currentTimeMillis();
@@ -84,10 +77,10 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
 
     /**
      * Show Activity depending on whether or not screen is locked.
+     *
      * @param isLockedScreen true if Screen Locked (Keyguard enabled), false otherwise.
      */
-    private void showScreen(boolean isLockedScreen)
-    {
+    private void showScreen(boolean isLockedScreen) {
         if (!isLockedScreen) {
             new Handler().postDelayed(new Runnable() {
 

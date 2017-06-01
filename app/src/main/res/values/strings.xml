@@ -1,21 +1,15 @@
 <resources>
     <string name="app_name">Battery Buddy</string>
-    <string name="welcome">Battery Buddy Optimizer</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="home">Home</string>
     <string name="rank">Rank</string>
     <string name="charge">Charge</string>
-    <string name="hometext">Home Fragment</string>
-    <string name="rankText">Rank Fragment</string>
-    <string name="chargetext">Charge Fragment</string>
     <string name="batterybuddy">Battery Buddy</string>
     <string name="problemText">PROBLEMS DETECTED</string>
     <string name="issuetext">30+ issues</string>
     <string name="availableText">Available:</string>
-    <string name="hourText">12</string>
-    <string name="batteryChargeLevel">50%</string>
     <string name="estimatedchargeText">Estimated time until Full charge</string>
     <string name="remainingHourText">1h 30 m</string>
     <string name="optimize">OPTIMIZE</string>
@@ -41,9 +35,7 @@
     <string name="powerconsumedValueText">44%</string>
     <string name="rankpowerText">Power</string>
     <string name="checkButton">Check</string>
-    <string name="closeButton">CLOSE</string>
     <string name="hourSymbolText">H</string>
-    <string name="minutesText">45</string>
     <string name="minutesSymbolText">MIN</string>
     <string name="bluetoothtitle">Bluetooth</string>
     <string name="choose">Choose</string>
@@ -73,25 +65,18 @@
     <string name="soundvibrate">Vibrate</string>
     <string name="soundtitle">Sound Mode</string>
     <string name="ramtext">RAM</string>
-    <string name="cputext">CPU</string>
-    <string name="memorytext">SIZE</string>
     <string name="batterytext">Battery</string>
     <string name="systemDate">Date shows here</string>
-    <string name="storagetext">Storage</string>
-    <string name="storageSuffixtext">Storage</string>
     <string name="batteryLevelTextView">20%</string>
-    <string name="optimized">Optimized Battery</string>
     <string name="Consumptionchecktext">Checking Power Consumption</string>
     <string name="estimatedextensiontext">Estimated Extension : </string>
     <string name="powerconsumingapptext">POWER CONSUMING APPS</string>
-    <string name="extentedhours">0 H 40 Min</string>
     <string name="dummy_time_value">1 Hour 40 mins</string>
     <string name="optimalStateTextView">Optimal State</string>
     <string name="extentedTimeTextView">Extended Battery By : </string>
     <string name="extentedhoursAfter">Extended By : </string>
     <string name="powerconsumptionToolbar">Power Consumption</string>
     <string name="poweroptimization">Power Optimization</string>
-    <string name="nav_about_us">About us</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="uninstallButton">Uninstall</string>
     <string name="successful_optimization">Optimization Successful</string>
@@ -99,7 +84,6 @@
     <string name="on">ON</string>
     <string name="off">OFF</string>
     <string name="noproblemdetected">NO PROBLEMS DETECTED</string>
-    <string name="analyzingdata">Completed Analyzing of</string>
     <string name="charging">Charging</string>
     <string name="percentage_symbol">%</string>
     <string name="discharging">Discharging</string>
@@ -135,24 +119,18 @@
         <item>Sound</item>
         <item>Vibrate</item>
     </string-array>
-    <string name="title_activity_navigation">NavigationActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
     <string name="aboutUs">About Us</string>
     <string name="navfeedback">Feed back</string>
     <string name="nav_terms_policy"><![CDATA[Terms & Conditions]]></string>
     <string name="nav_share">Share</string>
     <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
     <string name="close_window_text">x</string>
-    <string name="share_to">Share to</string>
     <string name="welcometext">Welcome to Battery Buddy</string>
     <string name="byusingtext">By using this application, you agree to Battery Buddy\'s</string>
-    <string name="termsofservicetext">Terms of Service</string>
-    <string name="andtext">and</string>
     <string name="privacynoticetext">Privacy Policy</string>
     <string name="acceptandcontinue"><![CDATA[ACCEPT & CONTINUE]]></string>
     <string name="privacynotice" formatted="false"><![CDATA[<!DOCTYPE html>
@@ -237,7 +215,6 @@ We want to inform users of this Service that these third parties have access to 
 										</body>
 									</html>]]></string>
     <string name="optimizetexttitle">Custom title here</string>
-    <string name="apps_flyer_dev_key">3dgcFCh9m2TfgwbL3PoXKo</string>
     <string name="privacy_policy_heading">Privacy Policy</string>
     <string name="www_receptix_com">www.receptix.com</string>
     <string name="terms_and_conditions">Terms and Conditions</string>

@@ -14,20 +14,18 @@ import com.receptix.batterybuddy.R;
 import com.receptix.batterybuddy.activities.OptimizerActivity;
 import com.receptix.batterybuddy.helper.UserSessionManager;
 
-import static com.receptix.batterybuddy.helper.Constants.Params.REFERRER_JSON_OBJECT;
-
 /**
  * Created by hello on 5/22/2017.
  */
 
 public class AlarmReceiver extends BroadcastReceiver {
 
-    private String TAG = AlarmReceiver.class.getSimpleName();
+    final static int NOTIFICATION_ID = 999;
     NotificationManager notificationManager;
     Intent intent;
     PendingIntent pendingIntent;
-    final  static int NOTIFICATION_ID = 999;
     UserSessionManager userSessionManager;
+    private String TAG = AlarmReceiver.class.getSimpleName();
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -58,7 +56,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         notification.flags |= Notification.FLAG_NO_CLEAR;
         notificationManager.notify(NOTIFICATION_ID, notification);
     }
-
 
 
 }

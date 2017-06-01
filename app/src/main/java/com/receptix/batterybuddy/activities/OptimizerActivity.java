@@ -45,6 +45,7 @@ import static com.receptix.batterybuddy.helper.Constants.ShortHandNotations.MINU
 public class OptimizerActivity extends AppCompatActivity {
 
     private static final String TAG = OptimizerActivity.class.getSimpleName();
+    private static final int NOTIFICATION_ID = 999;
     Context context;
     View view_optimize;
     MyOptimizerAdapter myOptimizerAdapter;
@@ -60,7 +61,6 @@ public class OptimizerActivity extends AppCompatActivity {
     ImageView batteryImageView;
     private long mShortAnimationDuration = 300;
     private boolean isOptimizationInProgress = false;
-    private static final int NOTIFICATION_ID = 999;
 
     private static int getRandomNumberInRange(int min, int max) {
 

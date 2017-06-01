@@ -25,7 +25,7 @@ public class UserSessionManager {
     public UserSessionManager(Context context) {
         this.context = context;
         sharedPreferences = context.getSharedPreferences(PREFER_NAME, PRIVATE_MODE);
-        editor=sharedPreferences.edit();
+        editor = sharedPreferences.edit();
     }
 
     public boolean isOptimized() {
@@ -34,26 +34,27 @@ public class UserSessionManager {
 
 
     public void setIsOptimized(boolean isOptimizedNow) {
-        editor.putBoolean(IS_OPTIMIZED_NOW,isOptimizedNow);
+        editor.putBoolean(IS_OPTIMIZED_NOW, isOptimizedNow);
         editor.commit();
     }
 
     public boolean isFirstTime() {
-        return sharedPreferences.getBoolean(IS_FIRST_TIME,true);
+        return sharedPreferences.getBoolean(IS_FIRST_TIME, true);
     }
 
-    public void setIsFirstTime(boolean isFirstTime){
-        editor.putBoolean(IS_FIRST_TIME,isFirstTime);
+    public void setIsFirstTime(boolean isFirstTime) {
+        editor.putBoolean(IS_FIRST_TIME, isFirstTime);
         editor.commit();
     }
-    public boolean isOneDayFinished(){
 
-        return sharedPreferences.getBoolean(IS_ONE_DAY_FINISHED,false);
+    public boolean isOneDayFinished() {
+
+        return sharedPreferences.getBoolean(IS_ONE_DAY_FINISHED, false);
     }
 
-    public void setIsOneDayFinished(boolean isOneDayFinished){
+    public void setIsOneDayFinished(boolean isOneDayFinished) {
 
-        editor.putBoolean(IS_ONE_DAY_FINISHED,isOneDayFinished);
+        editor.putBoolean(IS_ONE_DAY_FINISHED, isOneDayFinished);
         editor.commit();
     }
 

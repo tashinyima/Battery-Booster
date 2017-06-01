@@ -15,7 +15,7 @@ public class Constants {
         public static final int PRIVATE_MODE = 0;
         public static final String PREFERENCES_IS_ACTIVE = "pref_is_active";
         public static final String IS_ACTIVE = "is_active";
-        public static final String IS_ONE_DAY_FINISHED="is_one_day_finished";
+        public static final String IS_ONE_DAY_FINISHED = "is_one_day_finished";
         public static final String LAST_TIMESTAMP_LOCK_ADS = "lastTimestamp";
         public static final String LAST_TIMESTAMP_LOCK_ADS_POWER_CONNECTION_RECEIVER = "lastTimestampPowerConnectionReceiver";
     }
@@ -136,27 +136,25 @@ public class Constants {
         public static final String INTENT_ACTION_UPDATE_WIDGET_BATTERY_SERVICE = "INTENT_ACTION_UPDATE_WIDGET_BATTERY_SERVICE";
 
         public static final String USED_RAM_PERCENTAGE = "usedRamPercentage";
-        public static final String STATUS_SUCCESS ="success";
+        public static final String STATUS_SUCCESS = "success";
 
         //install referrer pixel paramters
         public static final String REFERRER = "referrer";
         public static final String APP_NAME = "package";
-        public static final String REFERRER_JSON_OBJECT = "RequestBody" ;
-        public static final String JSON_OBJECT = "JsonObject" ;
+        public static final String REFERRER_JSON_OBJECT = "RequestBody";
+        public static final String JSON_OBJECT = "JsonObject";
         public static final String FCM_TOKEN = "fcm_token";
 
     }
 
 
-    public static class DateFormats
-    {
+    public static class DateFormats {
         //Date-Month-Year Hour:Minutes am/pm
         public static final String FORMAT_DATE_MONTH_YEAR_HOUR_MINUTES = "dd-MMM-yyyy hh:mm a";
         public static final String FORMAT_FULL_LENGTH_DAY = "EEEE";
     }
 
-    public static class CurrentValues
-    {
+    public static class CurrentValues {
         public static final int CURRENT_RATE_USB = 500;
         public static final int CURRENT_RATE_AC = 1000;
     }
@@ -180,39 +178,37 @@ public class Constants {
         public static final String AUTH_KEY = "authkey";
     }
 
-    public static class Urls
-    {
+    public static class Urls {
         public static final String URL_OZOCK = "http://www.ozock.com/";
-        public static final String URL_TRACKING_OZOCK_INSTALLED= "http://192.99.150.33/serve/android/install.php";
+        public static final String URL_TRACKING_OZOCK_INSTALLED = "http://192.99.150.33/serve/android/install.php";
         public static final String URL_UPDATE_FCM_TOKEN = "http://192.99.150.33/serve/android/update_fcm.php";
         public static final String URL_EMAIL_ADDRESS_SUPPORT = "akshit@zero1.io";
     }
 
-    public static class APPS_FLYER_ATTRIBUTES
-    {
+    public static class APPS_FLYER_ATTRIBUTES {
         public static final String INSTALL_TYPE = "af_status";
         public static final String MEDIA_SOURCE = "media_source";
         public static final String INSTALL_TIME = "install_time";
         public static final String CLICK_TIME = "click_time";
         public static final String INSTALL_CAMPAIGN = "campaign";
         public static final String AGENCY = "agency";
-        public static final String CLICK_ID="clickid";
-        public static final String CHANNEL="af_channel";
+        public static final String CLICK_ID = "clickid";
+        public static final String CHANNEL = "af_channel";
     }
 
-    public static class BannerPlacementIds
-    {
+    public static class BannerPlacementIds {
         public static final String INMOBI_ACCOUNT_ID = "4a38c3c40747428fa346cb0456d9034f";
         public static final String LOCK_ADS_PLACEMENT_ID = "1496191677809";
     }
 
-    public static class MoPubAdIds
-    {
+    public static class MoPubAdIds {
         public static final String LOCK_ADS_ID = "9868b50964e34c6faa88914bc7c91d05";
     }
-    public static class AuthKey{
+
+    public static class AuthKey {
     }
-    public static class UtmParams{
+
+    public static class UtmParams {
 
         public final static String PREFS_FILE_NAME = "ReferralParamsFile";
         public final static String[] EXPECTED_PARAMETERS = {
@@ -224,13 +220,12 @@ public class Constants {
                 "anid"
         };
 
-        public static final String UTM_SOURCE="utm_source";
-        public static final String UTM_MEDIUM="utm_medium";
-        public static final String UTM_TERM="utm_term";
-        public static final String UTM_CONTENT="umt_content";
-        public static final String UTM_CAMPAIGN="utm_campaign";
+        public static final String UTM_SOURCE = "utm_source";
+        public static final String UTM_MEDIUM = "utm_medium";
+        public static final String UTM_TERM = "utm_term";
+        public static final String UTM_CONTENT = "umt_content";
+        public static final String UTM_CAMPAIGN = "utm_campaign";
     }
-
 
 
 }

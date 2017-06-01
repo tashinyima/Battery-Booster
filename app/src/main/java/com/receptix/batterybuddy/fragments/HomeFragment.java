@@ -2,7 +2,6 @@ package com.receptix.batterybuddy.fragments;
 
 
 import android.annotation.TargetApi;
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,14 +16,12 @@ import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.SystemClock;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,16 +29,13 @@ import android.widget.RemoteViews;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.receptix.batterybuddy.R;
-import com.receptix.batterybuddy.activities.NavigationActivity;
+import com.receptix.batterybuddy.activities.OptimalStateActivity;
+import com.receptix.batterybuddy.activities.OptimizerActivity;
 import com.receptix.batterybuddy.databinding.FragmentHomeBinding;
 import com.receptix.batterybuddy.helper.LogUtil;
 import com.receptix.batterybuddy.helper.UserSessionManager;
-import com.receptix.batterybuddy.activities.OptimalStateActivity;
-import com.receptix.batterybuddy.activities.OptimizerActivity;
-import com.receptix.batterybuddy.receiver.AlarmReceiver;
 
 import java.lang.reflect.Method;
-import java.util.Calendar;
 
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_LEVEL;
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_SCALE;
@@ -132,15 +126,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     BatteryManager myBatteryManger;
     UserSessionManager userSessionManager;
-
-    private int mProgressStatus = 0;
-    private int screenBrightness = 0;
     PendingIntent pendingIntent;
     Intent intent;
     int NOTIFICATION_ID = 999;
-
     FragmentHomeBinding homeBinding;
-
+    private int mProgressStatus = 0;
+    private int screenBrightness = 0;
     private BroadcastReceiver battery_info_receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

@@ -1,16 +1,11 @@
 package com.receptix.batterybuddy;
 
-import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
-import android.support.multidex.MultiDexApplication;
 
 import com.clevertap.android.sdk.ActivityLifecycleCallback;
 import com.clevertap.android.sdk.CleverTapAPI;
-import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.Tracker;
 import com.inmobi.sdk.InMobiSdk;
-import com.receptix.batterybuddy.activities.LockAdsActivity;
 import com.receptix.batterybuddy.helper.LogUtil;
 
 import static com.receptix.batterybuddy.helper.Constants.BannerPlacementIds.INMOBI_ACCOUNT_ID;

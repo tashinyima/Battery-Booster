@@ -7,8 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.Nullable;
-import android.util.Log;
-import android.view.View;
 
 import com.receptix.batterybuddy.helper.LogUtil;
 
@@ -24,41 +22,7 @@ import static com.receptix.batterybuddy.helper.Constants.Params.USED_RAM_PERCENT
  * Created by futech on 20-May-17.
  */
 
-public class BatteryUpdateService extends IntentService{
-
-    /**
-     * Creates an IntentService.  Invoked by your subclass's constructor.
-     *
-     * @param name Used to name the worker thread, important only for debugging.
-     */
-    public BatteryUpdateService(String name) {
-        super(name);
-    }
-
-    public BatteryUpdateService()
-    {
-        super("BatteryUpdateService");
-    }
-
-    @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
-            //send broadcast
-        LogUtil.e("BatteryUpdateService", "onHandleIntent()");
-        getBatteryInformation(getApplicationContext());
-    }
-
-    private void getBatteryInformation(Context context) {
-        IntentFilter intentfilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        if(battery_info_receiver!=null)
-            context.registerReceiver(battery_info_receiver, intentfilter);
-    }
-
-    @Override
-    public void onDestroy() {
-        if(getApplicationContext()!=null && battery_info_receiver!=null)
-            getApplicationContext().unregisterReceiver(battery_info_receiver);
-        super.onDestroy();
-    }
+public class BatteryUpdateService extends IntentService {
 
     private BroadcastReceiver battery_info_receiver = new BroadcastReceiver() {
         @Override
@@ -99,5 +63,38 @@ public class BatteryUpdateService extends IntentService{
             }
         }
     };
+
+    /**
+     * Creates an IntentService.  Invoked by your subclass's constructor.
+     *
+     * @param name Used to name the worker thread, important only for debugging.
+     */
+    public BatteryUpdateService(String name) {
+        super(name);
+    }
+
+    public BatteryUpdateService() {
+        super("BatteryUpdateService");
+    }
+
+    @Override
+    protected void onHandleIntent(@Nullable Intent intent) {
+        //send broadcast
+        LogUtil.e("BatteryUpdateService", "onHandleIntent()");
+        getBatteryInformation(getApplicationContext());
+    }
+
+    private void getBatteryInformation(Context context) {
+        IntentFilter intentfilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        if (battery_info_receiver != null)
+            context.registerReceiver(battery_info_receiver, intentfilter);
+    }
+
+    @Override
+    public void onDestroy() {
+        if (getApplicationContext() != null && battery_info_receiver != null)
+            getApplicationContext().unregisterReceiver(battery_info_receiver);
+        super.onDestroy();
+    }
 
 }

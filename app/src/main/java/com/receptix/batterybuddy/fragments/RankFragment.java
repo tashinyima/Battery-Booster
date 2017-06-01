@@ -14,7 +14,6 @@ import android.os.Debug;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,7 +98,7 @@ public class RankFragment extends Fragment {
         LogUtil.d(TAG, "Total App=" + si);
         // print Contents of Hashmap (Maximum RAM Usage First)
         for (Map.Entry<String, Integer> entry : hashMap_packageRamUsage.entrySet()) {
-            int type=1;
+            int type = 1;
             String packageName = entry.getKey();
             Integer memoryUsedByPackage = entry.getValue();
             ApplicationInfo applicationInfo;
@@ -119,14 +118,13 @@ public class RankFragment extends Fragment {
                 e.printStackTrace();
             }
             // percentage of memory used by service = memory used by service * 100 / total memory
-            int valueInMb = memoryUsedByPackage/1024;
-            int percentageUsed = (valueInMb*100)/totalMemoryInMb;
+            int valueInMb = memoryUsedByPackage / 1024;
+            int percentageUsed = (valueInMb * 100) / totalMemoryInMb;
            /* LogUtil.e(packageName+"\t","\t" + memoryUsedByPackage/1024 + "Mb \t ==> "+ percentageUsed + "%");*/
             // show only those apps which are using memory > 0 %
-            if(percentageUsed >0 ){
-                if(!applicationName.equalsIgnoreCase(getString(R.string.app_name)))
-                {
-                    RankData rankdata = new RankData(packageName, percentageUsed+" %", appicon, type, applicationName);
+            if (percentageUsed > 0) {
+                if (!applicationName.equalsIgnoreCase(getString(R.string.app_name))) {
+                    RankData rankdata = new RankData(packageName, percentageUsed + " %", appicon, type, applicationName);
                     rankDataList.add(rankdata);
                     rankAdapter.notifyDataSetChanged();
                 }
@@ -135,8 +133,7 @@ public class RankFragment extends Fragment {
     }
 
     private boolean isSystemPackage(ApplicationInfo ai) {
-        if((ai.flags & (ApplicationInfo.FLAG_UPDATED_SYSTEM_APP | ApplicationInfo.FLAG_SYSTEM)) == 0)
-        {
+        if ((ai.flags & (ApplicationInfo.FLAG_UPDATED_SYSTEM_APP | ApplicationInfo.FLAG_SYSTEM)) == 0) {
             return true;
         }
         return false;
@@ -145,13 +142,12 @@ public class RankFragment extends Fragment {
     private int getPercentageFromPackage(String packageName) {
         for (Map.Entry<String, Integer> entry : hashMap_packageRamUsage.entrySet()) {
             String key = entry.getKey();
-            if(key.equalsIgnoreCase(packageName))
-            {
+            if (key.equalsIgnoreCase(packageName)) {
                 Integer value = entry.getValue();
                 // percentage of memory used by service = memory used by service * 100 / total memory
-                int valueInMb = value/1024;
-                int percentageUsed = (valueInMb*100)/totalMemoryInMb;
-                return  percentageUsed;
+                int valueInMb = value / 1024;
+                int percentageUsed = (valueInMb * 100) / totalMemoryInMb;
+                return percentageUsed;
             }
         }
 
@@ -159,8 +155,7 @@ public class RankFragment extends Fragment {
 
     }
 
-    private void getAllProcessesMemoryInfo()
-    {
+    private void getAllProcessesMemoryInfo() {
         ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
         List<ActivityManager.RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
         ArrayList<Integer> pidList = new ArrayList<>();
@@ -168,10 +163,8 @@ public class RankFragment extends Fragment {
         HashMap<String, Integer> hashMap = new HashMap<>();
 
         // extract all PIDs and Process Names from RunningServiceInfo list
-        for(ActivityManager.RunningServiceInfo runningServiceInfo : services)
-        {
-            if ((runningServiceInfo.flags & ActivityManager.RunningServiceInfo.FLAG_SYSTEM_PROCESS) == 0)
-            {
+        for (ActivityManager.RunningServiceInfo runningServiceInfo : services) {
+            if ((runningServiceInfo.flags & ActivityManager.RunningServiceInfo.FLAG_SYSTEM_PROCESS) == 0) {
                 // add class name to list
                 String className = runningServiceInfo.service.getPackageName();
                 processNameList.add(className);
@@ -187,14 +180,13 @@ public class RankFragment extends Fragment {
 
         LogUtil.e("pidListSize", pidList.size() + "");
 
-        for(int i=0, len = pidList.size(); i < len; i++)
+        for (int i = 0, len = pidList.size(); i < len; i++)
             pidIntegerArray[i] = pidList.get(i);
 
         Debug.MemoryInfo[] memoryInfo = activityManager.getProcessMemoryInfo(pidIntegerArray);
         /*LogUtil.e("getAllProcessesMemoryInfo()", "getProcessMemoryInfo");*/
 
-        for(int i=0; i<memoryInfo.length; i++)
-        {
+        for (int i = 0; i < memoryInfo.length; i++) {
             // put PROCESS NAME and MEMORY USAGE into Hashmap
             // this value is already in kB
             hashMap.put(processNameList.get(i), memoryInfo[i].getTotalPrivateDirty());
@@ -237,7 +229,7 @@ public class RankFragment extends Fragment {
 
     }
 
-    private class LoadRankData extends AsyncTask<Void, Void,Void> {
+    private class LoadRankData extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -272,8 +264,7 @@ public class RankFragment extends Fragment {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            if(isAdded())
-            {
+            if (isAdded()) {
                 LogUtil.e("LoadRankData", "onPostExecute()");
                 if (progressBar != null)
                     progressBar.setVisibility(View.GONE);

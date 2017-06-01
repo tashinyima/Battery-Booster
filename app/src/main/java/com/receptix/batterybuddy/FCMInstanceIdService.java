@@ -2,7 +2,6 @@ package com.receptix.batterybuddy;
 
 import android.content.Context;
 import android.provider.Settings;
-import android.util.Base64;
 import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -10,7 +9,6 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
-import com.receptix.batterybuddy.helper.LogUtil;
 import com.receptix.batterybuddy.helper.MCrypt;
 
 import static com.receptix.batterybuddy.helper.Constants.JsonProperties.AUTH_KEY;
@@ -19,10 +17,6 @@ import static com.receptix.batterybuddy.helper.Constants.JsonProperties.DEVICE_I
 import static com.receptix.batterybuddy.helper.Constants.Params.APP_NAME;
 import static com.receptix.batterybuddy.helper.Constants.Params.FCM_TOKEN;
 import static com.receptix.batterybuddy.helper.Constants.Params.JSON_OBJECT;
-import static com.receptix.batterybuddy.helper.Constants.Params.REFERRER;
-import static com.receptix.batterybuddy.helper.Constants.Params.REFERRER_JSON_OBJECT;
-import static com.receptix.batterybuddy.helper.Constants.Params.STATUS_SUCCESS;
-import static com.receptix.batterybuddy.helper.Constants.Urls.URL_TRACKING_OZOCK_INSTALLED;
 import static com.receptix.batterybuddy.helper.Constants.Urls.URL_UPDATE_FCM_TOKEN;
 
 /**
@@ -82,7 +76,7 @@ public class FCMInstanceIdService extends FirebaseInstanceIdService {
                         @Override
                         public void onCompleted(Exception e, JsonObject result) {
 
-                            if(e!=null)
+                            if (e != null)
                                 e.printStackTrace();
 
                             if (result != null) {
