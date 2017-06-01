@@ -15,6 +15,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.util.Patterns;
 
+import com.clevertap.android.sdk.CleverTapAPI;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -93,6 +94,11 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
 
         try {
             Log.e(TAG, "onReceive()");
+
+            // invoke clever tap receiver from within the Custom Receiver class
+            new com.clevertap.android.sdk.InstallReferrerBroadcastReceiver().onReceive(context, intent);
+
+
             String referrer = intent.getStringExtra("referrer");
             getUtmParameters(context, referrer);
             jsonObject.addProperty(REFERRER, referrer);
