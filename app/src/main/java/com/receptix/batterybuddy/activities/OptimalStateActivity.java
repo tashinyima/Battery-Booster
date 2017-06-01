@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.receptix.batterybuddy.R;
@@ -21,19 +22,16 @@ public class OptimalStateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_optimal_state);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        setupToolBar(getString(R.string.optimalStateTextView));
-
-
+        setupToolBar(" ");
     }
 
     private void setupToolBar(String title) {
-
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(getSupportActionBar()!=null)
+            if (getSupportActionBar() != null)
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         TextView textViewTitle = (TextView) toolbar.findViewById(R.id.textViewTitle);
         textViewTitle.setText(title);
-
 
     }
 
@@ -56,4 +54,16 @@ public class OptimalStateActivity extends AppCompatActivity {
         editor.commit();
         LogUtil.e(TAG, "isActive = " + isActive);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

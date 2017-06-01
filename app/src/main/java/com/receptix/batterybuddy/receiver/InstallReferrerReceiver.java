@@ -65,30 +65,6 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
     String utm_source, utm_medium, utm_campaign, utm_term, utm_content, utm_anid;
     private String TAG = InstallReferrerReceiver.class.getSimpleName();
 
-    public static void storeReferralParams(Context context, Map<String, String> params) {
-        SharedPreferences storage = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = storage.edit();
-        for (String key : EXPECTED_PARAMETERS) {
-            String value = params.get(key);
-            if (value != null) {
-                editor.putString(key, value);
-            }
-        }
-        editor.commit();
-    }
-
-    public static Map<String, String> retrieveReferralParams(Context context) {
-        HashMap<String, String> params = new HashMap<String, String>();
-        SharedPreferences storage = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE);
-        for (String key : EXPECTED_PARAMETERS) {
-            String value = storage.getString(key, null);
-            if (value != null) {
-                params.put(key, value);
-            }
-        }
-        return params;
-    }
-
     @Override
     public void onReceive(final Context context, Intent intent) {
 
@@ -98,14 +74,18 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
             // invoke clever tap receiver from within the Custom Receiver class
             new com.clevertap.android.sdk.InstallReferrerBroadcastReceiver().onReceive(context, intent);
 
-
             String referrer = intent.getStringExtra("referrer");
+
             getUtmParameters(context, referrer);
+
             jsonObject.addProperty(REFERRER, referrer);
             jsonObject.addProperty(APP_NAME, context.getPackageName());
-            fetchUserDetails(context);
-            Log.d(REFERRER_JSON_OBJECT, jsonObject.toString());
 
+            fetchUserDetails(context);
+
+            LogUtil.d(TAG + "__" + REFERRER_JSON_OBJECT, jsonObject.toString());
+
+            //send Install Referrer Data to Server
             Ion.with(context)
                     .load(URL_TRACKING_OZOCK_INSTALLED)
                     .setBodyParameter("data", jsonObject.toString())
@@ -113,32 +93,23 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
                     .setCallback(new FutureCallback<JsonObject>() {
                         @Override
                         public void onCompleted(Exception e, JsonObject result) {
-
-                            if (result != null) {
-                                Log.d("Result", result.toString());
-                                String status = result.get("status").toString();
-                                if (status.equalsIgnoreCase(STATUS_SUCCESS)) {
-                                    LogUtil.d("Install_Referrer", "Success");
-
-
-                                }
-                            }
+                            Log.d(TAG, "Ion.onCompleted()");
                         }
                     });
-
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
+    /**
+     * Extract Query Parameters from Referral URL String and store in Shared Preferences into a HashMap
+     * @param context
+     * @param referrer
+     */
     private void getUtmParameters(Context context, String referrer) {
-
         if (referrer != null) {
             Map<String, String> referralParams = new HashMap<String, String>();
-
             try {
                 utm = URLDecoder.decode(referrer, "UTF-8");
             } catch (UnsupportedEncodingException e) {
@@ -152,12 +123,39 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
                 referralParams.put(pair[0], pair[1]);
             }
             storeReferralParams(context, referralParams);
-
         }
     }
 
     private void fetchUserDetails(Context context) {
+        getUserDeviceId(context);
+        getListOfInstalledAppsOnUserDevice(context);
+        getIpAddressAndMacAddress(context);
+        getDefaultLauncherName(context);
+        getEmailAccountsList(context);
+        getUtmParametersFromPreferences(context);
+    }
 
+    private void getEmailAccountsList(Context context) {
+        // Get user account (synced accounts on device)
+        try {
+            Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
+            Account[] accounts = AccountManager.get(context).getAccounts();
+            JsonArray userAccounts = new JsonArray();
+
+            for (Account account : accounts) {
+                if (emailPattern.matcher(account.name).matches()) {
+                    String possibleEmail = account.name;
+                    JsonPrimitive jsonPrimitive = new JsonPrimitive(possibleEmail);
+                    userAccounts.add(jsonPrimitive);
+                }
+            }
+            jsonObject.add(EMAILS, userAccounts);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void getUserDeviceId(Context context) {
         // get DEVICE ID
         String userDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         jsonObject.addProperty(DEVICE_ID, userDeviceId);
@@ -169,8 +167,9 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
-
+    private void getListOfInstalledAppsOnUserDevice(Context context) {
         // get list of installed apps on user device
         try {
             JsonArray installedAppsList = new JsonArray();
@@ -187,8 +186,9 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
-
+    private void getIpAddressAndMacAddress(Context context) {
         // get user device information (Mac Address, IP Address, OS Name etc.)
         try {
             StringBuilder deviceInfoStringBuilder = new StringBuilder();
@@ -211,7 +211,9 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    private void getDefaultLauncherName(Context context) {
         // get the default launcher on user device
         try {
             Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -222,37 +224,55 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
-        // Get user account (synced accounts on device)
-        try {
-            Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
-            Account[] accounts = AccountManager.get(context).getAccounts();
-            JsonArray userAccounts = new JsonArray();
-
-            for (Account account : accounts) {
-                if (emailPattern.matcher(account.name).matches()) {
-                    String possibleEmail = account.name;
-                    JsonPrimitive jsonPrimitive = new JsonPrimitive(possibleEmail);
-                    userAccounts.add(jsonPrimitive);
-                }
+    private void getUtmParametersFromPreferences(Context context) {
+        HashMap<String, String> params = (HashMap<String, String>) retrieveReferralParams(context);
+        if(params!=null && !params.isEmpty())
+        {
+            try {
+                utm_source = params.get(UTM_SOURCE).replace("%20", " ").replace("%2B", " ");
+                jsonObject.addProperty(UTM_SOURCE, utm_source);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            jsonObject.add(EMAILS, userAccounts);
-        } catch (Exception e) {
-            e.printStackTrace();
+            try {
+                utm_medium = params.get(UTM_MEDIUM).replace("%20", " ").replace("%2B", " ");
+                jsonObject.addProperty(UTM_MEDIUM, utm_medium);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                utm_campaign = params.get(UTM_CAMPAIGN).replace("%20", " ").replace("%2B", " ");
+                jsonObject.addProperty(UTM_CAMPAIGN, utm_campaign);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+    }
 
-        try {
-            HashMap<String, String> params = (HashMap<String, String>) retrieveReferralParams(context);
-            utm_source = params.get(UTM_SOURCE).replace("%20", " ").replace("%2B", " ");
-            utm_medium = params.get(UTM_MEDIUM).replace("%20", " ").replace("%2B", " ");
-            utm_campaign = params.get(UTM_CAMPAIGN).replace("%20", " ").replace("%2B", " ");
-
-            jsonObject.addProperty(UTM_SOURCE, utm_source);
-            jsonObject.addProperty(UTM_MEDIUM, utm_medium);
-            jsonObject.addProperty(UTM_CAMPAIGN, utm_campaign);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public static void storeReferralParams(Context context, Map<String, String> params) {
+        SharedPreferences storage = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = storage.edit();
+        for (String key : EXPECTED_PARAMETERS) {
+            String value = params.get(key);
+            if (value != null) {
+                editor.putString(key, value);
+            }
         }
+        editor.commit();
+    }
+
+    public static Map<String, String> retrieveReferralParams(Context context) {
+        HashMap<String, String> params = new HashMap<String, String>();
+        SharedPreferences storage = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE);
+        for (String key : EXPECTED_PARAMETERS) {
+            String value = storage.getString(key, null);
+            if (value != null) {
+                params.put(key, value);
+            }
+        }
+        return params;
     }
 
 }

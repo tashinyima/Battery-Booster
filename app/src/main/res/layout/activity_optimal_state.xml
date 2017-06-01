@@ -24,9 +24,10 @@
     android:orientation="vertical">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/optimal_state_ic_150" />
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/ic_optimal_state"
+        />
 
     <TextView
         android:layout_width="match_parent"
@@ -36,8 +37,8 @@
         android:gravity="center"
         android:text="@string/optimalStateTextView"
         android:textColor="@color/white"
-        android:textSize="24dp"
-        android:textStyle="normal" />
+        android:textSize="@dimen/large_text_size"
+        />
 
 
 

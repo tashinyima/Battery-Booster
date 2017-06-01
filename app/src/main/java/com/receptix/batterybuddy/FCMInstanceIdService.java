@@ -65,7 +65,7 @@ public class FCMInstanceIdService extends FirebaseInstanceIdService {
 
             JsonObject dataObject = new JsonObject();
             dataObject.add(DATA, jsonObject);
-            Log.e("onTokenRefresh " + JSON_OBJECT, dataObject.toString());
+            Log.e(TAG + "__" + "onTokenRefresh()" + JSON_OBJECT, dataObject.toString());
 
             // send to server
             Ion.with(context)
@@ -75,13 +75,7 @@ public class FCMInstanceIdService extends FirebaseInstanceIdService {
                     .setCallback(new FutureCallback<JsonObject>() {
                         @Override
                         public void onCompleted(Exception e, JsonObject result) {
-
-                            if (e != null)
-                                e.printStackTrace();
-
-                            if (result != null) {
-                                Log.e("onTokenRefresh", "result = " + result.toString());
-                            }
+                            Log.d(TAG, "onCompleted()");
                         }
                     });
 

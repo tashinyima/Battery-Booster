@@ -20,6 +20,7 @@ import com.receptix.batterybuddy.helper.LogUtil;
 import java.util.Random;
 
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_LEVEL;
+import static com.receptix.batterybuddy.helper.Constants.Params.EXTENDED_TIME;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_ACTIVE;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.PREFERENCES_IS_ACTIVE;
 import static com.receptix.batterybuddy.helper.Constants.ShortHandNotations.MINUTES;
@@ -66,12 +67,12 @@ public class SuccessOptimizerActivity extends AppCompatActivity {
                 // show activity only if user is currently on this activity
                 if (!isFinishing()) {
                     Intent backIntent = new Intent(SuccessOptimizerActivity.this, AfterOptimizerActivity.class);
-                    backIntent.putExtra("extendedTime", randomExtendedTimePeriod);
+                    backIntent.putExtra(EXTENDED_TIME, randomExtendedTimePeriod);
                     startActivity(backIntent);
                     finish();
                 }
             }
-        }, 3000);
+        }, 2000);
 
 
     }

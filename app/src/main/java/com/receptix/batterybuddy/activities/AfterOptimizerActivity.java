@@ -18,6 +18,7 @@ import com.receptix.batterybuddy.helper.LogUtil;
 import java.util.Map;
 
 import static com.receptix.batterybuddy.helper.Constants.BannerPlacementIds.INMOBI_ACCOUNT_ID;
+import static com.receptix.batterybuddy.helper.Constants.Params.EXTENDED_TIME;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_ACTIVE;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.PREFERENCES_IS_ACTIVE;
 
@@ -25,7 +26,7 @@ public class AfterOptimizerActivity extends AppCompatActivity {
     private static final String TAG = AfterOptimizerActivity.class.getSimpleName();
     Toolbar toolbar;
     int extendedTime;
-    TextView extentedTextViewAfter;
+    TextView textViewExtendedTime;
     InMobiBanner inMobiBanner;
     Context context;
 
@@ -39,27 +40,23 @@ public class AfterOptimizerActivity extends AppCompatActivity {
         context = getApplicationContext();
 
         Intent intent = getIntent();
-        extendedTime = intent.getIntExtra("extendedTime", 0);
+        extendedTime = intent.getIntExtra(EXTENDED_TIME, 0);
 
 
         initView();
-        setupToolBar(getString(R.string.powerconsumptionToolbar));
+        setupToolBar(getString(R.string.app_name));
     }
 
     private void setupToolBar(String title) {
-
         setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         TextView textViewTitle = (TextView) toolbar.findViewById(R.id.textViewTitle);
-        textViewTitle.setText(title);
-
-
+        textViewTitle.setText("");
     }
 
     private void initView() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        extentedTextViewAfter = (TextView) findViewById(R.id.extentedTextViewAfter);
-        extentedTextViewAfter.setText(extendedTime + " Minutes");
+        textViewExtendedTime = (TextView) findViewById(R.id.extentedTextViewAfter);
+        textViewExtendedTime.setText(extendedTime + " Minutes");
         inMobiBanner = (InMobiBanner) findViewById(R.id.banner);
         inMobiBanner.load();
         inMobiBanner.setListener(new InMobiBanner.BannerAdListener() {
@@ -70,7 +67,7 @@ public class AfterOptimizerActivity extends AppCompatActivity {
 
             @Override
             public void onAdLoadFailed(InMobiBanner inMobiBanner, InMobiAdRequestStatus inMobiAdRequestStatus) {
-                LogUtil.e("onAdLoadFailed", inMobiAdRequestStatus.getMessage());
+                LogUtil.e(TAG + "onAdLoadFailed", inMobiAdRequestStatus.getMessage());
             }
 
             @Override

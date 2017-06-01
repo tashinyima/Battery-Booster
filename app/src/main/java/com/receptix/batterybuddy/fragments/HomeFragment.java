@@ -15,7 +15,6 @@ import android.media.AudioManager;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -75,7 +74,6 @@ import static com.receptix.batterybuddy.helper.Constants.LockScreenTimeout.TIMEO
 import static com.receptix.batterybuddy.helper.Constants.LockScreenTimeout.TIMEOUT_5_MINUTES;
 import static com.receptix.batterybuddy.helper.Constants.LockScreenTimeout.TIMEOUT_5_SECONDS;
 import static com.receptix.batterybuddy.helper.Constants.LockScreenTimeout.TIMEOUT_AUTO_LOCK;
-import static com.receptix.batterybuddy.helper.Constants.Params.COUNTDOWN_TIMER_VALUE;
 import static com.receptix.batterybuddy.helper.Constants.PowerProfileParams.BATTERY_CAPACITY;
 import static com.receptix.batterybuddy.helper.Constants.PowerProfileParams.CPU_ACTIVE;
 import static com.receptix.batterybuddy.helper.Constants.PowerProfileParams.CPU_AWAKE;
@@ -213,7 +211,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         audioManagerMode = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         userSessionManager = new UserSessionManager(context);
-        isOptimizedCheck();
+        checkIfOptimized();
         setOnClickListeners();
         getSystemData();
 
@@ -221,15 +219,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    private void isOptimizedCheck() {
-
+    private void checkIfOptimized() {
         if (userSessionManager.isOptimized()) {
-
             homeBinding.buttonOptimizeBattery.setBackgroundResource(R.drawable.optimizedbuttonbgcolor);
             homeBinding.textviewProblemsDetected.setText(getString(R.string.noproblemdetected));
             homeBinding.textviewProblemsDetected.setTextColor(ContextCompat.getColor(context, R.color.optimizedbtncolor));
             homeBinding.textviewIssueCount.setVisibility(View.INVISIBLE);
-
         } else {
             homeBinding.textviewProblemsDetected.setText(getString(R.string.problemText));
             homeBinding.buttonOptimizeBattery.setBackgroundResource(R.drawable.optimizerbuttonbgcolor);
@@ -269,7 +264,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onResume() {
         super.onResume();
         registerBatteryInfoReceiver();
-        isOptimizedCheck();
+        checkIfOptimized();
 
     }
 
@@ -550,25 +545,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             SoundStatusChange();
         }
     }
-
-    /**
-     * Once this timer is complete, we set a flag "IS_OPTIMIZED" to false in User SharedPreferences,
-     * so that next time the user opens the app, the app shows that the device has some issues and
-     * makes the user want to Optimize the device again and clear some memory.
-     */
-    private void TerminateSession() {
-        new CountDownTimer(COUNTDOWN_TIMER_VALUE, 1000) {
-            public void onTick(long millisUntilFinished) {
-            }
-
-            public void onFinish() {
-//                userSessionManager.setIsOptimized(false);
-            }
-        }.start();
-    }
-
-    // alarm start at wrong time....
-
 
     private void SoundStatusChange() {
         new MaterialDialog.Builder(context)
