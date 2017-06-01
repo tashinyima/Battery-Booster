@@ -19,7 +19,7 @@ public class HomePagersAdapter extends FragmentPagerAdapter {
         super(fm);
     }
 
-    public void addFragments(Fragment fragments,String titles){
+    public void addFragments(Fragment fragments, String titles) {
         this.fragmentList.add(fragments);
         this.tabTitleList.add(titles);
     }
@@ -33,6 +33,7 @@ public class HomePagersAdapter extends FragmentPagerAdapter {
     public int getCount() {
         return fragmentList.size();
     }
+
     @Override
     public CharSequence getPageTitle(int position) {
         return tabTitleList.get(position);

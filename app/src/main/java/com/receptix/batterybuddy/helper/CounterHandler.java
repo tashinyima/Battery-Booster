@@ -164,11 +164,11 @@ public class CounterHandler {
     public static final class Builder {
         private View incrementalView;
         private View decrementalView;
-        private long minRange=-1;
-        private long maxRange=-1;
-        private long startNumber=0;
-        private long counterStep =1;
-        private int counterDelay=50;
+        private long minRange = -1;
+        private long maxRange = -1;
+        private long startNumber = 0;
+        private long counterStep = 1;
+        private int counterDelay = 50;
         private boolean isCycle;
         private CounterListener listener;
 

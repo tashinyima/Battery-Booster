@@ -12,18 +12,14 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.provider.Settings;
-import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
-import android.widget.Toast;
 
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
-import com.receptix.batterybuddy.helper.AppKey;
 import com.receptix.batterybuddy.helper.LogUtil;
 import com.receptix.batterybuddy.helper.MCrypt;
 import com.receptix.batterybuddy.helper.Utils;
@@ -31,9 +27,6 @@ import com.receptix.batterybuddy.helper.Utils;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.net.URLDecoder;
-import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +41,6 @@ import static com.receptix.batterybuddy.helper.Constants.JsonProperties.ETHERNET
 import static com.receptix.batterybuddy.helper.Constants.JsonProperties.INSTALLED_APPS;
 import static com.receptix.batterybuddy.helper.Constants.JsonProperties.IP_ADDRESS;
 import static com.receptix.batterybuddy.helper.Constants.JsonProperties.MAC_ADDRESS;
-import static com.receptix.batterybuddy.helper.Constants.JsonProperties.REQUEST_OBJECT;
 import static com.receptix.batterybuddy.helper.Constants.JsonProperties.WLAN;
 import static com.receptix.batterybuddy.helper.Constants.Params.APP_NAME;
 import static com.receptix.batterybuddy.helper.Constants.Params.REFERRER;
@@ -58,10 +50,8 @@ import static com.receptix.batterybuddy.helper.Constants.Urls.URL_TRACKING_OZOCK
 import static com.receptix.batterybuddy.helper.Constants.UtmParams.EXPECTED_PARAMETERS;
 import static com.receptix.batterybuddy.helper.Constants.UtmParams.PREFS_FILE_NAME;
 import static com.receptix.batterybuddy.helper.Constants.UtmParams.UTM_CAMPAIGN;
-import static com.receptix.batterybuddy.helper.Constants.UtmParams.UTM_CONTENT;
 import static com.receptix.batterybuddy.helper.Constants.UtmParams.UTM_MEDIUM;
 import static com.receptix.batterybuddy.helper.Constants.UtmParams.UTM_SOURCE;
-import static com.receptix.batterybuddy.helper.Constants.UtmParams.UTM_TERM;
 
 /**
  * Created by hello on 5/23/2017.
@@ -69,11 +59,34 @@ import static com.receptix.batterybuddy.helper.Constants.UtmParams.UTM_TERM;
 
 public class InstallReferrerReceiver extends BroadcastReceiver {
 
-    private String TAG = InstallReferrerReceiver.class.getSimpleName();
     JsonObject jsonObject = new JsonObject();
     String utm;
     String utm_source, utm_medium, utm_campaign, utm_term, utm_content, utm_anid;
+    private String TAG = InstallReferrerReceiver.class.getSimpleName();
 
+    public static void storeReferralParams(Context context, Map<String, String> params) {
+        SharedPreferences storage = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = storage.edit();
+        for (String key : EXPECTED_PARAMETERS) {
+            String value = params.get(key);
+            if (value != null) {
+                editor.putString(key, value);
+            }
+        }
+        editor.commit();
+    }
+
+    public static Map<String, String> retrieveReferralParams(Context context) {
+        HashMap<String, String> params = new HashMap<String, String>();
+        SharedPreferences storage = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE);
+        for (String key : EXPECTED_PARAMETERS) {
+            String value = storage.getString(key, null);
+            if (value != null) {
+                params.put(key, value);
+            }
+        }
+        return params;
+    }
 
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -118,8 +131,7 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
 
     private void getUtmParameters(Context context, String referrer) {
 
-        if(referrer != null)
-        {
+        if (referrer != null) {
             Map<String, String> referralParams = new HashMap<String, String>();
 
             try {
@@ -138,33 +150,6 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
 
         }
     }
-
-
-    public static void storeReferralParams(Context context, Map<String, String> params) {
-        SharedPreferences storage = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = storage.edit();
-        for (String key : EXPECTED_PARAMETERS) {
-            String value = params.get(key);
-            if (value != null) {
-                editor.putString(key, value);
-            }
-        }
-        editor.commit();
-    }
-
-
-    public static Map<String, String> retrieveReferralParams(Context context) {
-        HashMap<String, String> params = new HashMap<String, String>();
-        SharedPreferences storage = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE);
-        for (String key : EXPECTED_PARAMETERS) {
-            String value = storage.getString(key, null);
-            if (value != null) {
-                params.put(key, value);
-            }
-        }
-        return params;
-    }
-
 
     private void fetchUserDetails(Context context) {
 
@@ -194,9 +179,7 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
                 }
             }
             jsonObject.add(INSTALLED_APPS, installedAppsList);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -220,9 +203,7 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
                 deviceMacAddress = Utils.getMACAddress(ETHERNET);
             }
             jsonObject.addProperty(MAC_ADDRESS, deviceMacAddress);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -233,9 +214,7 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
             ResolveInfo defaultLauncher = context.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
             String defaultLauncherStr = defaultLauncher.activityInfo.packageName;
             jsonObject.addProperty(DEFAULT_LAUNCHER, defaultLauncherStr);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -253,9 +232,7 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
                 }
             }
             jsonObject.add(EMAILS, userAccounts);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -268,9 +245,7 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
             jsonObject.addProperty(UTM_SOURCE, utm_source);
             jsonObject.addProperty(UTM_MEDIUM, utm_medium);
             jsonObject.addProperty(UTM_CAMPAIGN, utm_campaign);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

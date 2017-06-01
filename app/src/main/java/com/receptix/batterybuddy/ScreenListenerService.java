@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
-import android.util.Log;
 
 import com.receptix.batterybuddy.activities.LockAdsActivity;
 import com.receptix.batterybuddy.helper.LogUtil;
@@ -28,17 +27,15 @@ public class ScreenListenerService extends Service {
         public void onReceive(Context context, Intent intent) {
 
             userSessionManager = new UserSessionManager(context);
-            if(userSessionManager!=null)
-            {
+            if (userSessionManager != null) {
                 long lastScreenOnTimestamp = userSessionManager.getScreenOnTimestamp();
-                LogUtil.e("lastScreenOnTimeStamp", lastScreenOnTimestamp+"");
+                LogUtil.e("lastScreenOnTimeStamp", lastScreenOnTimestamp + "");
 
                 if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
                     //first we check if 24 hours have passed between the last time we showed the user the Lock Screen Ads Activity
-                    if(lastScreenOnTimestamp!=0)
-                    {
-                        LogUtil.e("Last TimeStamp", lastScreenOnTimestamp+"");
-                        LogUtil.e("Current Timestamp", System.currentTimeMillis()+"");
+                    if (lastScreenOnTimestamp != 0) {
+                        LogUtil.e("Last TimeStamp", lastScreenOnTimestamp + "");
+                        LogUtil.e("Current Timestamp", System.currentTimeMillis() + "");
                         long currentTimeStamp = System.currentTimeMillis();
                         Date lastDate = new Date();
                         Date currentDate = new Date();
@@ -48,8 +45,8 @@ public class ScreenListenerService extends Service {
                         long diffSec = diffMs / 1000;
                         long elapsedMinutesSinceLastScreenOn = diffSec / 60;
                         long elapsedSecondsSinceLastScreenOn = diffSec % 60;
-                        LogUtil.e("Difference is", elapsedMinutesSinceLastScreenOn+" mins, "+elapsedSecondsSinceLastScreenOn + " seconds");
-                        if(elapsedMinutesSinceLastScreenOn >= SCREEN_LOCK_ADS_TIMER_VALUE_MINUTES) //24 hours have 1440 minutes
+                        LogUtil.e("Difference is", elapsedMinutesSinceLastScreenOn + " mins, " + elapsedSecondsSinceLastScreenOn + " seconds");
+                        if (elapsedMinutesSinceLastScreenOn >= SCREEN_LOCK_ADS_TIMER_VALUE_MINUTES) //24 hours have 1440 minutes
                         {
                             Intent i = new Intent(context, LockAdsActivity.class);
                             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -57,8 +54,7 @@ public class ScreenListenerService extends Service {
                         }
                     }
                     // if last timestamp hasn't been saved yet
-                    else
-                    {
+                    else {
                         Intent i = new Intent(context, LockAdsActivity.class);
                         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(i);

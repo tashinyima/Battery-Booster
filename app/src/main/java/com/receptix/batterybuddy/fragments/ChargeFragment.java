@@ -9,7 +9,6 @@ import android.os.BatteryManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,18 +69,16 @@ public class ChargeFragment extends Fragment {
                 boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
                         status == BatteryManager.BATTERY_STATUS_FULL;
                 /*Toast.makeText(context, "isCharging = " + isCharging , Toast.LENGTH_SHORT).show();*/
-                if(!isCharging)
-                {
+                if (!isCharging) {
                     waveLoadingView.pauseAnimation();
                     textViewChargeTimeRemaining.setVisibility(View.GONE);
                     textViewEtaHeading.setVisibility(View.GONE);
 //          waveLoadingView.setWaveColor(getContext().getResources().getColor(android.R.color.holo_green_dark));
-              waveLoadingView.setWaveColor(ContextCompat.getColor(context,android.R.color.holo_green_dark));
-                }
-                else {
+                    waveLoadingView.setWaveColor(ContextCompat.getColor(context, android.R.color.holo_green_dark));
+                } else {
                     waveLoadingView.resumeAnimation();
-                  //   waveLoadingView.setWaveColor(getContext().getResources().getColor(R.color.colorGreen));  Depreciated getcolor
-                    waveLoadingView.setWaveColor(ContextCompat.getColor(context,R.color.colorGreen));
+                    //   waveLoadingView.setWaveColor(getContext().getResources().getColor(R.color.colorGreen));  Depreciated getcolor
+                    waveLoadingView.setWaveColor(ContextCompat.getColor(context, R.color.colorGreen));
 
                     try {
                         int chargePlug = batteryStatus.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
@@ -116,9 +113,7 @@ public class ChargeFragment extends Fragment {
                             textViewChargeTimeRemaining.setText(valueLessThanOneHour);
                         }
 
-                    }
-                    catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
@@ -155,6 +150,7 @@ public class ChargeFragment extends Fragment {
         }
         return 0.0;
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

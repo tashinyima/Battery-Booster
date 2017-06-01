@@ -88,23 +88,6 @@
             android:name=".activities.NavigationActivity"
             android:screenOrientation="portrait" />
 
-        <!-- MoPub Activities (not directly instantiated) -->
-        <activity
-            android:name="com.mopub.mobileads.MoPubActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
-        <activity
-            android:name="com.mopub.mobileads.MraidActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
-        <activity
-            android:name="com.mopub.common.MoPubBrowser"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
-        <activity
-            android:name="com.mopub.mobileads.MraidVideoPlayerActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
-        <activity
-            android:name="com.mopub.mobileads.RewardedMraidActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
-
         <!-- Must-Have Activity and Service for InMobi -->
         <activity
             android:name="com.inmobi.rendering.InMobiAdActivity"
@@ -164,13 +147,6 @@
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".receiver.UninstallReceiver">
-            <intent-filter android:priority="0">
-                <action android:name="android.intent.action.QUERY_PACKAGE_RESTART" />
-
-                <data android:scheme="package" />
-            </intent-filter>
-        </receiver>
 
         <!-- App Widget -->
         <receiver android:name=".BatteryBuddyAppWidget">
@@ -183,6 +159,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/battery_buddy_app_widget_info" />
         </receiver>
+
         <receiver
             android:name=".receiver.DeviceBootReceiver"
             android:enabled="true">
@@ -190,6 +167,7 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
         <receiver android:name=".receiver.AlarmReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -202,28 +180,7 @@
             android:enabled="true"
             android:exported="false" />
 
-        <!-- Used for Google Play Store Campaign Measurement -->
-        <receiver
-            android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER" />
-            </intent-filter>
-        </receiver>
-
-        <!-- AppsFlyer Install Referrer Tracking -->
-        <receiver
-            android:name="com.appsflyer.MultipleInstallBroadcastReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER" />
-            </intent-filter>
-        </receiver>
-
-        <service android:name="com.google.android.gms.tagmanager.InstallReferrerService" />
-
-        <!-- Custom Referrer for Installs -->
+        <!-- We are using only 2 Install Referrer Receivers => Custom Class and CleverTap -->
         <receiver
             android:name=".receiver.InstallReferrerReceiver"
             android:exported="true">
@@ -231,7 +188,6 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-
 
         <receiver
             android:name="com.clevertap.android.sdk.InstallReferrerBroadcastReceiver"
@@ -274,6 +230,9 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
+
+        <service android:name="com.google.android.gms.tagmanager.InstallReferrerService" />
+
 
         <service
             android:name="com.clevertap.android.sdk.FcmMessageListenerService">

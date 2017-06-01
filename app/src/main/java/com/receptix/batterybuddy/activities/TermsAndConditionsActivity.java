@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.appsflyer.AppsFlyerLib;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.JsonObject;
 import com.receptix.batterybuddy.R;
@@ -26,9 +25,8 @@ public class TermsAndConditionsActivity extends AppCompatActivity implements Vie
     Context context;
     Button agreeBtn;
     JsonObject jsonObject = new JsonObject();
-    private FirebaseAnalytics mFirebaseAnalytics;
     PendingIntent pendingIntent;
-
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +37,6 @@ public class TermsAndConditionsActivity extends AppCompatActivity implements Vie
 
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        AppsFlyerLib.getInstance().startTracking(this.getApplication(), getString(R.string.apps_flyer_dev_key));
-        /*
-         #AppsFlyer: registerConversionListener implements the collection of attribution (conversion) data
-         Please refer to this documentation to view all the available attribution parameters:
-         https://support.appsflyer.com/hc/en-us/articles/207032096-Accessing-AppsFlyer-Attribution-Conversion-Data-from-the-SDK-Deferred-Deeplinking
-         */
 
         initView();
         startAlarm();
@@ -59,7 +51,7 @@ public class TermsAndConditionsActivity extends AppCompatActivity implements Vie
             pendingIntent = PendingIntent.getBroadcast(TermsAndConditionsActivity.this, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
-            manager.setInexactRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),AlarmManager.INTERVAL_HALF_DAY, pendingIntent);
+            manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HALF_DAY, pendingIntent);
         } catch (Exception e) {
             e.printStackTrace();
         }

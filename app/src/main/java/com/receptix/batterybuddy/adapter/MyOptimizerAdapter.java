@@ -29,15 +29,15 @@ public class MyOptimizerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.gridview_row_recycler,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.gridview_row_recycler, parent, false);
         return new GridListViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         OptimizerData data = optimizerDataArrayList.get(position);
-        if(data!=null){
-            if(holder instanceof GridListViewHolder){
+        if (data != null) {
+            if (holder instanceof GridListViewHolder) {
                 ((GridListViewHolder) holder).gridImageView.setImageDrawable(data.getDrawableIcon());
             }
         }

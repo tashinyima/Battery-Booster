@@ -1,6 +1,5 @@
 package com.receptix.batterybuddy;
 
-import android.app.Service;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;

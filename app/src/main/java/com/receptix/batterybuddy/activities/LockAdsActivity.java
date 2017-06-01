@@ -18,8 +18,6 @@ import android.view.WindowManager;
 import com.inmobi.ads.InMobiAdRequestStatus;
 import com.inmobi.ads.InMobiBanner;
 import com.inmobi.sdk.InMobiSdk;
-import com.mopub.mobileads.MoPubErrorCode;
-import com.mopub.mobileads.MoPubView;
 import com.receptix.batterybuddy.R;
 import com.receptix.batterybuddy.databinding.ActivityLockAdsBinding;
 import com.receptix.batterybuddy.helper.LogUtil;
@@ -49,7 +47,6 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
     ActivityLockAdsBinding binding;
     int USED_RAM_PERCENTAGE_THRESHOLD = 70;
     InMobiBanner inMobiBanner;
-    private MoPubView moPubView;
     private BroadcastReceiver battery_info_receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -228,7 +225,6 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
     protected void onDestroy() {
         if (battery_info_receiver != null)
             LockAdsActivity.this.unregisterReceiver(battery_info_receiver);
-
 
 
         super.onDestroy();

@@ -1,24 +1,11 @@
 package com.receptix.batterybuddy.activities;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.app.AlarmManager;
-import android.app.KeyguardManager;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
@@ -31,50 +18,23 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
-import android.widget.RemoteViews;
 import android.widget.Toast;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
 import com.receptix.batterybuddy.R;
 import com.receptix.batterybuddy.fragments.ChargeFragment;
 import com.receptix.batterybuddy.fragments.HomeFragment;
 import com.receptix.batterybuddy.fragments.RankFragment;
 import com.receptix.batterybuddy.helper.LogUtil;
 import com.receptix.batterybuddy.helper.MCrypt;
-import com.receptix.batterybuddy.helper.UserSessionManager;
-import com.receptix.batterybuddy.helper.Utils;
-import com.receptix.batterybuddy.receiver.AlarmReceiver;
-import com.scottyab.aescrypt.AESCrypt;
 
-import java.lang.reflect.Field;
-import java.security.GeneralSecurityException;
-import java.util.List;
-import java.util.regex.Pattern;
-
-import static com.receptix.batterybuddy.helper.Constants.JsonProperties.DEFAULT_LAUNCHER;
-import static com.receptix.batterybuddy.helper.Constants.JsonProperties.DEVICE_ID;
-import static com.receptix.batterybuddy.helper.Constants.JsonProperties.DEVICE_INFO;
-import static com.receptix.batterybuddy.helper.Constants.JsonProperties.EMAILS;
-import static com.receptix.batterybuddy.helper.Constants.JsonProperties.ETHERNET;
-import static com.receptix.batterybuddy.helper.Constants.JsonProperties.INSTALLED_APPS;
-import static com.receptix.batterybuddy.helper.Constants.JsonProperties.IP_ADDRESS;
-import static com.receptix.batterybuddy.helper.Constants.JsonProperties.MAC_ADDRESS;
-import static com.receptix.batterybuddy.helper.Constants.JsonProperties.WLAN;
-import static com.receptix.batterybuddy.helper.Constants.Params.STATUS_SUCCESS;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_ACTIVE;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.PREFERENCES_IS_ACTIVE;
 import static com.receptix.batterybuddy.helper.Constants.Urls.URL_EMAIL_ADDRESS_SUPPORT;
-import static com.receptix.batterybuddy.helper.Constants.Urls.URL_TRACKING_OZOCK_INSTALLED;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -277,15 +237,14 @@ public class NavigationActivity extends AppCompatActivity
     }
 
 
-
     private void TestUtmData() {
 
         MCrypt mcrypt = new MCrypt();
 
         try {
-            String encrypted = MCrypt.bytesToHex( mcrypt.encrypt("tashidelek") );
+            String encrypted = MCrypt.bytesToHex(mcrypt.encrypt("tashidelek"));
 
-            Log.d("Encry",encrypted);
+            Log.d("Encry", encrypted);
         } catch (Exception e) {
             e.printStackTrace();
         }

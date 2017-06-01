@@ -1,7 +1,6 @@
 package com.receptix.batterybuddy.model;
 
 import android.graphics.drawable.Drawable;
-import android.provider.Settings;
 
 /**
  * Created by hello on 5/15/2017.
@@ -13,15 +12,10 @@ public class OptimizerData {
     String packageName;
     String packageLable;
 
-    public OptimizerData(Drawable drawableIcon, String packageName,String packageLable) {
+    public OptimizerData(Drawable drawableIcon, String packageName, String packageLable) {
         this.drawableIcon = drawableIcon;
         this.packageName = packageName;
-        this.packageLable=packageLable;
-    }
-
-    public void setDrawableIcon(Drawable drawableIcon) {
-
-        this.drawableIcon = drawableIcon;
+        this.packageLable = packageLable;
     }
 
     public Drawable getDrawableIcon() {
@@ -29,9 +23,9 @@ public class OptimizerData {
         return drawableIcon;
     }
 
-    public void setPackageName(String packageName) {
+    public void setDrawableIcon(Drawable drawableIcon) {
 
-        this.packageName = packageName;
+        this.drawableIcon = drawableIcon;
     }
 
     public String getPackageName() {
@@ -40,13 +34,18 @@ public class OptimizerData {
         return packageName;
     }
 
-    public void setPackageLable(String packageLable){
+    public void setPackageName(String packageName) {
 
-        this.packageLable=packageLable;
+        this.packageName = packageName;
     }
 
-    public String getPackageLable(){
+    public String getPackageLable() {
 
         return packageLable;
+    }
+
+    public void setPackageLable(String packageLable) {
+
+        this.packageLable = packageLable;
     }
 }
