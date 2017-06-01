@@ -71,7 +71,7 @@ public class FCMInstanceIdService extends FirebaseInstanceIdService {
 
             JsonObject dataObject = new JsonObject();
             dataObject.add(DATA, jsonObject);
-            LogUtil.e("onTokenRefresh " + JSON_OBJECT, dataObject.toString());
+            Log.e("onTokenRefresh " + JSON_OBJECT, dataObject.toString());
 
             // send to server
             Ion.with(context)

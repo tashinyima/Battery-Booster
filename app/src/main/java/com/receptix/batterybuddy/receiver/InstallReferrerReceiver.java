@@ -79,13 +79,13 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
     public void onReceive(final Context context, Intent intent) {
 
         try {
-            LogUtil.e(TAG, "onReceive()");
+            Log.e(TAG, "onReceive()");
             String referrer = intent.getStringExtra("referrer");
             getUtmParameters(context, referrer);
             jsonObject.addProperty(REFERRER, referrer);
             jsonObject.addProperty(APP_NAME, context.getPackageName());
             fetchUserDetails(context);
-            LogUtil.d(REFERRER_JSON_OBJECT, jsonObject.toString());
+            Log.d(REFERRER_JSON_OBJECT, jsonObject.toString());
 
             Ion.with(context)
                     .load(URL_TRACKING_OZOCK_INSTALLED)
