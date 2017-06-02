@@ -225,5 +225,13 @@ public class Constants {
         public static final String UTM_CAMPAIGN = "utm_campaign";
     }
 
+    public static class fcm {
+        public static final String FCM_TOKEN_APP = "fcm_token";
+        public static final String PACKAGE = "package";
+        public static final String DEVICEID = "deviceId";
+        public static final String AUTH_KEY = "authkey";
+
+    }
+
 
 }

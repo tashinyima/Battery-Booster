@@ -10,6 +10,10 @@ import static com.receptix.batterybuddy.helper.Constants.Preferences.LAST_TIMEST
 import static com.receptix.batterybuddy.helper.Constants.Preferences.LAST_TIMESTAMP_LOCK_ADS_POWER_CONNECTION_RECEIVER;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.PREFER_NAME;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.PRIVATE_MODE;
+import static com.receptix.batterybuddy.helper.Constants.fcm.AUTH_KEY;
+import static com.receptix.batterybuddy.helper.Constants.fcm.DEVICEID;
+import static com.receptix.batterybuddy.helper.Constants.fcm.FCM_TOKEN_APP;
+import static com.receptix.batterybuddy.helper.Constants.fcm.PACKAGE;
 
 /**
  * Created by hello on 5/15/2017.
@@ -74,5 +78,53 @@ public class UserSessionManager {
     public void setScreenOnTimestampPowerConnectionReceiver(long screenOnTimestampPowerConnectionReceiver) {
         editor.putLong(LAST_TIMESTAMP_LOCK_ADS_POWER_CONNECTION_RECEIVER, screenOnTimestampPowerConnectionReceiver);
         editor.commit();
+    }
+
+    public void setAuthKey(String authKey){
+
+        editor.putString(AUTH_KEY,authKey);
+        editor.commit();
+    }
+
+    public String getAuthKey(){
+
+        return  sharedPreferences.getString(AUTH_KEY,null);
+
+    }
+
+    public void setToken(String authKey){
+
+        editor.putString(FCM_TOKEN_APP,authKey);
+        editor.commit();
+    }
+
+    public String getToken(){
+
+        return  sharedPreferences.getString(FCM_TOKEN_APP,null);
+
+    }
+
+    public void setDeviceId(String authKey){
+
+        editor.putString(DEVICEID,authKey);
+        editor.commit();
+    }
+
+    public String getDeviceId(){
+
+        return  sharedPreferences.getString(DEVICEID,null);
+
+    }
+
+    public void setPackageName(String authKey){
+
+        editor.putString(PACKAGE,authKey);
+        editor.commit();
+    }
+
+    public String getPackageName(){
+
+        return  sharedPreferences.getString(PACKAGE,null);
+
     }
 }

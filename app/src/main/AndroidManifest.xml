@@ -185,7 +185,10 @@
             android:name=".receiver.InstallReferrerReceiver"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER" />
+
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
+                <!--<action android:name="com.android.vending.INSTALL_REFERRER" />-->
             </intent-filter>
         </receiver>
 

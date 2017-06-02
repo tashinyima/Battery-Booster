@@ -23,6 +23,7 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.receptix.batterybuddy.helper.LogUtil;
 import com.receptix.batterybuddy.helper.MCrypt;
+import com.receptix.batterybuddy.helper.UserSessionManager;
 import com.receptix.batterybuddy.helper.Utils;
 
 import java.io.UnsupportedEncodingException;
@@ -34,6 +35,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import static com.receptix.batterybuddy.helper.Constants.JsonProperties.AUTH_KEY;
+import static com.receptix.batterybuddy.helper.Constants.JsonProperties.DATA;
 import static com.receptix.batterybuddy.helper.Constants.JsonProperties.DEFAULT_LAUNCHER;
 import static com.receptix.batterybuddy.helper.Constants.JsonProperties.DEVICE_ID;
 import static com.receptix.batterybuddy.helper.Constants.JsonProperties.DEVICE_INFO;
@@ -44,10 +46,12 @@ import static com.receptix.batterybuddy.helper.Constants.JsonProperties.IP_ADDRE
 import static com.receptix.batterybuddy.helper.Constants.JsonProperties.MAC_ADDRESS;
 import static com.receptix.batterybuddy.helper.Constants.JsonProperties.WLAN;
 import static com.receptix.batterybuddy.helper.Constants.Params.APP_NAME;
+import static com.receptix.batterybuddy.helper.Constants.Params.FCM_TOKEN;
 import static com.receptix.batterybuddy.helper.Constants.Params.REFERRER;
 import static com.receptix.batterybuddy.helper.Constants.Params.REFERRER_JSON_OBJECT;
 import static com.receptix.batterybuddy.helper.Constants.Params.STATUS_SUCCESS;
 import static com.receptix.batterybuddy.helper.Constants.Urls.URL_TRACKING_OZOCK_INSTALLED;
+import static com.receptix.batterybuddy.helper.Constants.Urls.URL_UPDATE_FCM_TOKEN;
 import static com.receptix.batterybuddy.helper.Constants.UtmParams.EXPECTED_PARAMETERS;
 import static com.receptix.batterybuddy.helper.Constants.UtmParams.PREFS_FILE_NAME;
 import static com.receptix.batterybuddy.helper.Constants.UtmParams.UTM_CAMPAIGN;
@@ -75,7 +79,7 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
             // invoke clever tap receiver from within the Custom Receiver class
             new com.clevertap.android.sdk.InstallReferrerBroadcastReceiver().onReceive(context, intent);
 
-            String referrer = intent.getStringExtra("referrer");
+            final String referrer = intent.getStringExtra("referrer");
 
             getUtmParameters(context, referrer);
 
@@ -94,13 +98,56 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
                     .setCallback(new FutureCallback<JsonObject>() {
                         @Override
                         public void onCompleted(Exception e, JsonObject result) {
-                            Log.d(TAG, "Ion.onCompleted()");
+
+                         //   SendFCMDataNow(context);
+//                            if(result!=null){
+//
+//                                Log.d("Tashi","result=="+result.toString());
+//
+//                                int status = result.get("status").getAsInt();
+//                                if(status==1){
+//
+////                                    send fc token values
+//
+//                                    SendFCMDataNow(context);
+//
+//                                }
+//                            }
+
                         }
                     });
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void SendFCMDataNow(Context context) {
+
+        String url = URL_UPDATE_FCM_TOKEN;
+
+        UserSessionManager userSessionManager = new UserSessionManager(context);
+        JsonObject jsonObject = new JsonObject();
+
+        jsonObject.addProperty(FCM_TOKEN, userSessionManager.getToken().toString());
+        jsonObject.addProperty(APP_NAME, context.getPackageName());
+        jsonObject.addProperty(DEVICE_ID, userSessionManager.getDeviceId().toString());
+        jsonObject.addProperty(AUTH_KEY, userSessionManager.getAuthKey().toString());
+
+        // send to server
+
+        Log.d("Tashi",jsonObject.toString());
+        Ion.with(context)
+                .load(url)
+                .setBodyParameter(DATA, jsonObject.toString())
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        Log.d(TAG, "onCompleted()");
+                    }
+                });
+
     }
 
     /**

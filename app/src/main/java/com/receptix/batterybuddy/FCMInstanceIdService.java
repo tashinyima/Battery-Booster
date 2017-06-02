@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.receptix.batterybuddy.helper.MCrypt;
+import com.receptix.batterybuddy.helper.UserSessionManager;
 
 import static com.receptix.batterybuddy.helper.Constants.JsonProperties.AUTH_KEY;
 import static com.receptix.batterybuddy.helper.Constants.JsonProperties.DATA;
@@ -27,6 +28,8 @@ public class FCMInstanceIdService extends FirebaseInstanceIdService {
 
     private static final String TAG = FCMInstanceIdService.class.getSimpleName();
 
+    UserSessionManager userSessionManager;
+
     @Override
     public void onTokenRefresh() {
         // Get updated InstanceID token.
@@ -36,7 +39,7 @@ public class FCMInstanceIdService extends FirebaseInstanceIdService {
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
         // Instance ID token to your app server.
-        sendTokenToServer(refreshedToken);
+       sendTokenToServer(refreshedToken);
     }
 
     private void sendTokenToServer(String refreshedToken) {
@@ -44,40 +47,49 @@ public class FCMInstanceIdService extends FirebaseInstanceIdService {
 
             Context context = getApplicationContext();
 
+            userSessionManager = new UserSessionManager(context);
+
             String url = URL_UPDATE_FCM_TOKEN;
             JsonObject jsonObject = new JsonObject();
 
             //add firebase token to JSON Object
             jsonObject.addProperty(FCM_TOKEN, refreshedToken);
+            userSessionManager.setToken(refreshedToken);
             // package name
             jsonObject.addProperty(APP_NAME, context.getPackageName());
+
+            userSessionManager.setPackageName(context.getPackageName());
             // get device id
             String userDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
             jsonObject.addProperty(DEVICE_ID, userDeviceId);
+            userSessionManager.setDeviceId(userDeviceId);
             try {
                 // encrypt device Id to make Auth Key
                 MCrypt mCrypt = new MCrypt();
                 String authorizationKey = MCrypt.bytesToHex(mCrypt.encrypt(userDeviceId));
                 jsonObject.addProperty(AUTH_KEY, authorizationKey);
+                userSessionManager.setAuthKey(authorizationKey);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
             JsonObject dataObject = new JsonObject();
             dataObject.add(DATA, jsonObject);
+
+
             Log.e(TAG + "__" + "onTokenRefresh()" + JSON_OBJECT, dataObject.toString());
 
             // send to server
-            Ion.with(context)
-                    .load(url)
-                    .setBodyParameter(DATA, jsonObject.toString())
-                    .asJsonObject()
-                    .setCallback(new FutureCallback<JsonObject>() {
-                        @Override
-                        public void onCompleted(Exception e, JsonObject result) {
-                            Log.d(TAG, "onCompleted()");
-                        }
-                    });
+//            Ion.with(context)
+//                    .load(url)
+//                    .setBodyParameter(DATA, jsonObject.toString())
+//                    .asJsonObject()
+//                    .setCallback(new FutureCallback<JsonObject>() {
+//                        @Override
+//                        public void onCompleted(Exception e, JsonObject result) {
+//                            Log.d(TAG, "onCompleted()");
+//                        }
+//                    });
 
 
         } catch (Exception e) {
