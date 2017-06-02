@@ -151,6 +151,8 @@ public class ScreenListenerService extends Service {
                                 if (hasStatus) {
                                     String status = String.valueOf(result.get("status"));
                                     if (status.equalsIgnoreCase("1")) {
+                                        // mark "referrerDataSentOnce" to true (so that install data is not sent again and again)
+                                        userSessionManager.setReferrerDataSentOnce(true);
                                         SendFCMDataNow(context);
                                     }
                                 }
@@ -184,8 +186,6 @@ public class ScreenListenerService extends Service {
                         @Override
                         public void onCompleted(Exception e, JsonObject result) {
                             Log.e(TAG, "update_fcm.php => onCompleted()");
-                            // mark "referrerDataSentOnce" to true (so that install data is not sent again and again)
-                            userSessionManager.setReferrerDataSentOnce(true);
                             Log.e(TAG, "isReferrerDataSentOnce = "+ userSessionManager.isReferrerDataSentOnce());
                         }
                     });

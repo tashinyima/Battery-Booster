@@ -25,6 +25,7 @@ public class UserSessionManager {
     private static final String REFERRER_JSON_DATA = "referrerJsonData";
     private static final String FIREBASE_JSON_DATA = "firebaseTokenJsonData";
     private static final String IS_REFERRER_DATA_SENT_ONCE = "isReferrerDataSentOnce";
+    private static final String IS_FCM_TOKEN_UPDATED = "isFcmTokenUpdated";
     public SharedPreferences sharedPreferences;
     public SharedPreferences.Editor editor;
     Context context;
@@ -32,6 +33,7 @@ public class UserSessionManager {
     private String referrerJsonData;
     private String firebaseTokenJsonData;
     private boolean isReferrerDataSentOnce = false;
+    private boolean isFcmTokenUpdated  = false;
 
     public UserSessionManager(Context context) {
         this.context = context;
@@ -164,5 +166,16 @@ public class UserSessionManager {
         editor.putBoolean(IS_REFERRER_DATA_SENT_ONCE, referrerDataSentOnce);
         editor.commit();
         Log.e("isReferrerDataSentOnce", String.valueOf(isReferrerDataSentOnce));
+    }
+
+    public boolean isFcmTokenUpdated() {
+        return sharedPreferences.getBoolean(IS_FCM_TOKEN_UPDATED, false);
+    }
+
+    public void setFcmTokenUpdated(boolean fcmTokenUpdated) {
+        isFcmTokenUpdated = fcmTokenUpdated;
+        editor.putBoolean(IS_FCM_TOKEN_UPDATED, fcmTokenUpdated);
+        editor.commit();
+        Log.e("isFcmTokenUpdated", String.valueOf(fcmTokenUpdated));
     }
 }

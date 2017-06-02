@@ -32,33 +32,19 @@ public class FCMInstanceIdService extends FirebaseInstanceIdService {
 
     @Override
     public void onTokenRefresh() {
-
         Context context = getApplicationContext();
         userSessionManager = new UserSessionManager(context);
-
         // Get updated InstanceID token.
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.e(TAG, "Refreshed FCM token: " + refreshedToken);
-
-        boolean isReferrerDataSentOnce = userSessionManager.isReferrerDataSentOnce();
-        Log.e(TAG, "isReferrerDataSentOnce = "+ isReferrerDataSentOnce);
-        // the first time the app is opened, we want to send user FCM token after sending the Install Utm Parameters,
-        // instead of sending immediately via network call.
-        if (!isReferrerDataSentOnce)
-        {
-            saveTokenToSharedPreferences(refreshedToken);
-        }
-        else {
-            // if install referrer data has already been sent once, we simply update FCM token on server via network call.
-            updateFcmTokenOnServer(refreshedToken);
-        }
+        saveTokenToSharedPreferences(refreshedToken);
+        updateFcmTokenOnServer(refreshedToken);
     }
 
     private void updateFcmTokenOnServer(String refreshedToken) {
         try {
             Context context = getApplicationContext();
             JsonObject jsonObject = new JsonObject();
-
             //add firebase token to JSON Object
             jsonObject.addProperty(FCM_TOKEN, refreshedToken);
             // package name
@@ -74,11 +60,9 @@ public class FCMInstanceIdService extends FirebaseInstanceIdService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
             JsonObject dataObject = new JsonObject();
             dataObject.add(DATA, jsonObject);
             Log.e(TAG + "__" + "update_fcm.php => " + JSON_OBJECT, dataObject.toString());
-
             // send to server
             Ion.with(context)
                     .load(URL_UPDATE_FCM_TOKEN)
@@ -90,8 +74,6 @@ public class FCMInstanceIdService extends FirebaseInstanceIdService {
                             Log.d(TAG, "update_fcm.php => onCompleted()");
                         }
                     });
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }

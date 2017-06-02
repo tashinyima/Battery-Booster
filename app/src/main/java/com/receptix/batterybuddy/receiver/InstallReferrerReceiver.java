@@ -15,15 +15,12 @@ import android.provider.Settings;
 import android.util.Log;
 import android.util.Patterns;
 
-import com.clevertap.android.sdk.CleverTapAPI;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
-import com.receptix.batterybuddy.BuildConfig;
 import com.receptix.batterybuddy.helper.InternetUtils;
-import com.receptix.batterybuddy.helper.LogUtil;
 import com.receptix.batterybuddy.helper.MCrypt;
 import com.receptix.batterybuddy.helper.UserSessionManager;
 import com.receptix.batterybuddy.helper.Utils;
@@ -50,8 +47,6 @@ import static com.receptix.batterybuddy.helper.Constants.JsonProperties.WLAN;
 import static com.receptix.batterybuddy.helper.Constants.Params.APP_NAME;
 import static com.receptix.batterybuddy.helper.Constants.Params.FCM_TOKEN;
 import static com.receptix.batterybuddy.helper.Constants.Params.REFERRER;
-import static com.receptix.batterybuddy.helper.Constants.Params.REFERRER_JSON_OBJECT;
-import static com.receptix.batterybuddy.helper.Constants.Params.STATUS_SUCCESS;
 import static com.receptix.batterybuddy.helper.Constants.Urls.URL_TRACKING_OZOCK_INSTALLED;
 import static com.receptix.batterybuddy.helper.Constants.Urls.URL_UPDATE_FCM_TOKEN;
 import static com.receptix.batterybuddy.helper.Constants.UtmParams.EXPECTED_PARAMETERS;
@@ -69,10 +64,35 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
     JsonObject jsonObject = new JsonObject();
     String utm;
     String utm_source, utm_medium, utm_campaign, utm_term, utm_content, utm_anid;
-    private String TAG = InstallReferrerReceiver.class.getSimpleName();
     String deviceId, authKey, packageName = "";
+    UserSessionManager userSessionManager;
+    private String TAG = InstallReferrerReceiver.class.getSimpleName();
     private boolean isInstallReferrerDataSent = false;
     private boolean isFCMDataSent = false;
+
+    public static void storeReferralParams(Context context, Map<String, String> params) {
+        SharedPreferences storage = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = storage.edit();
+        for (String key : EXPECTED_PARAMETERS) {
+            String value = params.get(key);
+            if (value != null) {
+                editor.putString(key, value);
+            }
+        }
+        editor.commit();
+    }
+
+    public static Map<String, String> retrieveReferralParams(Context context) {
+        HashMap<String, String> params = new HashMap<String, String>();
+        SharedPreferences storage = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE);
+        for (String key : EXPECTED_PARAMETERS) {
+            String value = storage.getString(key, null);
+            if (value != null) {
+                params.put(key, value);
+            }
+        }
+        return params;
+    }
 
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -80,6 +100,8 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
         try {
 
             Log.e(TAG, "onReceive()");
+
+            userSessionManager = new UserSessionManager(context);
 
             // invoke clever tap receiver from within the Custom Receiver class
             new com.clevertap.android.sdk.InstallReferrerBroadcastReceiver().onReceive(context, intent);
@@ -93,18 +115,12 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
             fetchUserDetails(context);
 
             // BEST CASE SCENARIO
-            if(InternetUtils.isInternetConnected(context))
-            {
+            if (InternetUtils.isInternetConnected(context)) {
                 sendReferrerDataToServer(jsonObject.toString(), context);
-            }
-            else
-            {
+            } else {
                 Log.e(TAG, "No Internet Connection");
-                if(context!=null)
-                {
-                    UserSessionManager userSessionManager = new UserSessionManager(context);
-                    if(userSessionManager!=null)
-                    {
+                if (context != null) {
+                    if (userSessionManager != null) {
                         //save Referrer Json Data to SharedPrefs
                         userSessionManager.setReferrerJsonData(jsonObject.toString());
                         // mark "is referrer data sent once" to false, to check in ScreenListenerService
@@ -144,6 +160,8 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
                                         String status = String.valueOf(result.get("status"));
                                         if (status.equalsIgnoreCase("1")) {
                                             isInstallReferrerDataSent = true;
+                                            // mark "referrerDataSentOnce" to true (so that install data is not sent again and again)
+                                            userSessionManager.setReferrerDataSentOnce(true);
                                             SendFCMDataNow(context);
                                         }
                                     }
@@ -151,44 +169,41 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
                             }
                         }
                     });
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void SendFCMDataNow(Context context) {
         try {
-        final UserSessionManager userSessionManager = new UserSessionManager(context);
-        final JsonObject jsonObject = new JsonObject();
-        String fcmToken = userSessionManager.getToken();
-        jsonObject.addProperty(FCM_TOKEN, fcmToken);
-        jsonObject.addProperty(APP_NAME, context.getPackageName());
-        jsonObject.addProperty(DEVICE_ID, deviceId);
-        jsonObject.addProperty(AUTH_KEY, authKey);
-        Log.e(TAG + " update_fcm.php =>",jsonObject.toString());
-        Ion.with(context)
-                .load(URL_UPDATE_FCM_TOKEN)
-                .setBodyParameter(DATA, jsonObject.toString())
-                .asJsonObject()
-                .setCallback(new FutureCallback<JsonObject>() {
-                    @Override
-                    public void onCompleted(Exception networkCallException, JsonObject result) {
-                        Log.e(TAG, "update_fcm.php => onCompleted()");
-                        // mark "referrerDataSentOnce" to true (so that install data is not sent again and again)
-                        userSessionManager.setReferrerDataSentOnce(true);
-                        isFCMDataSent = true;
-                        Log.e(TAG, "isFCMDataSent = "+ isFCMDataSent);
-                    }
-                });
-        }catch (Exception e)
-        {
+            userSessionManager = new UserSessionManager(context);
+            final JsonObject jsonObject = new JsonObject();
+            String fcmToken = userSessionManager.getToken();
+            jsonObject.addProperty(FCM_TOKEN, fcmToken);
+            jsonObject.addProperty(APP_NAME, context.getPackageName());
+            jsonObject.addProperty(DEVICE_ID, deviceId);
+            jsonObject.addProperty(AUTH_KEY, authKey);
+            Log.e(TAG + " update_fcm.php =>", jsonObject.toString());
+            Ion.with(context)
+                    .load(URL_UPDATE_FCM_TOKEN)
+                    .setBodyParameter(DATA, jsonObject.toString())
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception networkCallException, JsonObject result) {
+                            Log.e(TAG, "update_fcm.php => onCompleted()");
+                            isFCMDataSent = true;
+                            Log.e(TAG, "isFCMDataSent = " + isFCMDataSent);
+                        }
+                    });
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
      * Extract Query Parameters from Referral URL String and store in Shared Preferences into a HashMap
+     *
      * @param context
      * @param referrer
      */
@@ -319,8 +334,7 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
 
     private void getUtmParametersFromPreferences(Context context) {
         HashMap<String, String> params = (HashMap<String, String>) retrieveReferralParams(context);
-        if(params!=null && !params.isEmpty())
-        {
+        if (params != null && !params.isEmpty()) {
             try {
                 utm_source = params.get(UTM_SOURCE).replace("%20", " ").replace("%2B", " ");
                 jsonObject.addProperty(UTM_SOURCE, utm_source);
@@ -340,30 +354,6 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
                 e.printStackTrace();
             }
         }
-    }
-
-    public static void storeReferralParams(Context context, Map<String, String> params) {
-        SharedPreferences storage = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = storage.edit();
-        for (String key : EXPECTED_PARAMETERS) {
-            String value = params.get(key);
-            if (value != null) {
-                editor.putString(key, value);
-            }
-        }
-        editor.commit();
-    }
-
-    public static Map<String, String> retrieveReferralParams(Context context) {
-        HashMap<String, String> params = new HashMap<String, String>();
-        SharedPreferences storage = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE);
-        for (String key : EXPECTED_PARAMETERS) {
-            String value = storage.getString(key, null);
-            if (value != null) {
-                params.put(key, value);
-            }
-        }
-        return params;
     }
 
 }
