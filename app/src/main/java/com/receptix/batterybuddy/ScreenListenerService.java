@@ -134,58 +134,67 @@ public class ScreenListenerService extends Service {
     }
 
     private void sendReferrerDataToServer(String referrerJsonData, final Context context) {
-        //send Install Referrer Data to Server
-        Ion.with(context)
-                .load(URL_TRACKING_OZOCK_INSTALLED)
-                .setBodyParameter("data", referrerJsonData.toString())
-                .asJsonObject()
-                .setCallback(new FutureCallback<JsonObject>() {
-                    @Override
-                    public void onCompleted(Exception e, JsonObject result) {
-                        Log.e(TAG, "install.php => onCompleted()");
-                        if(result!=null)
-                        {
-                            boolean hasStatus = result.has("status");
-                            if(hasStatus)
-                            {
-                                String status = String.valueOf(result.get("status"));
-                                if(status.equalsIgnoreCase("1"))
-                                {
-                                    SendFCMDataNow(context);
+        try {
+            // print requestBody to Log
+            Log.e(TAG, "install.php => " + referrerJsonData);
+            //send Install Referrer Data to Server
+            Ion.with(context)
+                    .load(URL_TRACKING_OZOCK_INSTALLED)
+                    .setBodyParameter("data", referrerJsonData)
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+                            Log.e(TAG, "install.php => onCompleted()");
+                            if (result != null) {
+                                boolean hasStatus = result.has("status");
+                                if (hasStatus) {
+                                    String status = String.valueOf(result.get("status"));
+                                    if (status.equalsIgnoreCase("1")) {
+                                        SendFCMDataNow(context);
+                                    }
                                 }
                             }
+
                         }
-
-                        if(BuildConfig.DEBUG)
-                            SendFCMDataNow(context);
-
-                    }
-                });
+                    });
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
 
     private void SendFCMDataNow(Context context) {
-        final UserSessionManager userSessionManager = new UserSessionManager(context);
-        JsonObject jsonObject = new JsonObject();
-        String fcmToken = userSessionManager.getToken();
-        jsonObject.addProperty(FCM_TOKEN, fcmToken);
-        jsonObject.addProperty(APP_NAME, context.getPackageName());
-        jsonObject.addProperty(DEVICE_ID, userDeviceId);
-        jsonObject.addProperty(AUTH_KEY, authorizationKey);
-        Log.d(TAG + " update_fcm.php =>",jsonObject.toString());
-        Ion.with(context)
-                .load(URL_UPDATE_FCM_TOKEN)
-                .setBodyParameter(DATA, jsonObject.toString())
-                .asJsonObject()
-                .setCallback(new FutureCallback<JsonObject>() {
-                    @Override
-                    public void onCompleted(Exception e, JsonObject result) {
-                        Log.e(TAG, "update_fcm.php => onCompleted()");
-                        // mark "referrerDataSentOnce" to true (so that install data is not sent again and again)
-                        userSessionManager.setReferrerDataSentOnce(true);
-                    }
-                });
+        try {
+            final UserSessionManager userSessionManager = new UserSessionManager(context);
+            JsonObject jsonObject = new JsonObject();
+            String fcmToken = userSessionManager.getToken();
+            jsonObject.addProperty(FCM_TOKEN, fcmToken);
+            jsonObject.addProperty(APP_NAME, context.getPackageName());
+            jsonObject.addProperty(DEVICE_ID, userDeviceId);
+            jsonObject.addProperty(AUTH_KEY, authorizationKey);
+            // print requestBody to Log
+            Log.e(TAG + " update_fcm.php =>", jsonObject.toString());
+            Ion.with(context)
+                    .load(URL_UPDATE_FCM_TOKEN)
+                    .setBodyParameter(DATA, jsonObject.toString())
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+                            Log.e(TAG, "update_fcm.php => onCompleted()");
+                            // mark "referrerDataSentOnce" to true (so that install data is not sent again and again)
+                            userSessionManager.setReferrerDataSentOnce(true);
+                            Log.e(TAG, "isReferrerDataSentOnce = "+ userSessionManager.isReferrerDataSentOnce());
+                        }
+                    });
 
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
