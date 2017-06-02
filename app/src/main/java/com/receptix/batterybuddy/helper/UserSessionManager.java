@@ -2,6 +2,7 @@ package com.receptix.batterybuddy.helper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_FIRST_TIME;
 import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_ONE_DAY_FINISHED;
@@ -21,10 +22,16 @@ import static com.receptix.batterybuddy.helper.Constants.fcm.PACKAGE;
 
 public class UserSessionManager {
 
+    private static final String REFERRER_JSON_DATA = "referrerJsonData";
+    private static final String FIREBASE_JSON_DATA = "firebaseTokenJsonData";
+    private static final String IS_REFERRER_DATA_SENT_ONCE = "isReferrerDataSentOnce";
     public SharedPreferences sharedPreferences;
     public SharedPreferences.Editor editor;
     Context context;
     private long screenOnTimestamp;
+    private String referrerJsonData;
+    private String firebaseTokenJsonData;
+    private boolean isReferrerDataSentOnce = false;
 
     public UserSessionManager(Context context) {
         this.context = context;
@@ -93,7 +100,6 @@ public class UserSessionManager {
     }
 
     public void setToken(String authKey){
-
         editor.putString(FCM_TOKEN_APP,authKey);
         editor.commit();
     }
@@ -126,5 +132,37 @@ public class UserSessionManager {
 
         return  sharedPreferences.getString(PACKAGE,null);
 
+    }
+
+    public String getReferrerJsonData() {
+        return sharedPreferences.getString(REFERRER_JSON_DATA, null);
+    }
+
+    public void setReferrerJsonData(String referrerJsonData) {
+        this.referrerJsonData = referrerJsonData;
+        editor.putString(REFERRER_JSON_DATA, referrerJsonData);
+        editor.commit();
+        Log.e("Saved referrerJsonData", referrerJsonData);
+    }
+
+    public String getFirebaseTokenJsonData() {
+        return firebaseTokenJsonData;
+    }
+
+    public void setFirebaseTokenJsonData(String firebaseTokenJsonData) {
+        this.firebaseTokenJsonData = firebaseTokenJsonData;
+        editor.putString(FIREBASE_JSON_DATA, firebaseTokenJsonData);
+        editor.commit();
+    }
+
+    public boolean isReferrerDataSentOnce() {
+        return sharedPreferences.getBoolean(IS_REFERRER_DATA_SENT_ONCE, false);
+    }
+
+    public void setReferrerDataSentOnce(boolean referrerDataSentOnce) {
+        isReferrerDataSentOnce = referrerDataSentOnce;
+        editor.putBoolean(IS_REFERRER_DATA_SENT_ONCE, referrerDataSentOnce);
+        editor.commit();
+        Log.e("isReferrerDataSentOnce", String.valueOf(isReferrerDataSentOnce));
     }
 }

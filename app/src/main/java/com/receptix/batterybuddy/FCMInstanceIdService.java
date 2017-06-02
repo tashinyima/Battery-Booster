@@ -32,66 +32,78 @@ public class FCMInstanceIdService extends FirebaseInstanceIdService {
 
     @Override
     public void onTokenRefresh() {
+
+        Context context = getApplicationContext();
+        userSessionManager = new UserSessionManager(context);
+
         // Get updated InstanceID token.
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d(TAG, "Refreshed token: " + refreshedToken);
+        Log.e(TAG, "Refreshed FCM token: " + refreshedToken);
 
-        // If you want to send messages to this application instance or
-        // manage this apps subscriptions on the server side, send the
-        // Instance ID token to your app server.
-       sendTokenToServer(refreshedToken);
+        boolean isReferrerDataSentOnce = userSessionManager.isReferrerDataSentOnce();
+        Log.e(TAG, "isReferrerDataSentOnce = "+ isReferrerDataSentOnce);
+        // the first time the app is opened, we want to send user FCM token after sending the Install Utm Parameters,
+        // instead of sending immediately via network call.
+        if (!isReferrerDataSentOnce)
+        {
+            saveTokenToSharedPreferences(refreshedToken);
+        }
+        else {
+            // if install referrer data has already been sent once, we simply update FCM token on server via network call.
+            updateFcmTokenOnServer(refreshedToken);
+        }
     }
 
-    private void sendTokenToServer(String refreshedToken) {
+    private void updateFcmTokenOnServer(String refreshedToken) {
         try {
-
             Context context = getApplicationContext();
-
-            userSessionManager = new UserSessionManager(context);
-
-            String url = URL_UPDATE_FCM_TOKEN;
             JsonObject jsonObject = new JsonObject();
 
             //add firebase token to JSON Object
             jsonObject.addProperty(FCM_TOKEN, refreshedToken);
-            userSessionManager.setToken(refreshedToken);
             // package name
             jsonObject.addProperty(APP_NAME, context.getPackageName());
-
-            userSessionManager.setPackageName(context.getPackageName());
             // get device id
             String userDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
             jsonObject.addProperty(DEVICE_ID, userDeviceId);
-            userSessionManager.setDeviceId(userDeviceId);
             try {
                 // encrypt device Id to make Auth Key
                 MCrypt mCrypt = new MCrypt();
                 String authorizationKey = MCrypt.bytesToHex(mCrypt.encrypt(userDeviceId));
                 jsonObject.addProperty(AUTH_KEY, authorizationKey);
-                userSessionManager.setAuthKey(authorizationKey);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
             JsonObject dataObject = new JsonObject();
             dataObject.add(DATA, jsonObject);
-
-
-            Log.e(TAG + "__" + "onTokenRefresh()" + JSON_OBJECT, dataObject.toString());
+            Log.e(TAG + "__" + "update_fcm.php => " + JSON_OBJECT, dataObject.toString());
 
             // send to server
-//            Ion.with(context)
-//                    .load(url)
-//                    .setBodyParameter(DATA, jsonObject.toString())
-//                    .asJsonObject()
-//                    .setCallback(new FutureCallback<JsonObject>() {
-//                        @Override
-//                        public void onCompleted(Exception e, JsonObject result) {
-//                            Log.d(TAG, "onCompleted()");
-//                        }
-//                    });
+            Ion.with(context)
+                    .load(URL_UPDATE_FCM_TOKEN)
+                    .setBodyParameter(DATA, jsonObject.toString())
+                    .asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+                            Log.d(TAG, "update_fcm.php => onCompleted()");
+                        }
+                    });
 
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveTokenToSharedPreferences(String refreshedToken) {
+        try {
+            Context context = getApplicationContext();
+            userSessionManager = new UserSessionManager(context);
+            // save firebase token to SharedPreferences
+            userSessionManager.setToken(refreshedToken);
+            Log.e(TAG, "FCM Token Saved for Sending Later.");
         } catch (Exception e) {
             e.printStackTrace();
         }

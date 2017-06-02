@@ -21,6 +21,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+import com.receptix.batterybuddy.BuildConfig;
+import com.receptix.batterybuddy.helper.InternetUtils;
 import com.receptix.batterybuddy.helper.LogUtil;
 import com.receptix.batterybuddy.helper.MCrypt;
 import com.receptix.batterybuddy.helper.UserSessionManager;
@@ -68,6 +70,9 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
     String utm;
     String utm_source, utm_medium, utm_campaign, utm_term, utm_content, utm_anid;
     private String TAG = InstallReferrerReceiver.class.getSimpleName();
+    String deviceId, authKey, packageName = "";
+    private boolean isInstallReferrerDataSent = false;
+    private boolean isFCMDataSent = false;
 
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -85,69 +90,117 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
 
             jsonObject.addProperty(REFERRER, referrer);
             jsonObject.addProperty(APP_NAME, context.getPackageName());
-
             fetchUserDetails(context);
 
-            LogUtil.d(TAG + "__" + REFERRER_JSON_OBJECT, jsonObject.toString());
-
-            //send Install Referrer Data to Server
-            Ion.with(context)
-                    .load(URL_TRACKING_OZOCK_INSTALLED)
-                    .setBodyParameter("data", jsonObject.toString())
-                    .asJsonObject()
-                    .setCallback(new FutureCallback<JsonObject>() {
-                        @Override
-                        public void onCompleted(Exception e, JsonObject result) {
-
-                         //   SendFCMDataNow(context);
-//                            if(result!=null){
-//
-//                                Log.d("Tashi","result=="+result.toString());
-//
-//                                int status = result.get("status").getAsInt();
-//                                if(status==1){
-//
-////                                    send fc token values
-//
-//                                    SendFCMDataNow(context);
-//
-//                                }
-//                            }
-
-                        }
-                    });
-
+            if(InternetUtils.isInternetConnected(context))
+            {
+                //send Install Referrer Data to Server
+                sendReferrerDataToServer(jsonObject.toString(), context);
+            }
+            else
+            {
+                Log.e(TAG, "No Internet Connection");
+                // in case, install referrer and FCM Token were not sent due to unavailability of Internet,
+                // we'll resend those parameters whenever Internet connection is obtained in background
+                if(context!=null)
+                {
+                    UserSessionManager userSessionManager = new UserSessionManager(context);
+                    if(userSessionManager!=null)
+                    {
+                        //save Json Data to SharedPrefs
+                        userSessionManager.setReferrerJsonData(jsonObject.toString());
+                        // mark "is referrer data sent once" to false, to check in ScreenListenerService
+                        userSessionManager.setReferrerDataSentOnce(false);
+                    }
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void SendFCMDataNow(Context context) {
-
-        String url = URL_UPDATE_FCM_TOKEN;
-
-        UserSessionManager userSessionManager = new UserSessionManager(context);
-        JsonObject jsonObject = new JsonObject();
-
-        jsonObject.addProperty(FCM_TOKEN, userSessionManager.getToken().toString());
-        jsonObject.addProperty(APP_NAME, context.getPackageName());
-        jsonObject.addProperty(DEVICE_ID, userSessionManager.getDeviceId().toString());
-        jsonObject.addProperty(AUTH_KEY, userSessionManager.getAuthKey().toString());
-
-        // send to server
-
-        Log.d("Tashi",jsonObject.toString());
+    private void sendReferrerDataToServer(final String jsonObject, final Context context) {
+        Log.e(TAG, "sendReferrerDataToServer => " + jsonObject);
         Ion.with(context)
-                .load(url)
+                .load(URL_TRACKING_OZOCK_INSTALLED)
+                .setBodyParameter("data", jsonObject)
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception networkCallException, JsonObject result) {
+                        if(networkCallException!=null)
+                        {
+                            Log.e(TAG, "install.php => NO EXCEPTION");
+                            Log.e(TAG, "install.php => onCompleted()");
+                            if(result!=null)
+                            {
+                                boolean hasStatus = result.has("status");
+                                if(hasStatus)
+                                {
+                                    String status = String.valueOf(result.get("status"));
+                                    if(status.equalsIgnoreCase("1"))
+                                    {
+                                        isInstallReferrerDataSent = true;
+                                        SendFCMDataNow(context);
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // if FCM Update Network Call Fails, save Referrer Object to SharedPrefs for sending later
+                            Log.e(TAG, "isInstallReferrerDataSent = "+false);
+                            UserSessionManager userSessionManager = new UserSessionManager(context);
+                            //save Json Data to SharedPrefs
+                            userSessionManager.setReferrerJsonData(jsonObject);
+                            // mark "is referrer data sent once" to false, to check in ScreenListenerService
+                            userSessionManager.setReferrerDataSentOnce(false);
+                        }
+
+
+                        if(BuildConfig.DEBUG)
+                        {
+                            isInstallReferrerDataSent = true;
+                            SendFCMDataNow(context);
+                        }
+                    }
+                });
+    }
+
+    private void SendFCMDataNow(Context context) {
+        final UserSessionManager userSessionManager = new UserSessionManager(context);
+        final JsonObject jsonObject = new JsonObject();
+        String fcmToken = userSessionManager.getToken();
+        jsonObject.addProperty(FCM_TOKEN, fcmToken);
+        jsonObject.addProperty(APP_NAME, context.getPackageName());
+        jsonObject.addProperty(DEVICE_ID, deviceId);
+        jsonObject.addProperty(AUTH_KEY, authKey);
+        Log.e(TAG + " update_fcm.php =>",jsonObject.toString());
+        Ion.with(context)
+                .load(URL_UPDATE_FCM_TOKEN)
                 .setBodyParameter(DATA, jsonObject.toString())
                 .asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
-                    public void onCompleted(Exception e, JsonObject result) {
-                        Log.d(TAG, "onCompleted()");
+                    public void onCompleted(Exception networkCallException, JsonObject result) {
+                        if(networkCallException != null)
+                        {
+                            Log.e(TAG, "update_fcm.php => NO EXCEPTION");
+                            // mark "referrerDataSentOnce" to true (so that install data is not sent again and again)
+                            userSessionManager.setReferrerDataSentOnce(true);
+                            isFCMDataSent = true;
+                            Log.e(TAG, "isFCMDataSent = "+ isFCMDataSent);
+                        }
+                        else
+                        {
+                            Log.e(TAG, "update_fcm.php => EXCEPTION");
+                            //save Json Data to SharedPrefs
+                            userSessionManager.setReferrerJsonData(jsonObject.toString());
+                            // mark "is referrer data sent once" to false, to check in ScreenListenerService
+                            userSessionManager.setReferrerDataSentOnce(false);
+                        }
                     }
                 });
-
     }
 
     /**
@@ -207,11 +260,17 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
         // get DEVICE ID
         String userDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
         jsonObject.addProperty(DEVICE_ID, userDeviceId);
+
+        deviceId = userDeviceId;
+
         try {
             // encrypt device Id to make Auth Key
             MCrypt mCrypt = new MCrypt();
             String authorizationKey = MCrypt.bytesToHex(mCrypt.encrypt(userDeviceId));
             jsonObject.addProperty(AUTH_KEY, authorizationKey);
+
+            authKey = authorizationKey;
+
         } catch (Exception e) {
             e.printStackTrace();
         }
