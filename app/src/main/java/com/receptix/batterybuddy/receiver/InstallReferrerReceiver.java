@@ -92,6 +92,7 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
             jsonObject.addProperty(APP_NAME, context.getPackageName());
             fetchUserDetails(context);
 
+            // BEST CASE SCENARIO
             if(InternetUtils.isInternetConnected(context))
             {
                 sendReferrerDataToServer(jsonObject.toString(), context);
@@ -128,7 +129,6 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
                         public void onCompleted(Exception networkCallException, JsonObject result) {
                             if (networkCallException != null) {
                                 Log.e(TAG, "install.php => EXCEPTION => " + networkCallException.getMessage());
-                                // if FCM Update Network Call Fails, save Referrer Object to SharedPrefs for sending later
                                 Log.e(TAG, "isInstallReferrerDataSent = " + isInstallReferrerDataSent);
                                 UserSessionManager userSessionManager = new UserSessionManager(context);
                                 //save Json Data to SharedPrefs
@@ -174,29 +174,11 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
                 .setCallback(new FutureCallback<JsonObject>() {
                     @Override
                     public void onCompleted(Exception networkCallException, JsonObject result) {
-
                         Log.e(TAG, "update_fcm.php => onCompleted()");
                         // mark "referrerDataSentOnce" to true (so that install data is not sent again and again)
                         userSessionManager.setReferrerDataSentOnce(true);
                         isFCMDataSent = true;
                         Log.e(TAG, "isFCMDataSent = "+ isFCMDataSent);
-
-                       /* if(networkCallException != null)
-                        {
-                            Log.e(TAG, "update_fcm.php => EXCEPTION => "+ networkCallException.getMessage());
-                            //save Json Data to SharedPrefs
-                            userSessionManager.setReferrerJsonData(jsonObject.toString());
-                            // mark "is referrer data sent once" to false, to check in ScreenListenerService
-                            userSessionManager.setReferrerDataSentOnce(false);
-                        }
-                        else
-                        {
-                            Log.e(TAG, "update_fcm.php => NO EXCEPTION");
-                            // mark "referrerDataSentOnce" to true (so that install data is not sent again and again)
-                            userSessionManager.setReferrerDataSentOnce(true);
-                            isFCMDataSent = true;
-                            Log.e(TAG, "isFCMDataSent = "+ isFCMDataSent);
-                        }*/
                     }
                 });
         }catch (Exception e)

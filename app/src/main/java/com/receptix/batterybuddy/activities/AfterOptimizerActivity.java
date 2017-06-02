@@ -42,15 +42,16 @@ public class AfterOptimizerActivity extends AppCompatActivity {
         Intent intent = getIntent();
         extendedTime = intent.getIntExtra(EXTENDED_TIME, 0);
 
-
         initView();
-        setupToolBar(getString(R.string.app_name));
+        setupToolBar(" ");
     }
 
     private void setupToolBar(String title) {
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         TextView textViewTitle = (TextView) toolbar.findViewById(R.id.textViewTitle);
-        textViewTitle.setText("");
+        textViewTitle.setText(title);
     }
 
     private void initView() {
