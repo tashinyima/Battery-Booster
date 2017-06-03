@@ -21,20 +21,35 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.RemoteViews;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.inmobi.ads.InMobiAdRequestStatus;
+import com.inmobi.ads.InMobiNative;
 import com.receptix.batterybuddy.R;
 import com.receptix.batterybuddy.activities.OptimalStateActivity;
 import com.receptix.batterybuddy.activities.OptimizerActivity;
 import com.receptix.batterybuddy.databinding.FragmentHomeBinding;
+import com.receptix.batterybuddy.helper.Constants;
 import com.receptix.batterybuddy.helper.LogUtil;
 import com.receptix.batterybuddy.helper.UserSessionManager;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.reflect.Method;
+
+import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_LEVEL;
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_SCALE;
@@ -74,6 +89,11 @@ import static com.receptix.batterybuddy.helper.Constants.LockScreenTimeout.TIMEO
 import static com.receptix.batterybuddy.helper.Constants.LockScreenTimeout.TIMEOUT_5_MINUTES;
 import static com.receptix.batterybuddy.helper.Constants.LockScreenTimeout.TIMEOUT_5_SECONDS;
 import static com.receptix.batterybuddy.helper.Constants.LockScreenTimeout.TIMEOUT_AUTO_LOCK;
+import static com.receptix.batterybuddy.helper.Constants.NativeAdContentJson.AD_DESCRIPTION;
+import static com.receptix.batterybuddy.helper.Constants.NativeAdContentJson.AD_ICON;
+import static com.receptix.batterybuddy.helper.Constants.NativeAdContentJson.AD_IMAGE_URL;
+import static com.receptix.batterybuddy.helper.Constants.NativeAdContentJson.AD_RATING;
+import static com.receptix.batterybuddy.helper.Constants.NativeAdContentJson.AD_TITLE;
 import static com.receptix.batterybuddy.helper.Constants.PowerProfileParams.BATTERY_CAPACITY;
 import static com.receptix.batterybuddy.helper.Constants.PowerProfileParams.CPU_ACTIVE;
 import static com.receptix.batterybuddy.helper.Constants.PowerProfileParams.CPU_AWAKE;
@@ -198,6 +218,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getContext();
+
     }
 
     @Override
@@ -208,6 +229,69 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         homeBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_home, container, false);
         view = homeBinding.getRoot();
+
+        final RelativeLayout nativeAdLayout = (RelativeLayout) homeBinding.nativeAd;
+        final ImageView imageView_adIcon = (ImageView) nativeAdLayout.findViewById(R.id.native_ad_icon_imageview);
+        final TextView textView_adTitle = (TextView) nativeAdLayout.findViewById(R.id.native_ad_title_textview);
+        final MaterialRatingBar ratingBar = (MaterialRatingBar) nativeAdLayout.findViewById(R.id.native_ad_rating_bar);
+        Button button_callToAction = (Button) nativeAdLayout.findViewById(R.id.call_to_action_button);
+        nativeAdLayout.setVisibility(View.GONE);
+
+        Long placementID = 1497109684434L;
+        InMobiNative nativeAd = new InMobiNative(getActivity(), placementID, new InMobiNative.NativeAdListener() {
+            @Override
+            public void onAdLoadSucceeded(InMobiNative inMobiNative) {
+                Log.e(TAG_HOME_FRAGMENT, "onAdLoadSucceeded");
+                JSONObject content = null;
+                try {
+                    content = new JSONObject((String) inMobiNative.getAdContent());
+                    if(content!=null)
+                    {
+                        nativeAdLayout.setVisibility(View.VISIBLE);
+                        Log.e(TAG_HOME_FRAGMENT, "content => " + content.toString());
+                        String title = content.optString(AD_TITLE);
+                        String description = content.optString(AD_DESCRIPTION);
+                        float rating = (float) content.optDouble(AD_RATING);
+                        JSONObject jsonObject = content.getJSONObject(AD_ICON);
+                        String imageUrl = jsonObject.optString(AD_IMAGE_URL);
+                        if(title!=null)
+                            textView_adTitle.setText(title);
+                        if(rating!=0.0)
+                            ratingBar.setRating(rating);
+                        if(imageUrl!=null)
+                            Picasso.with(getContext()).load(imageUrl).into(imageView_adIcon);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onAdLoadFailed(InMobiNative inMobiNative, InMobiAdRequestStatus inMobiAdRequestStatus) {
+                Log.e(TAG_HOME_FRAGMENT, "onAdLoadFailed => " + inMobiAdRequestStatus.getMessage());
+                nativeAdLayout.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAdDismissed(InMobiNative inMobiNative) {
+
+            }
+
+            @Override
+            public void onAdDisplayed(InMobiNative inMobiNative) {
+
+            }
+
+            @Override
+            public void onUserLeftApplication(InMobiNative inMobiNative) {
+
+            }
+        });
+        nativeAd.load();
+        InMobiNative.bind(nativeAdLayout, nativeAd);
+        
+
 
         audioManagerMode = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         userSessionManager = new UserSessionManager(context);

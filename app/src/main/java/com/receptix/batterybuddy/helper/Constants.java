@@ -202,6 +202,7 @@ public class Constants {
     public static class BannerPlacementIds {
         public static final String INMOBI_ACCOUNT_ID = "4a38c3c40747428fa346cb0456d9034f";
         public static final String LOCK_ADS_PLACEMENT_ID = "1496191677809";
+        public static final String NATIVE_AD_ID_HOME_PAGE = "1497109684434";
     }
 
     public static class MoPubAdIds {
@@ -230,6 +231,18 @@ public class Constants {
         public static final String PACKAGE = "package";
         public static final String DEVICEID = "deviceId";
         public static final String AUTH_KEY = "authkey";
+
+    }
+
+
+    public static class NativeAdContentJson
+    {
+        public static final String AD_TITLE = "title";
+        public static final String AD_DESCRIPTION = "description";
+        public static final String AD_RATING = "rating";
+        public static final String AD_LANDING_URL = "landingURL";
+        public static final String AD_ICON = "icon";
+        public static final String AD_IMAGE_URL = "url";
 
     }
 

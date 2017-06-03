@@ -417,15 +417,82 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
 
-                <View
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp" />
-            </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x_small_margin"
+                    android:layout_marginRight="@dimen/x_small_margin"
+                    android:layout_marginTop="@dimen/x_small_margin"
+                    android:layout_marginBottom="@dimen/x_small_margin"
+                    android:paddingBottom="@dimen/small_margin">
 
+                    <RelativeLayout
+                        android:id="@+id/native_ad"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/bgcolor"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:orientation="vertical"
+                        android:paddingBottom="10dp"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="10dp">
+
+
+                        <ImageView
+                            android:id="@+id/native_ad_icon_imageview"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10dp" />
+
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@+id/native_ad_icon_imageview"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/native_ad_title_textview"
+                                style="@style/CustomBaseTextView"
+                                android:layout_centerVertical="true"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:textSize="@dimen/medium_text_size"
+                                android:text="@string/packageNameText"
+                                android:textColor="@color/white" />
+
+                            <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                                android:id="@+id/native_ad_rating_bar"
+                                android:layout_width="wrap_content"
+                                android:layout_height="24dp"
+                                android:clickable="false"
+                                android:isIndicator="true"
+                                style="@style/Widget.MaterialRatingBar.RatingBar" />
+
+                        </LinearLayout>
+
+
+                        <Button
+                            android:id="@+id/call_to_action_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="5dp"
+                            android:background="@color/colorGreen"
+                            android:minHeight="32dp"
+                            android:text="@string/open"
+                            android:visibility="gone"
+                            android:textColor="@color/white" />
+
+
+                    </RelativeLayout>
+
+                </LinearLayout>
 
         </LinearLayout>
 

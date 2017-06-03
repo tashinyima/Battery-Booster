@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bgcolor"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="5dp"
+    android:paddingTop="10dp">
+
+
+    <ImageView
+        android:id="@+id/native_ad_icon_imageview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp" />
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/native_ad_icon_imageview"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/native_ad_title_textview"
+            style="@style/CustomBaseTextView"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:ems="9"
+            android:maxEms="9"
+            android:maxLines="1"
+            android:text="@string/packageNameText"
+            android:textColor="@color/white" />
+
+        <RatingBar
+            android:id="@+id/native_ad_rating_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            />
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/call_to_action_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="5dp"
+        android:background="@color/colorGreen"
+        android:minHeight="32dp"
+        android:text="@string/open"
+        android:textColor="@color/white" />
+
+
+</RelativeLayout>
