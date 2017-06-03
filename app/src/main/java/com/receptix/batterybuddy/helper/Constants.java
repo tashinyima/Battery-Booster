@@ -243,7 +243,7 @@ public class Constants {
         public static final String AD_LANDING_URL = "landingURL";
         public static final String AD_ICON = "icon";
         public static final String AD_IMAGE_URL = "url";
-
+        public static final String AD_CALL_TO_ACTION = "cta";
     }
 
 

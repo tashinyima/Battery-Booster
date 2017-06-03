@@ -212,6 +212,88 @@
 
             </LinearLayout>
 
+            <!-- Native Ad 1 -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x_small_margin"
+                android:layout_marginRight="@dimen/x_small_margin"
+                android:layout_marginTop="@dimen/x_small_margin">
+
+                <RelativeLayout
+                    android:id="@+id/native_ad_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/bgcolor"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="vertical"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="5dp"
+                    android:paddingTop="10dp">
+
+
+                    <ImageView
+                        android:id="@+id/native_ad_1_icon_imageview"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginRight="10dp" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:weightSum="5"
+                        android:layout_toEndOf="@+id/native_ad_1_icon_imageview"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_weight="3"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@+id/native_ad_icon_imageview"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/native_ad_1_title_textview"
+                                style="@style/CustomBaseTextView"
+                                android:layout_centerVertical="true"
+                                android:text="@string/packageNameText"
+                                android:textColor="@color/white" />
+
+                            <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                                android:id="@+id/native_ad_1_rating_bar"
+                                android:layout_width="wrap_content"
+                                android:layout_height="24dp"
+                                android:clickable="false"
+                                app:mrb_progressTint="@color/yellow_600"
+                                apps:mrb_secondaryProgressTint="@color/bgcolormain"
+                                android:isIndicator="true"
+                                style="@style/Widget.MaterialRatingBar.RatingBar" />
+
+                        </LinearLayout>
+
+                        <Button
+                            android:id="@+id/call_to_action_button_1"
+                            android:layout_width="0dp"
+                            android:layout_weight="2"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_marginStart="5dp"
+                            android:background="@color/optimizedbtncolor"
+                            android:minHeight="32dp"
+                            android:textColor="@color/white" />
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
+            <!-- Battery Status Tab -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
@@ -450,7 +532,15 @@
 
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:weightSum="5"
+                            android:layout_toEndOf="@+id/native_ad_icon_imageview"
+                            android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_weight="3"
                             android:layout_height="wrap_content"
                             android:layout_toEndOf="@+id/native_ad_icon_imageview"
                             android:orientation="vertical">
@@ -474,20 +564,18 @@
 
                         </LinearLayout>
 
+                            <Button
+                                android:id="@+id/call_to_action_button"
+                                android:layout_width="0dp"
+                                android:layout_weight="2"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="right"
+                                android:layout_marginStart="5dp"
+                                android:background="@color/optimizedbtncolor"
+                                android:minHeight="32dp"
+                                android:textColor="@color/white" />
 
-                        <Button
-                            android:id="@+id/call_to_action_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginStart="5dp"
-                            android:background="@color/colorGreen"
-                            android:minHeight="32dp"
-                            android:text="@string/open"
-                            android:visibility="gone"
-                            android:textColor="@color/white" />
-
+                        </LinearLayout>
 
                     </RelativeLayout>
 

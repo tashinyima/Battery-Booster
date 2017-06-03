@@ -90,6 +90,7 @@ import static com.receptix.batterybuddy.helper.Constants.LockScreenTimeout.TIMEO
 import static com.receptix.batterybuddy.helper.Constants.LockScreenTimeout.TIMEOUT_5_MINUTES;
 import static com.receptix.batterybuddy.helper.Constants.LockScreenTimeout.TIMEOUT_5_SECONDS;
 import static com.receptix.batterybuddy.helper.Constants.LockScreenTimeout.TIMEOUT_AUTO_LOCK;
+import static com.receptix.batterybuddy.helper.Constants.NativeAdContentJson.AD_CALL_TO_ACTION;
 import static com.receptix.batterybuddy.helper.Constants.NativeAdContentJson.AD_DESCRIPTION;
 import static com.receptix.batterybuddy.helper.Constants.NativeAdContentJson.AD_ICON;
 import static com.receptix.batterybuddy.helper.Constants.NativeAdContentJson.AD_IMAGE_URL;
@@ -232,11 +233,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 inflater, R.layout.fragment_home, container, false);
         view = homeBinding.getRoot();
 
+        // NATIVE AD 1
         final RelativeLayout nativeAdLayout = (RelativeLayout) homeBinding.nativeAd;
         final ImageView imageView_adIcon = (ImageView) nativeAdLayout.findViewById(R.id.native_ad_icon_imageview);
         final TextView textView_adTitle = (TextView) nativeAdLayout.findViewById(R.id.native_ad_title_textview);
         final MaterialRatingBar ratingBar = (MaterialRatingBar) nativeAdLayout.findViewById(R.id.native_ad_rating_bar);
-        Button button_callToAction = (Button) nativeAdLayout.findViewById(R.id.call_to_action_button);
+        final Button button_callToAction = (Button) nativeAdLayout.findViewById(R.id.call_to_action_button);
         nativeAdLayout.setVisibility(View.GONE);
 
         Long placementID = 1497109684434L;
@@ -253,18 +255,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                         Log.e(TAG_HOME_FRAGMENT, "content => " + content.toString());
                         String title = content.optString(AD_TITLE);
                         String description = content.optString(AD_DESCRIPTION);
+                        String cta = content.optString(AD_CALL_TO_ACTION);
                         final String landingUrl = content.optString(AD_LANDING_URL);
                         float rating = (float) content.optDouble(AD_RATING);
                         JSONObject jsonObject = content.getJSONObject(AD_ICON);
                         String imageUrl = jsonObject.optString(AD_IMAGE_URL);
                         if(title!=null)
-                            textView_adTitle.setText(description);
+                            textView_adTitle.setText(title);
                         if(rating!=0.0)
                             ratingBar.setRating(rating);
                         if(imageUrl!=null)
                             Picasso.with(getContext()).load(imageUrl).into(imageView_adIcon);
+                        if(cta!=null)
+                            button_callToAction.setText(cta.toUpperCase());
 
-                        nativeAdLayout.setOnClickListener(new View.OnClickListener() {
+                        button_callToAction.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 if (landingUrl != null){
@@ -305,7 +310,86 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         });
         nativeAd.load();
         InMobiNative.bind(nativeAdLayout, nativeAd);
-        
+
+
+        // NATIVE AD 2
+        final RelativeLayout nativeAdLayout_1 = (RelativeLayout) homeBinding.nativeAd1;
+        final ImageView imageView_adIcon_1 = (ImageView) nativeAdLayout_1.findViewById(R.id.native_ad_1_icon_imageview);
+        final TextView textView_adTitle_1 = (TextView) nativeAdLayout_1.findViewById(R.id.native_ad_1_title_textview);
+        final MaterialRatingBar ratingBar_1 = (MaterialRatingBar) nativeAdLayout_1.findViewById(R.id.native_ad_1_rating_bar);
+        final Button button_callToAction_1 = (Button) nativeAdLayout_1.findViewById(R.id.call_to_action_button_1);
+        nativeAdLayout_1.setVisibility(View.GONE);
+
+        Long placementID_1 = 1496570757077L ;
+        InMobiNative nativeAd_1 = new InMobiNative(getActivity(), placementID_1, new InMobiNative.NativeAdListener() {
+            @Override
+            public void onAdLoadSucceeded(InMobiNative inMobiNative) {
+                Log.e(TAG_HOME_FRAGMENT, "onAdLoadSucceeded");
+                JSONObject content = null;
+                try {
+                    content = new JSONObject((String) inMobiNative.getAdContent());
+                    if(content!=null)
+                    {
+                        nativeAdLayout_1.setVisibility(View.VISIBLE);
+                        Log.e(TAG_HOME_FRAGMENT, "content => " + content.toString());
+                        String title = content.optString(AD_TITLE);
+                        String description = content.optString(AD_DESCRIPTION);
+                        String cta = content.optString(AD_CALL_TO_ACTION);
+                        final String landingUrl = content.optString(AD_LANDING_URL);
+                        float rating = (float) content.optDouble(AD_RATING);
+                        JSONObject jsonObject = content.getJSONObject(AD_ICON);
+                        String imageUrl = jsonObject.optString(AD_IMAGE_URL);
+                        if(title!=null)
+                            textView_adTitle_1.setText(title);
+                        if(rating!=0.0)
+                            ratingBar_1.setRating(rating);
+                        if(imageUrl!=null)
+                            Picasso.with(getContext()).load(imageUrl).into(imageView_adIcon_1);
+                        if(cta!=null)
+                            button_callToAction_1.setText(cta.toUpperCase());
+
+                        button_callToAction_1.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (landingUrl != null){
+                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(landingUrl));
+                                    browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(browserIntent);
+                                }
+                            }
+                        });
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onAdLoadFailed(InMobiNative inMobiNative, InMobiAdRequestStatus inMobiAdRequestStatus) {
+                Log.e(TAG_HOME_FRAGMENT, "onAdLoadFailed => " + inMobiAdRequestStatus.getMessage());
+                nativeAdLayout_1.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAdDismissed(InMobiNative inMobiNative) {
+
+            }
+
+            @Override
+            public void onAdDisplayed(InMobiNative inMobiNative) {
+
+            }
+
+            @Override
+            public void onUserLeftApplication(InMobiNative inMobiNative) {
+
+            }
+        });
+        nativeAd_1.load();
+        InMobiNative.bind(nativeAdLayout_1, nativeAd_1);
+
 
 
         audioManagerMode = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
