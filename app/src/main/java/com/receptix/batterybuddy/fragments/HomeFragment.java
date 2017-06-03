@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -92,6 +93,7 @@ import static com.receptix.batterybuddy.helper.Constants.LockScreenTimeout.TIMEO
 import static com.receptix.batterybuddy.helper.Constants.NativeAdContentJson.AD_DESCRIPTION;
 import static com.receptix.batterybuddy.helper.Constants.NativeAdContentJson.AD_ICON;
 import static com.receptix.batterybuddy.helper.Constants.NativeAdContentJson.AD_IMAGE_URL;
+import static com.receptix.batterybuddy.helper.Constants.NativeAdContentJson.AD_LANDING_URL;
 import static com.receptix.batterybuddy.helper.Constants.NativeAdContentJson.AD_RATING;
 import static com.receptix.batterybuddy.helper.Constants.NativeAdContentJson.AD_TITLE;
 import static com.receptix.batterybuddy.helper.Constants.PowerProfileParams.BATTERY_CAPACITY;
@@ -251,15 +253,28 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                         Log.e(TAG_HOME_FRAGMENT, "content => " + content.toString());
                         String title = content.optString(AD_TITLE);
                         String description = content.optString(AD_DESCRIPTION);
+                        final String landingUrl = content.optString(AD_LANDING_URL);
                         float rating = (float) content.optDouble(AD_RATING);
                         JSONObject jsonObject = content.getJSONObject(AD_ICON);
                         String imageUrl = jsonObject.optString(AD_IMAGE_URL);
                         if(title!=null)
-                            textView_adTitle.setText(title);
+                            textView_adTitle.setText(description);
                         if(rating!=0.0)
                             ratingBar.setRating(rating);
                         if(imageUrl!=null)
                             Picasso.with(getContext()).load(imageUrl).into(imageView_adIcon);
+
+                        nativeAdLayout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (landingUrl != null){
+                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(landingUrl));
+                                    browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(browserIntent);
+                                }
+                            }
+                        });
+
                     }
 
                 } catch (JSONException e) {
