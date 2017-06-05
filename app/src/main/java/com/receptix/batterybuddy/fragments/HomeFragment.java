@@ -241,11 +241,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         final Button button_callToAction = (Button) nativeAdLayout.findViewById(R.id.call_to_action_button);
         nativeAdLayout.setVisibility(View.GONE);
 
-        Long placementID = 1497109684434L;
+        final Long placementID = 1497109684434L;
         InMobiNative nativeAd = new InMobiNative(getActivity(), placementID, new InMobiNative.NativeAdListener() {
             @Override
             public void onAdLoadSucceeded(InMobiNative inMobiNative) {
-                Log.e(TAG_HOME_FRAGMENT, "onAdLoadSucceeded");
+                Log.e(TAG_HOME_FRAGMENT,  "onAdLoadSucceeded =>" + placementID);
                 JSONObject content = null;
                 try {
                     content = new JSONObject((String) inMobiNative.getAdContent());
@@ -289,7 +289,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onAdLoadFailed(InMobiNative inMobiNative, InMobiAdRequestStatus inMobiAdRequestStatus) {
-                Log.e(TAG_HOME_FRAGMENT, "onAdLoadFailed => " + inMobiAdRequestStatus.getMessage());
+                Log.e(TAG_HOME_FRAGMENT, "onAdLoadFailed => " + placementID + "=> " + inMobiAdRequestStatus.getMessage());
                 nativeAdLayout.setVisibility(View.GONE);
             }
 
@@ -320,11 +320,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         final Button button_callToAction_1 = (Button) nativeAdLayout_1.findViewById(R.id.call_to_action_button_1);
         nativeAdLayout_1.setVisibility(View.GONE);
 
-        Long placementID_1 = 1496570757077L ;
+        final Long placementID_1 = 1496570757077L ;
         InMobiNative nativeAd_1 = new InMobiNative(getActivity(), placementID_1, new InMobiNative.NativeAdListener() {
             @Override
             public void onAdLoadSucceeded(InMobiNative inMobiNative) {
-                Log.e(TAG_HOME_FRAGMENT, "onAdLoadSucceeded");
+                Log.e(TAG_HOME_FRAGMENT, "onAdLoadSucceeded =>" + placementID_1 );
                 JSONObject content = null;
                 try {
                     content = new JSONObject((String) inMobiNative.getAdContent());
@@ -368,7 +368,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onAdLoadFailed(InMobiNative inMobiNative, InMobiAdRequestStatus inMobiAdRequestStatus) {
-                Log.e(TAG_HOME_FRAGMENT, "onAdLoadFailed => " + inMobiAdRequestStatus.getMessage());
+                Log.e(TAG_HOME_FRAGMENT, "onAdLoadFailed => " + placementID_1 + "==>" + inMobiAdRequestStatus.getMessage());
                 nativeAdLayout_1.setVisibility(View.GONE);
             }
 

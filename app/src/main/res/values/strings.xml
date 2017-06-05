@@ -124,7 +124,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="aboutUs">About Us</string>
-    <string name="navfeedback">Feed back</string>
+    <string name="navfeedback">Feedback</string>
     <string name="nav_terms_policy"><![CDATA[Terms & Conditions]]></string>
     <string name="nav_share">Share</string>
     <string name="appwidget_text">EXAMPLE</string>
@@ -138,6 +138,17 @@
 	<head>
 		<meta charset="UTF-8">
 			<title>Excel To HTML using codebeautify.org</title>
+			<style>
+			p {
+    font-size: 17px;
+    line-height: 1.2;
+}
+h3 {
+    font-size: 18px;
+    line-height: 1.2;
+    font-weight:bold
+}
+</style>
 		</head>
 		<body>
 			<!DOCTYPE html>
@@ -220,30 +231,50 @@ We want to inform users of this Service that these third parties have access to 
     <string name="terms_and_conditions">Terms and Conditions</string>
     <string name="about_us_content" formatted="false"><![CDATA[<!DOCTYPE html>
 <html>
+<head>
+<style>
+p {
+    font-size: 17px;
+    line-height: 1.2;
+}
+h3 {
+    font-size: 18px;
+    line-height: 1.2;
+    font-weight:bold
+}
+ul.b {
+    list-style-type: square;
+    font-size: 17px;
+    line-height: 1.2;
+}
+.percentage
+{
+    font-size: 17px;
+    line-height: 1.2;
+    font-weight:bold
+}
+</style>
+</head>
     <body>
-BatteryBuddy is an application to solve all the problems related to your battery. It is a simple app to extend the life of your battery and phone speed.
-
-
-
-
-												<p>
-Now track your battery performance, power consumption and control applications to increased  your battery life of up to 40% and phone speed up to 30%.
+    <p>
+<span class="percentage">BatteryBuddy</span> is an application to solve all the problems related to your battery. It is a simple app to extend the life of your battery and phone speed.
 </p>
+<p>
+Now track your battery performance, power consumption and control applications to increased  your battery life of up to <span class="percentage">40%</span> and phone speed up to <span class="percentage">30%</span>.
+</p>
+<p>
 The app has a very simple interface with the option to optimize your battery usage simply by the click of a button.
-
-
-
-
-
-												<p>
+</p>
 <h3>Features:</h3>
 </p>
-												<p>- Accurate Estimation of Remaining Battery Time</p>
-												<p>- Power Saver and Monitor</p>
-												<p>- Memory Manager</p>
-												<p>- List information on the battery usage of device software and hardware</p>
-												<p>- Customized power saver mode</p>
-												<p>- Power Protection</p>
+<ul class="b">
+  <li>Accurate Estimation of Remaining Battery Time</li>
+  <li>Power Saver and Monitor</li>
+  <li>Memory Manager</li>
+  <li>List information on the battery usage of device software and hardware</li>
+  <li>Customized power saver mode</li>
+  <li>Power Protection</li>
+</ul>
 											</body>
 										</html>]]>
     </string>
