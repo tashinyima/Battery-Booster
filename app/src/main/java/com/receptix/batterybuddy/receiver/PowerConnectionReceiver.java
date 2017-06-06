@@ -39,7 +39,10 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
 
             LogUtil.d(TAG, "isLockedScreen : " + isLockedScreen);
 
-            SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCES_IS_ACTIVE, MODE_PRIVATE);
+            // show popup every time user connects charger
+            showScreen(isLockedScreen);
+
+            /*SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCES_IS_ACTIVE, MODE_PRIVATE);
             if (sharedPreferences != null) {
                 boolean isActive = sharedPreferences.getBoolean(IS_ACTIVE, false);
                 if (!isActive) {
@@ -68,7 +71,7 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
                     //save timestamp to SharedPreferences
                     userSessionManager.setScreenOnTimestampPowerConnectionReceiver(currentTimeStamp);
                 }
-            }
+            }*/
         } catch (Exception ex) {
             ex.printStackTrace();
         }
