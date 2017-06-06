@@ -55,7 +55,10 @@
             android:screenOrientation="portrait"
             android:showForAllUsers="true"
             android:showOnLockScreen="true"
-            tools:targetApi="m"></activity>
+            tools:targetApi="m"
+            android:theme="@style/Theme.AppCompat.Translucent" >
+
+        </activity>
 
         <!-- Optimizer Module -->
         <activity

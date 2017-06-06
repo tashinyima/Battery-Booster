@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/activity_lock_ads"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="300dp"
         android:background="@color/bgcolormain"
         tools:context="com.receptix.batterybuddy.activities.LockAdsActivity">
 
@@ -24,7 +24,6 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_gravity="end"
-                android:layout_margin="@dimen/x_small_margin"
                 android:background="@color/bgcolor"
                 android:gravity="center"
                 android:text="@string/close_window_text"
@@ -53,6 +52,7 @@
                 android:layout_marginEnd="15dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
+                android:visibility="gone"
                 android:orientation="horizontal"
                 android:weightSum="100">
 
@@ -180,7 +180,7 @@
             ads:placementId="1496191677809"
             android:layout_width="match_parent"
             android:layout_alignParentBottom="true"
-            android:layout_height="250dp">
+            android:layout_height="50dp">
         </com.inmobi.ads.InMobiBanner>
 
     </RelativeLayout>

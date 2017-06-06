@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -91,6 +93,8 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
 
         InMobiSdk.init(LockAdsActivity.this, INMOBI_ACCOUNT_ID);
 
