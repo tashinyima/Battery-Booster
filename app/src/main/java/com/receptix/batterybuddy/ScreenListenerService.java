@@ -85,6 +85,15 @@ public class ScreenListenerService extends Service {
                         Log.e(TAG, "No Internet Connection");
                     }
 
+                    /*//stop lock screen widget service before opening LockAds Activity again
+                    Intent intent_lockScreenWidgetService = new Intent(context, LockScreenTextService.class);
+                    stopService(intent_lockScreenWidgetService);
+
+                    // open LockAdsActivity from wherein we can restart widget service
+                    Intent i = new Intent(context, LockAdsActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(i);*/
+
                     //first we check if 24 hours have passed between the last time we showed the user the Lock Screen Ads Activity
                     if (lastScreenOnTimestamp != 0) {
                         LogUtil.e("Last TimeStamp", lastScreenOnTimestamp + "");
@@ -101,6 +110,11 @@ public class ScreenListenerService extends Service {
                         LogUtil.e("Difference is", elapsedMinutesSinceLastScreenOn + " mins, " + elapsedSecondsSinceLastScreenOn + " seconds");
                         if (elapsedMinutesSinceLastScreenOn >= SCREEN_LOCK_ADS_TIMER_VALUE_MINUTES) //24 hours have 1440 minutes
                         {
+                            //stop lock screen widget service before opening LockAds Activity again
+                            Intent intent_lockScreenWidgetService = new Intent(context, LockScreenTextService.class);
+                            stopService(intent_lockScreenWidgetService);
+
+                            // open LockAdsActivity from wherein we can restart widget service
                             Intent i = new Intent(context, LockAdsActivity.class);
                             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(i);
@@ -108,6 +122,10 @@ public class ScreenListenerService extends Service {
                     }
                     // if last timestamp hasn't been saved yet
                     else {
+                        //stop lock screen widget service before opening LockAds Activity again
+                        Intent intent_lockScreenWidgetService = new Intent(context, LockScreenTextService.class);
+                        stopService(intent_lockScreenWidgetService);
+
                         Intent i = new Intent(context, LockAdsActivity.class);
                         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(i);

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 
+import com.receptix.batterybuddy.LockScreenTextService;
 import com.receptix.batterybuddy.activities.BatteryAdActivity;
 import com.receptix.batterybuddy.activities.LockAdsActivity;
 import com.receptix.batterybuddy.helper.LogUtil;
@@ -42,11 +43,12 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
             // show popup every time user connects charger
             showScreen(isLockedScreen);
 
-            /*SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCES_IS_ACTIVE, MODE_PRIVATE);
+            SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCES_IS_ACTIVE, MODE_PRIVATE);
             if (sharedPreferences != null) {
                 boolean isActive = sharedPreferences.getBoolean(IS_ACTIVE, false);
                 if (!isActive) {
-                    long lastScreenOnTimestamp = userSessionManager.getScreenOnTimestampPowerConnectionReceiver();
+                    /*showScreen(isLockedScreen);*/
+                    /*long lastScreenOnTimestamp = userSessionManager.getScreenOnTimestampPowerConnectionReceiver();
                     if (lastScreenOnTimestamp != 0) {
                         LogUtil.e("Last TimeStamp (PCR)", lastScreenOnTimestamp + "");
                         LogUtil.e("Current Timestamp (PCR)", System.currentTimeMillis() + "");
@@ -69,9 +71,9 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
                     }
                     long currentTimeStamp = System.currentTimeMillis();
                     //save timestamp to SharedPreferences
-                    userSessionManager.setScreenOnTimestampPowerConnectionReceiver(currentTimeStamp);
+                    userSessionManager.setScreenOnTimestampPowerConnectionReceiver(currentTimeStamp);*/
                 }
-            }*/
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -98,6 +100,10 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
+
+                    Intent intent_lockScreenWidgetService = new Intent(context, LockScreenTextService.class);
+                    context.stopService(intent_lockScreenWidgetService);
+
                     Intent i = new Intent(context, LockAdsActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(i);

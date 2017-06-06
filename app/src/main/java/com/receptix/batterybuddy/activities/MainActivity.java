@@ -12,6 +12,7 @@ import com.clevertap.android.sdk.CleverTapAPI;
 import com.clevertap.android.sdk.exceptions.CleverTapMetaDataNotFoundException;
 import com.clevertap.android.sdk.exceptions.CleverTapPermissionsNotSatisfied;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.receptix.batterybuddy.LockScreenTextService;
 import com.receptix.batterybuddy.R;
 import com.receptix.batterybuddy.ScreenListenerService;
 import com.receptix.batterybuddy.helper.LogUtil;
@@ -50,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
 
         //start screen listener service
         startService(new Intent(this, ScreenListenerService.class));
+        /*Intent intent = new Intent(this, LockScreenTextService.class);
+            startService(intent);*/
 
         findViewsById();
 

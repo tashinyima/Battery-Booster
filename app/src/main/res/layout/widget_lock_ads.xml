@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/activity_lock_ads"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="250dp"
         android:background="@color/bgcolormain"
         tools:context="com.receptix.batterybuddy.activities.LockAdsActivity">
 
@@ -27,12 +27,14 @@
                 android:background="@color/bgcolor"
                 android:gravity="center"
                 android:text="@string/close_window_text"
+                android:visibility="gone"
                 android:textColor="@android:color/white"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_marginTop="4dp">
 
                 <TextView
@@ -52,6 +54,7 @@
                 android:layout_marginEnd="15dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
+                android:visibility="gone"
                 android:orientation="horizontal"
                 android:weightSum="100">
 
@@ -173,13 +176,26 @@
         </LinearLayout>
 
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/CustomBaseTextView"
+            android:textSize="@dimen/small_text_size"
+            android:text="@string/app_name"
+            android:layout_alignParentBottom="true"
+            android:textColor="@android:color/white"
+            android:gravity="center"
+            android:textStyle="italic"
+            />
+
+
         <!-- InMobi Ad -->
         <com.inmobi.ads.InMobiBanner
             android:id="@+id/inmobi_banner"
-            ads:placementId="1496191677809"
+            ads:placementId="1493593962658"
             android:layout_width="match_parent"
             android:layout_alignParentBottom="true"
-            android:layout_height="250dp">
+            android:layout_height="75dp">
         </com.inmobi.ads.InMobiBanner>
 
     </RelativeLayout>

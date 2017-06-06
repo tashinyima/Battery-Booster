@@ -20,9 +20,11 @@ import android.view.WindowManager;
 import com.inmobi.ads.InMobiAdRequestStatus;
 import com.inmobi.ads.InMobiBanner;
 import com.inmobi.sdk.InMobiSdk;
+import com.receptix.batterybuddy.LockScreenTextService;
 import com.receptix.batterybuddy.R;
 import com.receptix.batterybuddy.databinding.ActivityLockAdsBinding;
 import com.receptix.batterybuddy.helper.LogUtil;
+import com.receptix.batterybuddy.helper.UserSessionManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -90,12 +92,9 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-        /*getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);*/
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
-        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
 
         InMobiSdk.init(LockAdsActivity.this, INMOBI_ACCOUNT_ID);
 
@@ -105,6 +104,9 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
 
         this.context = getApplicationContext();
 
+        // mark lock ads shown in SharedPreferences
+        UserSessionManager userSessionManager = new UserSessionManager(getApplicationContext());
+        userSessionManager.setLockAdsShowing(true);
 
         inMobiBanner = (InMobiBanner) findViewById(R.id.inmobi_banner);
         inMobiBanner.load();
@@ -213,7 +215,14 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         if (v == binding.closeLockScreenPopup) {
             finish();
+            //mark lock ads as closed in SharedPreferences
+            UserSessionManager userSessionManager = new UserSessionManager(getApplicationContext());
+            userSessionManager.setLockAdsShowing(false);
             overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+
+            //start lock screen widget service
+            Intent intent = new Intent(this, LockScreenTextService.class);
+            startService(intent);
         }
     }
 

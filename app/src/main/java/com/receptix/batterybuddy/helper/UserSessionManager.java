@@ -26,6 +26,7 @@ public class UserSessionManager {
     private static final String FIREBASE_JSON_DATA = "firebaseTokenJsonData";
     private static final String IS_REFERRER_DATA_SENT_ONCE = "isReferrerDataSentOnce";
     private static final String IS_FCM_TOKEN_UPDATED = "isFcmTokenUpdated";
+    private static final String IS_LOCK_ADS_SHOWING = "isLockAdsShowing";
     public SharedPreferences sharedPreferences;
     public SharedPreferences.Editor editor;
     Context context;
@@ -34,6 +35,7 @@ public class UserSessionManager {
     private String firebaseTokenJsonData;
     private boolean isReferrerDataSentOnce = false;
     private boolean isFcmTokenUpdated  = false;
+    private boolean isLockAdsShowing = false;
 
     public UserSessionManager(Context context) {
         this.context = context;
@@ -177,5 +179,17 @@ public class UserSessionManager {
         editor.putBoolean(IS_FCM_TOKEN_UPDATED, fcmTokenUpdated);
         editor.commit();
         Log.e("isFcmTokenUpdated", String.valueOf(fcmTokenUpdated));
+    }
+
+
+    public boolean isLockAdsShowing() {
+        return sharedPreferences.getBoolean(IS_LOCK_ADS_SHOWING, false);
+    }
+
+    public void setLockAdsShowing(boolean lockAdsShowing) {
+        isLockAdsShowing = lockAdsShowing;
+        editor.putBoolean(IS_LOCK_ADS_SHOWING, isLockAdsShowing);
+        editor.commit();
+        Log.e("isLockAdsShowing", isLockAdsShowing+"");
     }
 }

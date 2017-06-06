@@ -55,8 +55,7 @@
             android:screenOrientation="portrait"
             android:showForAllUsers="true"
             android:showOnLockScreen="true"
-            tools:targetApi="m"
-            android:theme="@style/Theme.AppCompat.Translucent" >
+            tools:targetApi="m" >
 
         </activity>
 
@@ -235,6 +234,9 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
+
+
+        <service android:name=".LockScreenTextService" />
 
 
     </application>
