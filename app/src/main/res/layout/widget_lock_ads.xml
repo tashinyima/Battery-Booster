@@ -200,10 +200,11 @@
         <!-- InMobi Ad -->
         <com.inmobi.ads.InMobiBanner
             android:id="@+id/inmobi_banner"
-            ads:placementId="1493593962658"
-            android:layout_width="match_parent"
-            android:layout_height="75dp">
-        </com.inmobi.ads.InMobiBanner>
+            ads:placementId="1496930154754"
+            android:layout_width="320dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="50dp"
+            />
 
     </LinearLayout>
 </layout>

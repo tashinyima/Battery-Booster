@@ -156,17 +156,17 @@ public class LockScreenTextService extends Service {
         inMobiBanner.setListener(new InMobiBanner.BannerAdListener() {
             @Override
             public void onAdLoadSucceeded(InMobiBanner inMobiBanner) {
-                Log.e(TAG, "inMobiBanner.onAdLoadSucceeded");
+                Log.e(TAG, "inMobiBanner.onAdLoadSucceeded 1496930154754");
             }
 
             @Override
             public void onAdLoadFailed(InMobiBanner inMobiBanner, InMobiAdRequestStatus inMobiAdRequestStatus) {
-                Log.e(TAG, "onAdLoadFailed" + inMobiAdRequestStatus.getMessage());
+                Log.e(TAG, "onAdLoadFailed => 1496930154754 =>" + inMobiAdRequestStatus.getMessage());
             }
 
             @Override
             public void onAdDisplayed(InMobiBanner inMobiBanner) {
-                Log.e(TAG, "inMobiBanner.onAdDisplayed");
+                Log.e(TAG, "inMobiBanner.onAdDisplayed => 1496930154754");
             }
 
             @Override
@@ -196,6 +196,7 @@ public class LockScreenTextService extends Service {
      * Get Device RAM information - used RAM percentage.
      */
     private void getRamInformation() {
+        try {
         ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();
         myActivityManager.getMemoryInfo(memInfo);
         long availableDeviceMemory = memInfo.availMem;
@@ -214,7 +215,11 @@ public class LockScreenTextService extends Service {
         }
 
         LogUtil.d(TAG, "MEM=" + String.valueOf(availableDeviceMemory) + "Total Ram=" + String.valueOf(totalDeviceMemory) + "Percentage=" + usedRamPercentage);
-
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     private void getCurrentSystemDateTime() {
@@ -232,9 +237,15 @@ public class LockScreenTextService extends Service {
     }
 
     private void getBatteryInformation() {
+        try {
         IntentFilter intentfilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         if (battery_info_receiver != null)
             registerReceiver(battery_info_receiver, intentfilter);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     private boolean isChargerConnected(Context context) {
@@ -259,7 +270,10 @@ public class LockScreenTextService extends Service {
     private BroadcastReceiver timeChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            //update time value on time change
             getCurrentSystemDateTime();
+            // update RAM information on time change
+            getRamInformation();
         }
     };
     /**

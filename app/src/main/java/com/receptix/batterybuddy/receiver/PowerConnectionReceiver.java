@@ -29,6 +29,7 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
     Context context;
     KeyguardManager keyguardManager;
     UserSessionManager userSessionManager;
+    private static final int SCREEN_SHOW_DELAY = 2000;
 
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -42,13 +43,13 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
 
             // show popup every time user connects charger
             showScreen(isLockedScreen);
-
+            /*
             SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCES_IS_ACTIVE, MODE_PRIVATE);
             if (sharedPreferences != null) {
                 boolean isActive = sharedPreferences.getBoolean(IS_ACTIVE, false);
                 if (!isActive) {
-                    /*showScreen(isLockedScreen);*/
-                    /*long lastScreenOnTimestamp = userSessionManager.getScreenOnTimestampPowerConnectionReceiver();
+                    showScreen(isLockedScreen);
+                    long lastScreenOnTimestamp = userSessionManager.getScreenOnTimestampPowerConnectionReceiver();
                     if (lastScreenOnTimestamp != 0) {
                         LogUtil.e("Last TimeStamp (PCR)", lastScreenOnTimestamp + "");
                         LogUtil.e("Current Timestamp (PCR)", System.currentTimeMillis() + "");
@@ -71,9 +72,9 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
                     }
                     long currentTimeStamp = System.currentTimeMillis();
                     //save timestamp to SharedPreferences
-                    userSessionManager.setScreenOnTimestampPowerConnectionReceiver(currentTimeStamp);*/
+                    userSessionManager.setScreenOnTimestampPowerConnectionReceiver(currentTimeStamp);
                 }
-            }
+            }*/
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -95,7 +96,7 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(i);
                 }
-            }, 2000);
+            }, SCREEN_SHOW_DELAY );
         } else {
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -108,7 +109,7 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(i);
                 }
-            }, 2000);
+            }, SCREEN_SHOW_DELAY);
         }
     }
 }
