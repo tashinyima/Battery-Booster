@@ -4,6 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <com.receptix.batterybuddy.helper.views.SwipeBackLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
     <RelativeLayout
         android:id="@+id/activity_lock_ads"
         android:layout_width="match_parent"
@@ -183,4 +187,7 @@
         </com.inmobi.ads.InMobiBanner>
 
     </RelativeLayout>
+
+    </com.receptix.batterybuddy.helper.views.SwipeBackLayout>
+
 </layout>

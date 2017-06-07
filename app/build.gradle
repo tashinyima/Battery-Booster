@@ -11,7 +11,7 @@ android {
         applicationId "com.receptix.batterybuddy"
         minSdkVersion 19
         targetSdkVersion 22
-        versionCode 17
+        versionCode 18
         versionName "1.1"
         multiDexEnabled true // add this to enable multi-dex
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -61,6 +61,7 @@ dependencies {
     compile 'com.clevertap.android:clevertap-android-sdk:3.1.2'
     compile 'com.facebook.stetho:stetho:1.5.0'
     compile 'me.zhanghai.android.materialratingbar:library:1.0.2'
+    compile 'com.github.liuguangqiang.swipeback:library:1.0.2@aar'
 
 }
 

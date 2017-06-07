@@ -201,9 +201,9 @@
         <com.inmobi.ads.InMobiBanner
             android:id="@+id/inmobi_banner"
             ads:placementId="1496930154754"
-            android:layout_width="320dp"
+            android:layout_width="400dp"
             android:layout_gravity="center_horizontal"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             />
 
     </LinearLayout>
