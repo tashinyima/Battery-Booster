@@ -19,6 +19,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,41 +61,8 @@ public class LockScreenTextService extends Service {
     ArcProgress lockbatteryArcProgress;
     TextView lockBatteryLevelTextView;
     TextView lockbatteryChargingStatusTextView;
-
+    TextView lockdatetv;
     ArcProgress lockramArcProgress;
-
-    private BroadcastReceiver battery_info_receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            boolean isPresent = intent.getBooleanExtra(IS_BATTERY_PRESENT, false);
-            if (isPresent) {
-
-                // Calculate Battery Temperature (currently unused)
-                int temperature = intent.getIntExtra(BATTERY_TEMPERATURE, 0);
-                double temperatureInDouble = temperature * BATTERY_TEMPERATURE_CONVERSION_UNIT;
-                int batteryTemperature = (int) temperatureInDouble;
-
-                // Calculate Battery Charging Level
-                int level = intent.getIntExtra(BATTERY_LEVEL, 0);
-                int scale = intent.getIntExtra(BATTERY_SCALE, 0);
-                float percentage = level / (float) scale;
-                int batteryLevel = (int) ((percentage) * 100);
-                lockbatteryArcProgress.setSuffixText(getString(R.string.percentage_symbol));
-                lockbatteryArcProgress.setProgress(batteryLevel);
-                String batteryLevelString = batteryLevel + getString(R.string.percentage_symbol);
-                lockBatteryLevelTextView.setText(batteryLevelString);
-
-                if (isChargerConnected(context)) {
-                    lockbatteryChargingStatusTextView.setText(R.string.charging);
-                    lockbatteryChargingStatusTextView.setVisibility(View.VISIBLE);
-                } else {
-                    lockbatteryChargingStatusTextView.setText(R.string.discharging);
-                    lockbatteryChargingStatusTextView.setVisibility(View.VISIBLE);
-                }
-            }
-        }
-    };
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -104,7 +72,7 @@ public class LockScreenTextService extends Service {
 
     private WindowManager windowManager;
     private TextView textview;
-    RelativeLayout widgetLayout;
+    LinearLayout widgetLayout;
     WindowManager.LayoutParams params;
 
     @Override
@@ -120,7 +88,7 @@ public class LockScreenTextService extends Service {
 
         windowManager = (WindowManager)getSystemService(WINDOW_SERVICE);
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        widgetLayout = (RelativeLayout) layoutInflater.inflate(R.layout.widget_lock_ads, null);
+        widgetLayout = (LinearLayout) layoutInflater.inflate(R.layout.widget_lock_ads, null);
 
         myActivityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
 
@@ -128,30 +96,50 @@ public class LockScreenTextService extends Service {
         lockBatteryLevelTextView = (TextView) widgetLayout.findViewById(R.id.lockBatteryLevelTextView);
         lockbatteryChargingStatusTextView =  (TextView) widgetLayout.findViewById(R.id.lockbatteryChargingStatusTextView);
         lockramArcProgress = (ArcProgress) widgetLayout.findViewById(R.id.lockramArcProgress);
+        lockdatetv = (TextView) widgetLayout.findViewById(R.id.lockdatetv);
 
         //set parameters for the textview
         params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.MATCH_PARENT,
-                600,
+                800,
+                // Allows the view to be on top of the StatusBar
                 WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                        | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                        | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
-                        | WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                // Keeps the button presses from going to the background window
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+                        // Enables the notification to receive touch events
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
+                        // Draws over status bar
+                        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
                 PixelFormat.TRANSLUCENT);
-        params.gravity = Gravity.TOP ;
-        params.y = -100;
 
+        //set transparency
+        params.alpha = (float) 0.9;
+        params.gravity = Gravity.TOP;
 
-        /*Toast.makeText(context, "Service onCreate()", Toast.LENGTH_SHORT).show();*/
-
+        try {
         //Register receiver for determining screen off and if user is present
         mReceiver = new LockScreenStateReceiver();
         IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
         filter.addAction(Intent.ACTION_USER_PRESENT);
-
         registerReceiver(mReceiver, filter);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
+        // Register Time Change Receiver
+        try {
+            IntentFilter intentfilter = new IntentFilter(Intent.ACTION_TIME_CHANGED);
+            intentfilter.addAction(Intent.ACTION_TIME_TICK);
+            intentfilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+            if (timeChangeReceiver != null)
+                registerReceiver(timeChangeReceiver, intentfilter);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         try {
         getBatteryInformation();
         getCurrentSystemDateTime();
@@ -201,11 +189,12 @@ public class LockScreenTextService extends Service {
 
             }
         });
-
-
     }
 
 
+    /**
+     * Get Device RAM information - used RAM percentage.
+     */
     private void getRamInformation() {
         ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();
         myActivityManager.getMemoryInfo(memInfo);
@@ -236,7 +225,7 @@ public class LockScreenTextService extends Service {
             SimpleDateFormat sdf_ = new SimpleDateFormat(FORMAT_FULL_LENGTH_DAY);
             Date date = new Date();
             String dayName = sdf_.format(date);
-            /*binding.lockdatetv.setText("" + dayName + " " + currentDate + "");*/
+            lockdatetv.setText("" + dayName + "\n" + currentDate + "");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -266,6 +255,61 @@ public class LockScreenTextService extends Service {
         return START_STICKY;
     }
 
+
+    private BroadcastReceiver timeChangeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            getCurrentSystemDateTime();
+        }
+    };
+    /**
+     * Broadcast Receiver for Battery Information
+     */
+    private BroadcastReceiver battery_info_receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            boolean isPresent = intent.getBooleanExtra(IS_BATTERY_PRESENT, false);
+            if (isPresent) {
+
+                // Calculate Battery Temperature (currently unused)
+                int temperature = intent.getIntExtra(BATTERY_TEMPERATURE, 0);
+                double temperatureInDouble = temperature * BATTERY_TEMPERATURE_CONVERSION_UNIT;
+                int batteryTemperature = (int) temperatureInDouble;
+
+                // Calculate Battery Charging Level
+                int level = intent.getIntExtra(BATTERY_LEVEL, 0);
+                int scale = intent.getIntExtra(BATTERY_SCALE, 0);
+                float percentage = level / (float) scale;
+                int batteryLevel = (int) ((percentage) * 100);
+                lockbatteryArcProgress.setSuffixText(getString(R.string.percentage_symbol));
+                lockbatteryArcProgress.setProgress(batteryLevel);
+                String batteryLevelString = batteryLevel + getString(R.string.percentage_symbol);
+                lockBatteryLevelTextView.setText(batteryLevelString);
+
+                if (isChargerConnected(context)) {
+                    lockbatteryChargingStatusTextView.setText(R.string.charging);
+                    lockbatteryChargingStatusTextView.setVisibility(View.VISIBLE);
+                } else {
+                    lockbatteryChargingStatusTextView.setText(R.string.discharging);
+                    lockbatteryChargingStatusTextView.setVisibility(View.VISIBLE);
+                }
+
+                try {
+                    getCurrentSystemDateTime();
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+    };
+
+    /**
+     * Broadcast Receiver for Device Awake Status (Lock Screen Unlocked or not).
+     * Service handles the visibility of Widget View here.
+     */
     public class LockScreenStateReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -301,6 +345,9 @@ public class LockScreenTextService extends Service {
 
             if (battery_info_receiver != null)
                 unregisterReceiver(battery_info_receiver);
+
+            if(timeChangeReceiver != null)
+                unregisterReceiver(timeChangeReceiver);
 
             Log.e(TAG, "onDestroy()");
 

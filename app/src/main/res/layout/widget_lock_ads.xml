@@ -4,19 +4,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/activity_lock_ads"
         android:layout_width="match_parent"
-        android:layout_height="170dp"
-        android:background="@color/bgcolormain"
+        android:layout_height="250dp"
+        android:background="@android:color/transparent"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
+        android:clickable="false"
+        android:orientation="vertical"
         tools:context="com.receptix.batterybuddy.activities.LockAdsActivity">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:background="@color/bgcolormain"
-            android:orientation="vertical">
+            android:background="@android:color/black"
+            android:orientation="vertical"
+            android:paddingBottom="20dp">
 
             <!-- BUTTON TO CLOSE LOCK SCREEN ACTIVITY -->
             <TextView
@@ -34,7 +39,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 android:layout_marginTop="4dp">
 
                 <TextView
@@ -44,8 +48,10 @@
                     android:layout_marginStart="10dp"
                     android:padding="10dp"
                     android:text="@string/systemDate"
+                    android:fontFamily="sans-serif-condensed"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -118,7 +124,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:orientation="horizontal"
-                android:padding="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 android:weightSum="200">
 
                 <LinearLayout
@@ -185,6 +192,7 @@
             android:layout_alignParentBottom="true"
             android:textColor="@android:color/white"
             android:gravity="center"
+            android:visibility="gone"
             android:textStyle="italic"
             />
 
@@ -194,10 +202,8 @@
             android:id="@+id/inmobi_banner"
             ads:placementId="1493593962658"
             android:layout_width="match_parent"
-            android:visibility="gone"
-            android:layout_alignParentBottom="true"
             android:layout_height="75dp">
         </com.inmobi.ads.InMobiBanner>
 
-    </RelativeLayout>
+    </LinearLayout>
 </layout>
