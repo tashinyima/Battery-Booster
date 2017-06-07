@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/activity_lock_ads"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="170dp"
         android:background="@color/bgcolormain"
         tools:context="com.receptix.batterybuddy.activities.LockAdsActivity">
 
@@ -194,6 +194,7 @@
             android:id="@+id/inmobi_banner"
             ads:placementId="1493593962658"
             android:layout_width="match_parent"
+            android:visibility="gone"
             android:layout_alignParentBottom="true"
             android:layout_height="75dp">
         </com.inmobi.ads.InMobiBanner>

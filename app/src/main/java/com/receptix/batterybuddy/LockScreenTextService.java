@@ -132,16 +132,18 @@ public class LockScreenTextService extends Service {
         //set parameters for the textview
         params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.MATCH_PARENT,
-                750,
-                WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY,
+                600,
+                WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                         | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                         | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
                         | WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 PixelFormat.TRANSLUCENT);
-        params.gravity = Gravity.TOP;
+        params.gravity = Gravity.TOP ;
+        params.y = -100;
 
-        Toast.makeText(context, "Service onCreate()", Toast.LENGTH_SHORT).show();
+
+        /*Toast.makeText(context, "Service onCreate()", Toast.LENGTH_SHORT).show();*/
 
         //Register receiver for determining screen off and if user is present
         mReceiver = new LockScreenStateReceiver();

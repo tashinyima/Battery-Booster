@@ -27,6 +27,8 @@ public class UserSessionManager {
     private static final String IS_REFERRER_DATA_SENT_ONCE = "isReferrerDataSentOnce";
     private static final String IS_FCM_TOKEN_UPDATED = "isFcmTokenUpdated";
     private static final String IS_LOCK_ADS_SHOWING = "isLockAdsShowing";
+    private static final String UTM_CAMPAIGN_PARAMETER = "utmCampaignParameter";
+
     public SharedPreferences sharedPreferences;
     public SharedPreferences.Editor editor;
     Context context;
@@ -36,6 +38,7 @@ public class UserSessionManager {
     private boolean isReferrerDataSentOnce = false;
     private boolean isFcmTokenUpdated  = false;
     private boolean isLockAdsShowing = false;
+    private String utmCampaignParameter;
 
     public UserSessionManager(Context context) {
         this.context = context;
@@ -181,7 +184,7 @@ public class UserSessionManager {
         Log.e("isFcmTokenUpdated", String.valueOf(fcmTokenUpdated));
     }
 
-
+    // GETTER AND SETTER FOR LOCK ADS (GETTER NOT BEING USED)
     public boolean isLockAdsShowing() {
         return sharedPreferences.getBoolean(IS_LOCK_ADS_SHOWING, false);
     }
@@ -191,5 +194,17 @@ public class UserSessionManager {
         editor.putBoolean(IS_LOCK_ADS_SHOWING, isLockAdsShowing);
         editor.commit();
         Log.e("isLockAdsShowing", isLockAdsShowing+"");
+    }
+
+
+    // GETTER AND SETTER FOR UTM CAMPAIGN PARAMETER
+    public String getUtmCampaignParameter() {
+        return sharedPreferences.getString(UTM_CAMPAIGN_PARAMETER, null);
+    }
+
+    public void setUtmCampaignParameter(String utmCampaignParameter) {
+        this.utmCampaignParameter = utmCampaignParameter;
+        editor.putString(UTM_CAMPAIGN_PARAMETER, utmCampaignParameter);
+        editor.commit();
     }
 }

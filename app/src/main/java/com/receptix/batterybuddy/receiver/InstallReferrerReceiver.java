@@ -70,30 +70,6 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
     private boolean isInstallReferrerDataSent = false;
     private boolean isFCMDataSent = false;
 
-    public static void storeReferralParams(Context context, Map<String, String> params) {
-        SharedPreferences storage = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = storage.edit();
-        for (String key : EXPECTED_PARAMETERS) {
-            String value = params.get(key);
-            if (value != null) {
-                editor.putString(key, value);
-            }
-        }
-        editor.commit();
-    }
-
-    public static Map<String, String> retrieveReferralParams(Context context) {
-        HashMap<String, String> params = new HashMap<String, String>();
-        SharedPreferences storage = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE);
-        for (String key : EXPECTED_PARAMETERS) {
-            String value = storage.getString(key, null);
-            if (value != null) {
-                params.put(key, value);
-            }
-        }
-        return params;
-    }
-
     @Override
     public void onReceive(final Context context, Intent intent) {
 
@@ -350,10 +326,40 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
             try {
                 utm_campaign = params.get(UTM_CAMPAIGN).replace("%20", " ").replace("%2B", " ");
                 jsonObject.addProperty(UTM_CAMPAIGN, utm_campaign);
+
+                //SAVE UTM CAMPAIGN PARAMETER TO SHARED PREFERENCES
+                userSessionManager.setUtmCampaignParameter(utm_campaign);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+
+
+
+    public static void storeReferralParams(Context context, Map<String, String> params) {
+        SharedPreferences storage = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = storage.edit();
+        for (String key : EXPECTED_PARAMETERS) {
+            String value = params.get(key);
+            if (value != null) {
+                editor.putString(key, value);
+            }
+        }
+        editor.commit();
+    }
+
+    public static Map<String, String> retrieveReferralParams(Context context) {
+        HashMap<String, String> params = new HashMap<String, String>();
+        SharedPreferences storage = context.getSharedPreferences(PREFS_FILE_NAME, Context.MODE_PRIVATE);
+        for (String key : EXPECTED_PARAMETERS) {
+            String value = storage.getString(key, null);
+            if (value != null) {
+                params.put(key, value);
+            }
+        }
+        return params;
     }
 
 }
