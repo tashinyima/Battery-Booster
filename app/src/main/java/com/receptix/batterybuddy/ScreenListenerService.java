@@ -1,10 +1,12 @@
 package com.receptix.batterybuddy;
 
+import android.app.KeyguardManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.BatteryManager;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
@@ -47,14 +49,14 @@ public class ScreenListenerService extends Service {
             userSessionManager = new UserSessionManager(context);
             if (userSessionManager != null) {
                 long lastScreenOnTimestamp = userSessionManager.getScreenOnTimestamp();
-                LogUtil.e("lastScreenOnTimeStamp", lastScreenOnTimestamp + "");
+                /*LogUtil.e("lastScreenOnTimeStamp", lastScreenOnTimestamp + "");*/
                 if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
                     if(InternetUtils.isInternetConnected(context))
                     {
                         try {
                             // first we check if install referrer data is sent once or not
                             boolean isReferrerDataSentOnce = userSessionManager.isReferrerDataSentOnce();
-                            Log.e(TAG, "isReferrerDataSentOnce = "+ isReferrerDataSentOnce);
+                            /*Log.e(TAG, "isReferrerDataSentOnce = "+ isReferrerDataSentOnce);*/
                             if (!isReferrerDataSentOnce) {
                                 // if app has not sent Referrer Data even once, we send it via Network Call
                                 getUserDeviceIdAndAuthKey(context);
@@ -94,7 +96,7 @@ public class ScreenListenerService extends Service {
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(i);*/
 
-                    //first we check if 24 hours have passed between the last time we showed the user the Lock Screen Ads Activity
+                    /*//first we check if 24 hours have passed between the last time we showed the user the Lock Screen Ads Activity
                     if (lastScreenOnTimestamp != 0) {
                         LogUtil.e("Last TimeStamp", lastScreenOnTimestamp + "");
                         LogUtil.e("Current Timestamp", System.currentTimeMillis() + "");
@@ -132,12 +134,52 @@ public class ScreenListenerService extends Service {
                     }
                     long currentTimeStamp = System.currentTimeMillis();
                     //save timestamp to SharedPreferences
-                    userSessionManager.setScreenOnTimestamp(currentTimeStamp);
+                    userSessionManager.setScreenOnTimestamp(currentTimeStamp);*/
+
+
+                    boolean isKeyguardEnabled = ((KeyguardManager)getSystemService(Context.KEYGUARD_SERVICE)).isKeyguardLocked();
+                    // check if device is charging and keyguard is enabled
+                    if(isChargerConnected(context) && isKeyguardEnabled)
+                    {
+                        // if device is on charging and keyguard is enabled, show Lock-Ads Activity
+                        //stop lock screen widget service before opening LockAds Activity again
+                        /*Intent intent_lockScreenWidgetService = new Intent(context, LockScreenTextService.class);
+                        stopService(intent_lockScreenWidgetService);
+                        Log.e(TAG, "stopService(LockScreenTextService)");*/
+                        // start full screen LockAds Activity
+                        Intent i = new Intent(context, LockAdsActivity.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(i);
+                        Log.e(TAG, "startActivity(LockAdsActivity)");
+                    }
+                   /* else if(isKeyguardEnabled && !isChargerConnected(context))
+                    {
+                        // if device is NOT on charging and keyguard is enabled,
+                        // restart LockScreen Widget Service
+                        Intent intent_lockScreenWidgetService = new Intent(context, LockScreenTextService.class);
+                        stopService(intent_lockScreenWidgetService);
+                        // now start the service
+                        startService(intent_lockScreenWidgetService);
+                        Log.e(TAG, "restartService(LockScreenTextService)");
+                    }*/
                 }
             }
 
         }
     };
+
+
+    private boolean isChargerConnected(Context context) {
+        if (context != null) {
+            Intent intent = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+            if (intent != null) {
+                int plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+                return plugged == BatteryManager.BATTERY_PLUGGED_AC || plugged == BatteryManager.BATTERY_PLUGGED_USB;
+            }
+            return false;
+        }
+        return false;
+    }
 
     private void getUserDeviceIdAndAuthKey(Context context) {
         // get device id

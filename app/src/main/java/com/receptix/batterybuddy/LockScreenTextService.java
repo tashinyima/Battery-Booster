@@ -106,7 +106,7 @@ public class LockScreenTextService extends Service {
                 WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
                 // Keeps the button presses from going to the background window
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-                        // Enables the notification to receive touch events
+                        // Enables the view to receive touch events
                         WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
                         // Draws over status bar
                         WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,

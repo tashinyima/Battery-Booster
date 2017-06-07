@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <com.receptix.batterybuddy.helper.views.SwipeBackLayout
+        android:id="@+id/swipe_back_layout_lock_ads"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -92,7 +93,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="50">
@@ -173,17 +173,37 @@
 
                 </LinearLayout>
 
+
+
             </LinearLayout>
+
+
         </LinearLayout>
 
+
+        <TextView
+            android:id="@+id/swipe_to_dismiss"
+            style="@style/CustomBaseTextView"
+            android:text="@string/swipe_to_dismiss"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:padding="@dimen/small_margin"
+            android:fontFamily="sans-serif-condensed"
+            android:layout_marginTop="@dimen/large_margin"
+            />
 
         <!-- InMobi Ad -->
         <com.inmobi.ads.InMobiBanner
             android:id="@+id/inmobi_banner"
             ads:placementId="1496191677809"
             android:layout_width="match_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_height="250dp">
+            android:layout_height="200dp"
+            android:layout_above="@id/swipe_to_dismiss"
+            >
         </com.inmobi.ads.InMobiBanner>
 
     </RelativeLayout>
