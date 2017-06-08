@@ -26,31 +26,42 @@
             <!-- BUTTON TO CLOSE LOCK SCREEN ACTIVITY -->
             <TextView
                 android:id="@+id/close_lock_screen_popup"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:layout_gravity="end"
-                android:background="@color/bgcolor"
+                android:background="@color/bgcolormain"
                 android:gravity="center"
                 android:text="@string/close_window_text"
-                android:visibility="gone"
                 android:textColor="@android:color/white"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp">
+                android:orientation="vertical"
+                android:layout_marginBottom="@dimen/small_margin">
 
                 <TextView
-                    android:id="@+id/lockdatetv"
+                    android:id="@+id/textview_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:padding="10dp"
-                    android:text="@string/systemDate"
-                    android:fontFamily="sans-serif-condensed"
+                    android:gravity="center"
                     android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textSize="26sp"
+                    />
+
+                <TextView
+                    android:id="@+id/textview_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/CustomBaseTextView"
+                    android:textColor="@color/white"
+                    android:fontFamily="sans-serif-condensed"
+                    android:gravity="center"
+                    />
 
             </LinearLayout>
 
@@ -122,7 +133,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
                 android:orientation="horizontal"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"

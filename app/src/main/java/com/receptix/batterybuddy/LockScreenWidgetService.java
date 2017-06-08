@@ -41,7 +41,9 @@ import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_T
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_TEMPERATURE_CONVERSION_UNIT;
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.IS_BATTERY_PRESENT;
 import static com.receptix.batterybuddy.helper.Constants.DateFormats.FORMAT_DATE_MONTH_YEAR_HOUR_MINUTES;
+import static com.receptix.batterybuddy.helper.Constants.DateFormats.FORMAT_DATE_ONLY;
 import static com.receptix.batterybuddy.helper.Constants.DateFormats.FORMAT_FULL_LENGTH_DAY;
+import static com.receptix.batterybuddy.helper.Constants.DateFormats.FORMAT_HOUR_MINUTES;
 
 /**
  * Created on 2/20/2016.
@@ -59,7 +61,8 @@ public class LockScreenWidgetService extends Service {
     ArcProgress lockbatteryArcProgress;
     TextView lockBatteryLevelTextView;
     TextView lockbatteryChargingStatusTextView;
-    TextView lockdatetv;
+    TextView textview_time, textView_date;
+    TextView textView_closeLockScreenWidget;
     ArcProgress lockramArcProgress;
     private WindowManager windowManager;
     private TextView textview;
@@ -98,7 +101,9 @@ public class LockScreenWidgetService extends Service {
         lockBatteryLevelTextView = (TextView) widgetLayout.findViewById(R.id.lockBatteryLevelTextView);
         lockbatteryChargingStatusTextView =  (TextView) widgetLayout.findViewById(R.id.lockbatteryChargingStatusTextView);
         lockramArcProgress = (ArcProgress) widgetLayout.findViewById(R.id.lockramArcProgress);
-        lockdatetv = (TextView) widgetLayout.findViewById(R.id.lockdatetv);
+        textview_time = (TextView) widgetLayout.findViewById(R.id.textview_time);
+        textView_date = (TextView) widgetLayout.findViewById(R.id.textview_date);
+        textView_closeLockScreenWidget = (TextView) widgetLayout.findViewById(R.id.close_lock_screen_popup);
 
         //set parameters for the Widget layout (manually set height to 800 pixels)
         params = new WindowManager.LayoutParams(
@@ -211,6 +216,13 @@ public class LockScreenWidgetService extends Service {
             widgetLayout.setVisibility(View.GONE);
             LogUtil.d(TAG, "Widget => setVisibility(GONE)");
         }
+
+        textView_closeLockScreenWidget.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                widgetLayout.setVisibility(View.GONE);
+            }
+        });
     }
 
 
@@ -247,12 +259,13 @@ public class LockScreenWidgetService extends Service {
     private void getCurrentSystemDateTime() {
         try {
             calendar = Calendar.getInstance();
-            SimpleDateFormat sdf = new SimpleDateFormat(FORMAT_DATE_MONTH_YEAR_HOUR_MINUTES);
-            String currentDate = sdf.format(calendar.getTime());
-            SimpleDateFormat sdf_ = new SimpleDateFormat(FORMAT_FULL_LENGTH_DAY);
+            SimpleDateFormat dateFormat_dateOnly = new SimpleDateFormat(FORMAT_DATE_ONLY);
+            String currentDate = dateFormat_dateOnly.format(calendar.getTime());
+            SimpleDateFormat dateFormat_hoursMinutes = new SimpleDateFormat(FORMAT_HOUR_MINUTES);
             Date date = new Date();
-            String dayName = sdf_.format(date);
-            lockdatetv.setText("" + dayName + "\n" + currentDate + "");
+            String timeValue = dateFormat_hoursMinutes.format(date);
+            textview_time.setText(timeValue);
+            textView_date.setText(currentDate);
         } catch (Exception e) {
             e.printStackTrace();
         }
