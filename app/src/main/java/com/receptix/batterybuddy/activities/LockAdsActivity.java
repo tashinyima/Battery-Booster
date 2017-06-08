@@ -1,6 +1,7 @@
 package com.receptix.batterybuddy.activities;
 
 import android.app.ActivityManager;
+import android.app.KeyguardManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -50,6 +51,7 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
     ActivityLockAdsBinding binding;
     int USED_RAM_PERCENTAGE_THRESHOLD = 70;
     InMobiBanner inMobiBanner;
+    boolean locked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +60,7 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        /*getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);*/
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
@@ -283,8 +285,21 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     @Override
+    protected void onStop() {
+        Log.e("locked status => ", locked+"");
+        if(locked)
+        {
+            Intent intent_lockScreenWidgetService = new Intent(context, LockScreenWidgetService.class);
+            context.startService(intent_lockScreenWidgetService);
+        }
+        super.onStop();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+        KeyguardManager km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+        locked = km.inKeyguardRestrictedInputMode();
     }
 
 }

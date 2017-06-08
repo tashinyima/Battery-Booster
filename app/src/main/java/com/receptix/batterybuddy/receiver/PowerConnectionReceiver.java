@@ -39,7 +39,7 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
                 @Override
                 public void run() {
                     Intent i = new Intent(context, LockAdsActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     context.startActivity(i);
                 }
             }, SCREEN_SHOW_DELAY);

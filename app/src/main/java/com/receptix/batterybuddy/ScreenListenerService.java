@@ -90,6 +90,14 @@ public class ScreenListenerService extends Service {
                     {
                         Log.e(TAG, "No Internet Connection");
                     }
+
+                    if(isChargerConnected(context))
+                    {
+                        // open LockAdsActivity
+                        Intent i = new Intent(context, LockAdsActivity.class);
+                        i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        context.startActivity(i);
+                    }
                 }
 
 
