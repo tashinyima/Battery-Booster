@@ -4,21 +4,13 @@ import android.app.KeyguardManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Handler;
 
-import com.receptix.batterybuddy.LockScreenTextService;
+import com.receptix.batterybuddy.LockScreenWidgetService;
 import com.receptix.batterybuddy.activities.BatteryAdActivity;
 import com.receptix.batterybuddy.activities.LockAdsActivity;
 import com.receptix.batterybuddy.helper.LogUtil;
 import com.receptix.batterybuddy.helper.UserSessionManager;
-
-import java.util.Date;
-
-import static android.content.Context.MODE_PRIVATE;
-import static com.receptix.batterybuddy.helper.Constants.Params.SCREEN_LOCK_ADS_TIMER_VALUE_MINUTES;
-import static com.receptix.batterybuddy.helper.Constants.Preferences.IS_ACTIVE;
-import static com.receptix.batterybuddy.helper.Constants.Preferences.PREFERENCES_IS_ACTIVE;
 
 /**
  * Created by zero1 on 5/8/2017.
@@ -102,7 +94,7 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
                 @Override
                 public void run() {
 
-                    Intent intent_lockScreenWidgetService = new Intent(context, LockScreenTextService.class);
+                    Intent intent_lockScreenWidgetService = new Intent(context, LockScreenWidgetService.class);
                     context.stopService(intent_lockScreenWidgetService);
 
                     Intent i = new Intent(context, LockAdsActivity.class);

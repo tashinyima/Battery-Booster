@@ -236,7 +236,7 @@
         </service>
 
 
-        <service android:name=".LockScreenTextService" />
+        <service android:name=".LockScreenWidgetService" />
 
 
     </application>

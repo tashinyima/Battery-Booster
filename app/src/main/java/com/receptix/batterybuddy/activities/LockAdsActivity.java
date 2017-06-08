@@ -6,10 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.BatteryManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -18,17 +15,14 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.inmobi.ads.InMobiAdRequestStatus;
 import com.inmobi.ads.InMobiBanner;
 import com.inmobi.sdk.InMobiSdk;
-import com.receptix.batterybuddy.LockScreenTextService;
+import com.receptix.batterybuddy.LockScreenWidgetService;
 import com.receptix.batterybuddy.R;
 import com.receptix.batterybuddy.databinding.ActivityLockAdsBinding;
 import com.receptix.batterybuddy.helper.LogUtil;
 import com.receptix.batterybuddy.helper.UserSessionManager;
-import com.receptix.batterybuddy.helper.views.SwipeBackLayout;
 import com.romainpiel.shimmer.Shimmer;
 
 import java.text.SimpleDateFormat;
@@ -42,9 +36,7 @@ import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_S
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_TEMPERATURE;
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_TEMPERATURE_CONVERSION_UNIT;
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.IS_BATTERY_PRESENT;
-import static com.receptix.batterybuddy.helper.Constants.DateFormats.FORMAT_DATE_MONTH_YEAR_HOUR_MINUTES;
 import static com.receptix.batterybuddy.helper.Constants.DateFormats.FORMAT_DATE_ONLY;
-import static com.receptix.batterybuddy.helper.Constants.DateFormats.FORMAT_FULL_LENGTH_DAY;
 import static com.receptix.batterybuddy.helper.Constants.DateFormats.FORMAT_HOUR_MINUTES;
 
 public class LockAdsActivity extends AppCompatActivity implements View.OnClickListener {
@@ -261,7 +253,7 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
             overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
 
             /*//start lock screen widget service
-            Intent intent = new Intent(this, LockScreenTextService.class);
+            Intent intent = new Intent(this, LockScreenWidgetService.class);
             startService(intent);*/
         }
     }
@@ -269,10 +261,6 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onBackPressed() {
         // do nothing if user presses back
-    }
-
-    private void showMessage(String s) {
-        /*Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();*/
     }
 
     @Override
@@ -283,6 +271,33 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
             unregisterReceiver(timeChangeReceiver);
 
         super.onDestroy();
+    }
+
+
+    @Override
+    protected void onStop() {
+        LogUtil.d(TAG, "onStop()");
+        //stop existing service
+        Intent lockScreenWidgetService = new Intent(context, LockScreenWidgetService.class);
+        stopService(lockScreenWidgetService);
+        //start lock screen widget service now
+        startService(lockScreenWidgetService);
+        super.onStop();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        LogUtil.d(TAG, "onStart()");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LogUtil.d(TAG, "onResume()");
+        //stop existing service
+        Intent lockScreenWidgetService = new Intent(context, LockScreenWidgetService.class);
+        stopService(lockScreenWidgetService);
     }
 
 }

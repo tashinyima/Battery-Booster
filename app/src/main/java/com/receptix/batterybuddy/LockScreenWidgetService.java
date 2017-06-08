@@ -5,6 +5,7 @@ package com.receptix.batterybuddy;
  */
 
 import android.app.ActivityManager;
+import android.app.KeyguardManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -20,15 +21,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.inmobi.ads.InMobiAdRequestStatus;
 import com.inmobi.ads.InMobiBanner;
 import com.inmobi.sdk.InMobiSdk;
-import com.receptix.batterybuddy.activities.LockAdsActivity;
 import com.receptix.batterybuddy.helper.LogUtil;
 
 import java.text.SimpleDateFormat;
@@ -48,9 +46,9 @@ import static com.receptix.batterybuddy.helper.Constants.DateFormats.FORMAT_FULL
 /**
  * Created on 2/20/2016.
  */
-public class LockScreenTextService extends Service {
+public class LockScreenWidgetService extends Service {
 
-    private static final String TAG = LockScreenTextService.class.getSimpleName();
+    private static final String TAG = LockScreenWidgetService.class.getSimpleName();
     private BroadcastReceiver mReceiver;
     private boolean isShowing = false;
     Calendar calendar;
@@ -63,6 +61,11 @@ public class LockScreenTextService extends Service {
     TextView lockbatteryChargingStatusTextView;
     TextView lockdatetv;
     ArcProgress lockramArcProgress;
+    private WindowManager windowManager;
+    private TextView textview;
+    LinearLayout widgetLayout;
+    WindowManager.LayoutParams params;
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -70,35 +73,34 @@ public class LockScreenTextService extends Service {
         return null;
     }
 
-    private WindowManager windowManager;
-    private TextView textview;
-    LinearLayout widgetLayout;
-    WindowManager.LayoutParams params;
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_STICKY;
+    }
+
 
     @Override
     public void onCreate() {
-
         super.onCreate();
+        Log.e(TAG, "onCreate()");
 
         context = getApplicationContext();
 
-        Log.e(TAG, "onCreate()");
-
         InMobiSdk.init(getApplicationContext(), INMOBI_ACCOUNT_ID);
+        myActivityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
 
+        // Inflate Widget Layout from XML File
         windowManager = (WindowManager)getSystemService(WINDOW_SERVICE);
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         widgetLayout = (LinearLayout) layoutInflater.inflate(R.layout.widget_lock_ads, null);
-
-        myActivityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
-
+        // find Views By ID
         lockbatteryArcProgress = (ArcProgress) widgetLayout.findViewById(R.id.lockbatteryArcProgress);
         lockBatteryLevelTextView = (TextView) widgetLayout.findViewById(R.id.lockBatteryLevelTextView);
         lockbatteryChargingStatusTextView =  (TextView) widgetLayout.findViewById(R.id.lockbatteryChargingStatusTextView);
         lockramArcProgress = (ArcProgress) widgetLayout.findViewById(R.id.lockramArcProgress);
         lockdatetv = (TextView) widgetLayout.findViewById(R.id.lockdatetv);
 
-        //set parameters for the textview
+        //set parameters for the Widget layout (manually set height to 800 pixels)
         params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.MATCH_PARENT,
                 800,
@@ -112,12 +114,13 @@ public class LockScreenTextService extends Service {
                         WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
                 PixelFormat.TRANSLUCENT);
 
-        //set transparency
+        //set transparency and gravity of Widget
         params.alpha = (float) 0.9;
         params.gravity = Gravity.TOP;
 
+
+        // Register receiver for determining screen off and if user is present
         try {
-        //Register receiver for determining screen off and if user is present
         mReceiver = new LockScreenStateReceiver();
         IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
         filter.addAction(Intent.ACTION_USER_PRESENT);
@@ -140,6 +143,8 @@ public class LockScreenTextService extends Service {
         {
             e.printStackTrace();
         }
+
+        // Get Information to be displayed on the Widget
         try {
         getBatteryInformation();
         getCurrentSystemDateTime();
@@ -150,6 +155,7 @@ public class LockScreenTextService extends Service {
             e.printStackTrace();
         }
 
+        // Load InMobi Advertisement
         inMobiBanner = (InMobiBanner) widgetLayout.findViewById(R.id.inmobi_banner);
         inMobiBanner.load();
         Log.e(TAG, "inMobiBanner.load()");
@@ -189,6 +195,22 @@ public class LockScreenTextService extends Service {
 
             }
         });
+
+        // add Widget to Lock Screen
+        windowManager.addView(widgetLayout, params);
+
+        // Show Widget only if a PIN, pattern or password is set or a SIM card is locked.
+        boolean isKeyguardEnabled = ((KeyguardManager)getSystemService(Context.KEYGUARD_SERVICE)).isKeyguardSecure();
+        if (!isShowing && isKeyguardEnabled) {
+            widgetLayout.setVisibility(View.VISIBLE);
+            isShowing = true;
+            LogUtil.d(TAG, "Widget => setVisibility(VISIBLE)");
+        }
+        else
+        {
+            widgetLayout.setVisibility(View.GONE);
+            LogUtil.d(TAG, "Widget => setVisibility(GONE)");
+        }
     }
 
 
@@ -260,13 +282,6 @@ public class LockScreenTextService extends Service {
         return false;
     }
 
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        return START_STICKY;
-    }
-
-
     private BroadcastReceiver timeChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -329,13 +344,13 @@ public class LockScreenTextService extends Service {
         public void onReceive(Context context, Intent intent) {
             try {
                 if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
-                    //if screen is turn off show the textview
+                    //if screen is turned off, update the Widget (since its already been added in onCreate())
                     if (!isShowing) {
-                        windowManager.addView(widgetLayout, params);
+                        windowManager.updateViewLayout(widgetLayout, params);
                         isShowing = true;
                     }
                 } else if (intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
-                    //Handle resuming events if user is present/screen is unlocked remove the textview immediately
+                    //If user is present/screen is unlocked, remove the Widget immediately
                     if (isShowing) {
                         windowManager.removeViewImmediate(widgetLayout);
                         isShowing = false;
@@ -352,20 +367,15 @@ public class LockScreenTextService extends Service {
     @Override
     public void onDestroy() {
         try {
-            //unregister receiver when the service is destroy
+            //unregister all registered receivers
             if (mReceiver != null) {
                 unregisterReceiver(mReceiver);
             }
-
             if (battery_info_receiver != null)
                 unregisterReceiver(battery_info_receiver);
-
             if(timeChangeReceiver != null)
                 unregisterReceiver(timeChangeReceiver);
-
-            Log.e(TAG, "onDestroy()");
-
-            //remove view if it is showing and the service is destroy
+            //remove view if it is showing and the service is destroyed
             if (isShowing) {
                 windowManager.removeViewImmediate(widgetLayout);
                 isShowing = false;
@@ -375,6 +385,7 @@ public class LockScreenTextService extends Service {
         {
             e.printStackTrace();
         }
+        Log.e(TAG, "onDestroy()");
         super.onDestroy();
     }
 
