@@ -7,20 +7,19 @@
     <com.receptix.batterybuddy.helper.views.SwipeBackLayout
         android:id="@+id/swipe_back_layout_lock_ads"
         android:layout_width="match_parent"
+        android:background="@color/bgcolor"
         android:layout_height="wrap_content">
 
     <RelativeLayout
         android:id="@+id/activity_lock_ads"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/bgcolormain"
         tools:context="com.receptix.batterybuddy.activities.LockAdsActivity">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:background="@color/bgcolormain"
             android:orientation="vertical">
 
             <!-- BUTTON TO CLOSE LOCK SCREEN ACTIVITY -->
@@ -29,26 +28,42 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_gravity="end"
-                android:background="@color/bgcolor"
+                android:background="#616161"
                 android:gravity="center"
                 android:text="@string/close_window_text"
+                android:visibility="gone"
                 android:textColor="@android:color/white"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp">
+                android:layout_marginTop="@dimen/x_large_margin"
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/lockdatetv"
+                    android:id="@+id/textview_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:padding="10dp"
-                    android:text="@string/systemDate"
+                    android:gravity="center"
                     android:textColor="@color/white"
-                    android:textSize="18sp" />
+                    android:textSize="56sp"
+                    />
+
+                <TextView
+                    android:id="@+id/textview_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/CustomBaseTextView"
+                    android:textColor="@color/white"
+                    android:fontFamily="sans-serif-condensed"
+                    android:textSize="@dimen/medium_text_size"
+                    android:gravity="center"
+                    />
+
+
             </LinearLayout>
 
             <LinearLayout
@@ -62,11 +77,13 @@
 
                 <LinearLayout
                     android:layout_width="0dp"
+                    android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:layout_weight="50">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
+                        android:visibility="gone"
                         android:layout_height="wrap_content">
 
                         <ProgressBar
@@ -75,6 +92,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:minHeight="50dp"
+                            android:visibility="gone"
                             android:minWidth="140dp"
                             android:progress="40" />
 
@@ -83,6 +101,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
+                            android:visibility="gone"
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
                             android:gravity="center"
@@ -93,21 +112,20 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="50">
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
                     <TextView
                         android:id="@+id/lockbatteryChargingStatusTextView"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="15dp"
-                        android:gravity="center_vertical"
-                        android:text="chargeStatus"
+                        android:gravity="center"
                         android:textColor="@color/white"
-                        android:textSize="20sp"
-                        android:visibility="invisible" />
+                        android:textSize="@dimen/small_text_size"
+                        style="@style/CustomBaseTextView"
+                        />
+
                 </LinearLayout>
 
 
@@ -117,8 +135,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="@dimen/x_large_margin"
                 android:orientation="horizontal"
+                android:layout_marginLeft="@dimen/small_margin"
+                android:layout_marginRight="@dimen/small_margin"
                 android:padding="10dp"
                 android:weightSum="200">
 
@@ -181,19 +201,20 @@
         </LinearLayout>
 
 
-        <TextView
+        <com.romainpiel.shimmer.ShimmerTextView
             android:id="@+id/swipe_to_dismiss"
             style="@style/CustomBaseTextView"
             android:text="@string/swipe_to_dismiss"
             android:gravity="center"
             android:layout_gravity="center"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
+            android:textColor="#616161"
+            app:reflectionColor="#ffffff"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:padding="@dimen/small_margin"
-            android:fontFamily="sans-serif-condensed"
+            android:fontFamily="sans-serif-light"
             android:layout_marginTop="@dimen/large_margin"
+            android:layout_marginBottom="@dimen/large_margin"
             />
 
         <!-- InMobi Ad -->
@@ -201,7 +222,7 @@
             android:id="@+id/inmobi_banner"
             ads:placementId="1496191677809"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="150dp"
             android:layout_above="@id/swipe_to_dismiss"
             >
         </com.inmobi.ads.InMobiBanner>

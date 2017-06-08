@@ -42,7 +42,7 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
             LogUtil.d(TAG, "isLockedScreen : " + isLockedScreen);
 
             // show popup every time user connects charger
-            showScreen(isLockedScreen);
+            //showScreen(isLockedScreen);
             /*
             SharedPreferences sharedPreferences = context.getSharedPreferences(PREFERENCES_IS_ACTIVE, MODE_PRIVATE);
             if (sharedPreferences != null) {

@@ -9,6 +9,7 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.BatteryManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.inmobi.ads.InMobiAdRequestStatus;
 import com.inmobi.ads.InMobiBanner;
 import com.inmobi.sdk.InMobiSdk;
@@ -26,6 +29,7 @@ import com.receptix.batterybuddy.databinding.ActivityLockAdsBinding;
 import com.receptix.batterybuddy.helper.LogUtil;
 import com.receptix.batterybuddy.helper.UserSessionManager;
 import com.receptix.batterybuddy.helper.views.SwipeBackLayout;
+import com.romainpiel.shimmer.Shimmer;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -39,7 +43,9 @@ import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_T
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_TEMPERATURE_CONVERSION_UNIT;
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.IS_BATTERY_PRESENT;
 import static com.receptix.batterybuddy.helper.Constants.DateFormats.FORMAT_DATE_MONTH_YEAR_HOUR_MINUTES;
+import static com.receptix.batterybuddy.helper.Constants.DateFormats.FORMAT_DATE_ONLY;
 import static com.receptix.batterybuddy.helper.Constants.DateFormats.FORMAT_FULL_LENGTH_DAY;
+import static com.receptix.batterybuddy.helper.Constants.DateFormats.FORMAT_HOUR_MINUTES;
 
 public class LockAdsActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -119,10 +125,28 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
         getCurrentSystemDateTime();
         getRamInformation();
 
+        // Register Time Change Receiver
+        try {
+            IntentFilter intentfilter = new IntentFilter(Intent.ACTION_TIME_CHANGED);
+            intentfilter.addAction(Intent.ACTION_TIME_TICK);
+            intentfilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+            if (timeChangeReceiver != null)
+                registerReceiver(timeChangeReceiver, intentfilter);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        // Add Animation to SWIPE TO DISMISS TextView (Shimmer Effect)
+        Shimmer shimmer = new Shimmer();
+        shimmer.setRepeatCount(100)
+                .setDuration(1000)
+                .setStartDelay(300)
+                .setDirection(Shimmer.ANIMATION_DIRECTION_LTR);
+        shimmer.start(binding.swipeToDismiss);
+
         binding.closeLockScreenPopup.setOnClickListener(this);
-        /*moPubView.setBannerAdListener(this);*/
-
-
     }
 
     private void getRamInformation() {
@@ -143,19 +167,22 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
             binding.lockramArcProgress.setProgress(usedRamPercentage);
         }
 
-        LogUtil.d(TAG, "MEM=" + String.valueOf(availableDeviceMemory) + "Total Ram=" + String.valueOf(totalDeviceMemory) + "Percentage=" + usedRamPercentage);
+        LogUtil.d(TAG, "Available Memory " + String.valueOf(availableDeviceMemory) + ", Total Memory" + String.valueOf(totalDeviceMemory) + ", Percentage=" + usedRamPercentage);
 
     }
 
     private void getCurrentSystemDateTime() {
         try {
+
             calendar = Calendar.getInstance();
-            SimpleDateFormat sdf = new SimpleDateFormat(FORMAT_DATE_MONTH_YEAR_HOUR_MINUTES);
-            String currentDate = sdf.format(calendar.getTime());
-            SimpleDateFormat sdf_ = new SimpleDateFormat(FORMAT_FULL_LENGTH_DAY);
+            SimpleDateFormat dateFormat_dateOnly = new SimpleDateFormat(FORMAT_DATE_ONLY);
+            String currentDate = dateFormat_dateOnly.format(calendar.getTime());
+            SimpleDateFormat dateFormat_hoursMinutes = new SimpleDateFormat(FORMAT_HOUR_MINUTES);
             Date date = new Date();
-            String dayName = sdf_.format(date);
-            binding.lockdatetv.setText("" + dayName + " " + currentDate + "");
+            String timeValue = dateFormat_hoursMinutes.format(date);
+            binding.textviewTime.setText(timeValue);
+            binding.textviewDate.setText(currentDate);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -179,6 +206,16 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
         return false;
     }
 
+
+    private BroadcastReceiver timeChangeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //update time value on time change
+            getCurrentSystemDateTime();
+            // update RAM information on time change
+            getRamInformation();
+        }
+    };
 
     private BroadcastReceiver battery_info_receiver = new BroadcastReceiver() {
         @Override
@@ -207,7 +244,7 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
                     binding.lockbatteryChargingStatusTextView.setVisibility(View.VISIBLE);
                 } else {
                     binding.lockbatteryChargingStatusTextView.setText(R.string.discharging);
-                    binding.lockbatteryChargingStatusTextView.setVisibility(View.VISIBLE);
+                    binding.lockbatteryChargingStatusTextView.setVisibility(View.INVISIBLE);
                 }
             }
 
@@ -242,8 +279,8 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
     protected void onDestroy() {
         if (battery_info_receiver != null)
             LockAdsActivity.this.unregisterReceiver(battery_info_receiver);
-      /*  Intent intent = new Intent(this, LockScreenTextService.class);
-        startService(intent);*/
+        if(timeChangeReceiver != null)
+            unregisterReceiver(timeChangeReceiver);
 
         super.onDestroy();
     }

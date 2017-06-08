@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
+import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.util.Log;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+import com.receptix.batterybuddy.activities.BatteryAdActivity;
 import com.receptix.batterybuddy.activities.LockAdsActivity;
 import com.receptix.batterybuddy.helper.InternetUtils;
 import com.receptix.batterybuddy.helper.LogUtil;
@@ -40,11 +42,12 @@ public class ScreenListenerService extends Service {
     private static final String TAG = ScreenListenerService.class.getSimpleName() ;
     private UserSessionManager userSessionManager;
     private String userDeviceId, authorizationKey = "";
+    private static final int SCREEN_SHOW_DELAY = 300;
 
 
     private BroadcastReceiver mScreenStateBroadcastReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(final Context context, Intent intent) {
 
             userSessionManager = new UserSessionManager(context);
             if (userSessionManager != null) {
@@ -87,86 +90,32 @@ public class ScreenListenerService extends Service {
                         Log.e(TAG, "No Internet Connection");
                     }
 
-                    /*//stop lock screen widget service before opening LockAds Activity again
-                    Intent intent_lockScreenWidgetService = new Intent(context, LockScreenTextService.class);
-                    stopService(intent_lockScreenWidgetService);
+                    showLockAdsActivity(context);
 
-                    // open LockAdsActivity from wherein we can restart widget service
-                    Intent i = new Intent(context, LockAdsActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(i);*/
-
-                    /*//first we check if 24 hours have passed between the last time we showed the user the Lock Screen Ads Activity
-                    if (lastScreenOnTimestamp != 0) {
-                        LogUtil.e("Last TimeStamp", lastScreenOnTimestamp + "");
-                        LogUtil.e("Current Timestamp", System.currentTimeMillis() + "");
-                        long currentTimeStamp = System.currentTimeMillis();
-                        Date lastDate = new Date();
-                        Date currentDate = new Date();
-                        lastDate.setTime(lastScreenOnTimestamp);
-                        currentDate.setTime(currentTimeStamp);
-                        long diffMs = currentDate.getTime() - lastDate.getTime();
-                        long diffSec = diffMs / 1000;
-                        long elapsedMinutesSinceLastScreenOn = diffSec / 60;
-                        long elapsedSecondsSinceLastScreenOn = diffSec % 60;
-                        LogUtil.e("Difference is", elapsedMinutesSinceLastScreenOn + " mins, " + elapsedSecondsSinceLastScreenOn + " seconds");
-                        if (elapsedMinutesSinceLastScreenOn >= SCREEN_LOCK_ADS_TIMER_VALUE_MINUTES) //24 hours have 1440 minutes
-                        {
-                            //stop lock screen widget service before opening LockAds Activity again
-                            Intent intent_lockScreenWidgetService = new Intent(context, LockScreenTextService.class);
-                            stopService(intent_lockScreenWidgetService);
-
-                            // open LockAdsActivity from wherein we can restart widget service
-                            Intent i = new Intent(context, LockAdsActivity.class);
-                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(i);
-                        }
-                    }
-                    // if last timestamp hasn't been saved yet
-                    else {
-                        //stop lock screen widget service before opening LockAds Activity again
-                        Intent intent_lockScreenWidgetService = new Intent(context, LockScreenTextService.class);
-                        stopService(intent_lockScreenWidgetService);
-
-                        Intent i = new Intent(context, LockAdsActivity.class);
-                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(i);
-                    }
-                    long currentTimeStamp = System.currentTimeMillis();
-                    //save timestamp to SharedPreferences
-                    userSessionManager.setScreenOnTimestamp(currentTimeStamp);*/
-
-
-                    boolean isKeyguardEnabled = ((KeyguardManager)getSystemService(Context.KEYGUARD_SERVICE)).isKeyguardLocked();
+                    /*boolean isKeyguardEnabled = ((KeyguardManager)getSystemService(Context.KEYGUARD_SERVICE)).isKeyguardLocked();
                     // check if device is charging and keyguard is enabled
                     if(isChargerConnected(context) && isKeyguardEnabled)
                     {
-                        // if device is on charging and keyguard is enabled, show Lock-Ads Activity
-                        //stop lock screen widget service before opening LockAds Activity again
-                        /*Intent intent_lockScreenWidgetService = new Intent(context, LockScreenTextService.class);
-                        stopService(intent_lockScreenWidgetService);
-                        Log.e(TAG, "stopService(LockScreenTextService)");*/
-                        // start full screen LockAds Activity
-                        Intent i = new Intent(context, LockAdsActivity.class);
-                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(i);
-                        Log.e(TAG, "startActivity(LockAdsActivity)");
-                    }
-                   /* else if(isKeyguardEnabled && !isChargerConnected(context))
-                    {
-                        // if device is NOT on charging and keyguard is enabled,
-                        // restart LockScreen Widget Service
-                        Intent intent_lockScreenWidgetService = new Intent(context, LockScreenTextService.class);
-                        stopService(intent_lockScreenWidgetService);
-                        // now start the service
-                        startService(intent_lockScreenWidgetService);
-                        Log.e(TAG, "restartService(LockScreenTextService)");
+                        showLockAdsActivity(context);
                     }*/
                 }
             }
 
         }
     };
+
+    private void showLockAdsActivity(final Context context) {
+        // start full screen LockAds Activity after a delay (to override other lock screens)
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent i = new Intent(context, LockAdsActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                context.startActivity(i);
+                Log.e(TAG, "startActivity(LockAdsActivity)");
+            }
+        }, SCREEN_SHOW_DELAY );
+    }
 
 
     private boolean isChargerConnected(Context context) {
