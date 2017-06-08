@@ -54,6 +54,7 @@ public class ScreenListenerService extends Service {
                 long lastScreenOnTimestamp = userSessionManager.getScreenOnTimestamp();
                 /*LogUtil.e("lastScreenOnTimeStamp", lastScreenOnTimestamp + "");*/
                 if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+                    Log.d(TAG, "ACTION_SCREEN_ON");
                     if(InternetUtils.isInternetConnected(context))
                     {
                         try {
@@ -89,15 +90,22 @@ public class ScreenListenerService extends Service {
                     {
                         Log.e(TAG, "No Internet Connection");
                     }
+                }
 
-                    showLockAdsActivity(context);
 
-                    /*boolean isKeyguardEnabled = ((KeyguardManager)getSystemService(Context.KEYGUARD_SERVICE)).isKeyguardLocked();
-                    // check if device is charging and keyguard is enabled
-                    if(isChargerConnected(context) && isKeyguardEnabled)
+                if(intent.getAction().equals(Intent.ACTION_SCREEN_OFF))
+                {
+                    Log.d(TAG, "ACTION_SCREEN_OFF");
+                    KeyguardManager keyguardManager = (KeyguardManager) context.getSystemService(KEYGUARD_SERVICE);
+                    // if keyguard is securely locked (Pin, Password or Pattern), restart lock screen widget service
+                    boolean isKeyguardEnabled = keyguardManager.isKeyguardLocked();
+                    if(isKeyguardEnabled)
                     {
-                        showLockAdsActivity(context);
-                    }*/
+                        Intent intent_lockScreenWidgetService = new Intent(context, LockScreenWidgetService.class);
+                        context.stopService(intent_lockScreenWidgetService);
+                        context.startService(intent_lockScreenWidgetService);
+                        Log.e(TAG, "startService(LockScreenWidgetService)");
+                    }
                 }
             }
 
@@ -211,6 +219,7 @@ public class ScreenListenerService extends Service {
         super.onCreate();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_SCREEN_ON);
+        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
         registerReceiver(mScreenStateBroadcastReceiver, intentFilter);
         LogUtil.e("ScreenListener", "onCreate()");
 

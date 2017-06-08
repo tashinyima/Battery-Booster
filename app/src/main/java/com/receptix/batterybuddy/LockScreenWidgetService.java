@@ -40,9 +40,7 @@ import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_S
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_TEMPERATURE;
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.BATTERY_TEMPERATURE_CONVERSION_UNIT;
 import static com.receptix.batterybuddy.helper.Constants.BatteryParams.IS_BATTERY_PRESENT;
-import static com.receptix.batterybuddy.helper.Constants.DateFormats.FORMAT_DATE_MONTH_YEAR_HOUR_MINUTES;
 import static com.receptix.batterybuddy.helper.Constants.DateFormats.FORMAT_DATE_ONLY;
-import static com.receptix.batterybuddy.helper.Constants.DateFormats.FORMAT_FULL_LENGTH_DAY;
 import static com.receptix.batterybuddy.helper.Constants.DateFormats.FORMAT_HOUR_MINUTES;
 
 /**
@@ -52,7 +50,7 @@ public class LockScreenWidgetService extends Service {
 
     private static final String TAG = LockScreenWidgetService.class.getSimpleName();
     private BroadcastReceiver mReceiver;
-    private boolean isShowing = false;
+    private boolean isWidgetAdded = false;
     Calendar calendar;
     ActivityManager myActivityManager;
     Context context;
@@ -160,9 +158,11 @@ public class LockScreenWidgetService extends Service {
             e.printStackTrace();
         }
 
+        // keep the widget hidden initially
         widgetLayout.setVisibility(View.GONE);
         // add Widget to Lock Screen
         windowManager.addView(widgetLayout, params);
+        isWidgetAdded = true;
 
         // Load InMobi Advertisement
         inMobiBanner = (InMobiBanner) widgetLayout.findViewById(R.id.inmobi_banner);
@@ -172,14 +172,15 @@ public class LockScreenWidgetService extends Service {
             @Override
             public void onAdLoadSucceeded(InMobiBanner inMobiBanner) {
                 Log.e(TAG, "inMobiBanner.onAdLoadSucceeded 1496930154754");
-                // Show Widget only if a PIN, pattern or password is set or a SIM card is locked.
+
+                // Show Widget only if a PIN, pattern or password is set or a SIM card is locked (after successful ad loading).
                 boolean isKeyguardEnabled = ((KeyguardManager)getSystemService(Context.KEYGUARD_SERVICE)).isKeyguardSecure();
-                if (!isShowing && isKeyguardEnabled) {
+                if (isKeyguardEnabled) {
                     widgetLayout.setVisibility(View.VISIBLE);
-                    isShowing = true;
                     LogUtil.d(TAG, "Widget => setVisibility(VISIBLE)");
                 }
                 else
+                    // keep widget hidden if keyguard is not secure (Swipe to Unlock set for Lock Screen)
                 {
                     widgetLayout.setVisibility(View.GONE);
                     LogUtil.d(TAG, "Widget => setVisibility(GONE)");
@@ -190,6 +191,7 @@ public class LockScreenWidgetService extends Service {
             @Override
             public void onAdLoadFailed(InMobiBanner inMobiBanner, InMobiAdRequestStatus inMobiAdRequestStatus) {
                 Log.e(TAG, "onAdLoadFailed => 1496930154754 =>" + inMobiAdRequestStatus.getMessage());
+                // hide widget when ad load fails (new ad widget is created everytime screen if turned off (when keyguard is secure))
                 widgetLayout.setVisibility(View.GONE);
                 LogUtil.d(TAG, "Widget => setVisibility(GONE)");
             }
@@ -361,9 +363,9 @@ public class LockScreenWidgetService extends Service {
             try {
                 if (intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
                     //If user is present/screen is unlocked, remove the Widget immediately
-                    if (isShowing) {
+                    if (isWidgetAdded) {
                         windowManager.removeViewImmediate(widgetLayout);
-                        isShowing = false;
+                        isWidgetAdded = false;
                     }
                 }
             }
@@ -386,9 +388,9 @@ public class LockScreenWidgetService extends Service {
             if(timeChangeReceiver != null)
                 unregisterReceiver(timeChangeReceiver);
             //remove view if it is showing and the service is destroyed
-            if (isShowing) {
+            if (isWidgetAdded) {
                 windowManager.removeViewImmediate(widgetLayout);
-                isShowing = false;
+                isWidgetAdded = false;
             }
         }
         catch (Exception e)

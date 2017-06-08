@@ -154,7 +154,7 @@ public class Constants {
     public static class DateFormats {
         //Date-Month-Year Hour:Minutes am/pm
         public static final String FORMAT_DATE_MONTH_YEAR_HOUR_MINUTES = "dd-MMM-yyyy hh:mm a";
-        public static final String FORMAT_HOUR_MINUTES = "hh:mm";
+        public static final String FORMAT_HOUR_MINUTES = "HH:mm";
         public static final String FORMAT_DATE_ONLY = "EEEE, dd MMMM";
         public static final String FORMAT_FULL_LENGTH_DAY = "EEEE";
     }

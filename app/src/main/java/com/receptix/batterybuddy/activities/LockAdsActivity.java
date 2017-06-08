@@ -273,31 +273,18 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
         super.onDestroy();
     }
 
-
-    @Override
-    protected void onStop() {
-        LogUtil.d(TAG, "onStop()");
-        //stop existing service
-        Intent lockScreenWidgetService = new Intent(context, LockScreenWidgetService.class);
-        stopService(lockScreenWidgetService);
-        //start lock screen widget service now
-        startService(lockScreenWidgetService);
-        super.onStop();
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
         LogUtil.d(TAG, "onStart()");
+        //stop existing LockScreenWidgetService whenever Full Screen Widget is shown
+        Intent lockScreenWidgetService = new Intent(context, LockScreenWidgetService.class);
+        stopService(lockScreenWidgetService);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        LogUtil.d(TAG, "onResume()");
-        //stop existing service
-        Intent lockScreenWidgetService = new Intent(context, LockScreenWidgetService.class);
-        stopService(lockScreenWidgetService);
     }
 
 }

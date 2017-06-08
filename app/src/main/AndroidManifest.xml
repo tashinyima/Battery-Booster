@@ -135,19 +135,16 @@
             </intent-filter>
         </receiver>
 
-        <!--
-        invoke this receiver every time user does one of the following things -
-        1) Disconnect charger
-        2) Connect charger
-        -->
         <receiver
             android:name=".receiver.PowerConnectionReceiver"
             android:enabled="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter android:priority="1">
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
             </intent-filter>
         </receiver>
+
 
         <!-- App Widget -->
         <receiver android:name=".BatteryBuddyAppWidget">
