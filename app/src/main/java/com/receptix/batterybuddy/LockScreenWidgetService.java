@@ -160,6 +160,10 @@ public class LockScreenWidgetService extends Service {
             e.printStackTrace();
         }
 
+        widgetLayout.setVisibility(View.GONE);
+        // add Widget to Lock Screen
+        windowManager.addView(widgetLayout, params);
+
         // Load InMobi Advertisement
         inMobiBanner = (InMobiBanner) widgetLayout.findViewById(R.id.inmobi_banner);
         inMobiBanner.load();
@@ -168,11 +172,26 @@ public class LockScreenWidgetService extends Service {
             @Override
             public void onAdLoadSucceeded(InMobiBanner inMobiBanner) {
                 Log.e(TAG, "inMobiBanner.onAdLoadSucceeded 1496930154754");
+                // Show Widget only if a PIN, pattern or password is set or a SIM card is locked.
+                boolean isKeyguardEnabled = ((KeyguardManager)getSystemService(Context.KEYGUARD_SERVICE)).isKeyguardSecure();
+                if (!isShowing && isKeyguardEnabled) {
+                    widgetLayout.setVisibility(View.VISIBLE);
+                    isShowing = true;
+                    LogUtil.d(TAG, "Widget => setVisibility(VISIBLE)");
+                }
+                else
+                {
+                    widgetLayout.setVisibility(View.GONE);
+                    LogUtil.d(TAG, "Widget => setVisibility(GONE)");
+                }
+
             }
 
             @Override
             public void onAdLoadFailed(InMobiBanner inMobiBanner, InMobiAdRequestStatus inMobiAdRequestStatus) {
                 Log.e(TAG, "onAdLoadFailed => 1496930154754 =>" + inMobiAdRequestStatus.getMessage());
+                widgetLayout.setVisibility(View.GONE);
+                LogUtil.d(TAG, "Widget => setVisibility(GONE)");
             }
 
             @Override
@@ -200,22 +219,6 @@ public class LockScreenWidgetService extends Service {
 
             }
         });
-
-        // add Widget to Lock Screen
-        windowManager.addView(widgetLayout, params);
-
-        // Show Widget only if a PIN, pattern or password is set or a SIM card is locked.
-        boolean isKeyguardEnabled = ((KeyguardManager)getSystemService(Context.KEYGUARD_SERVICE)).isKeyguardSecure();
-        if (!isShowing && isKeyguardEnabled) {
-            widgetLayout.setVisibility(View.VISIBLE);
-            isShowing = true;
-            LogUtil.d(TAG, "Widget => setVisibility(VISIBLE)");
-        }
-        else
-        {
-            widgetLayout.setVisibility(View.GONE);
-            LogUtil.d(TAG, "Widget => setVisibility(GONE)");
-        }
 
         textView_closeLockScreenWidget.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -356,13 +359,7 @@ public class LockScreenWidgetService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             try {
-                if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
-                    //if screen is turned off, update the Widget (since its already been added in onCreate())
-                    if (!isShowing) {
-                        windowManager.updateViewLayout(widgetLayout, params);
-                        isShowing = true;
-                    }
-                } else if (intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
+                if (intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
                     //If user is present/screen is unlocked, remove the Widget immediately
                     if (isShowing) {
                         windowManager.removeViewImmediate(widgetLayout);
