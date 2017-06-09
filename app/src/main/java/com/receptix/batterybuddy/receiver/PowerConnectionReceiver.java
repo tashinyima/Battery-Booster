@@ -1,6 +1,5 @@
 package com.receptix.batterybuddy.receiver;
 
-import android.app.KeyguardManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,9 +16,9 @@ import com.receptix.batterybuddy.helper.UserSessionManager;
 
 public class PowerConnectionReceiver extends BroadcastReceiver {
     private static final String TAG = "PowerConnectionReceiver";
+     private static final int SCREEN_SHOW_DELAY = 300;
     Context context;
     UserSessionManager userSessionManager;
-    private static final int SCREEN_SHOW_DELAY = 300;
 
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -39,7 +38,8 @@ public class PowerConnectionReceiver extends BroadcastReceiver {
                 @Override
                 public void run() {
                     Intent i = new Intent(context, LockAdsActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     context.startActivity(i);
                 }
             }, SCREEN_SHOW_DELAY);

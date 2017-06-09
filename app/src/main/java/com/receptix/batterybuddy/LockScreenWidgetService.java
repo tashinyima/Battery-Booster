@@ -49,8 +49,6 @@ import static com.receptix.batterybuddy.helper.Constants.DateFormats.FORMAT_HOUR
 public class LockScreenWidgetService extends Service {
 
     private static final String TAG = LockScreenWidgetService.class.getSimpleName();
-    private BroadcastReceiver mReceiver;
-    private boolean isWidgetAdded = false;
     Calendar calendar;
     ActivityManager myActivityManager;
     Context context;
@@ -62,11 +60,62 @@ public class LockScreenWidgetService extends Service {
     TextView textview_time, textView_date;
     TextView textView_closeLockScreenWidget;
     ArcProgress lockramArcProgress;
-    private WindowManager windowManager;
-    private TextView textview;
     LinearLayout widgetLayout;
     WindowManager.LayoutParams params;
+    private BroadcastReceiver mReceiver;
+    private boolean isWidgetAdded = false;
+    private WindowManager windowManager;
+    private TextView textview;
+    private BroadcastReceiver timeChangeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //update time value on time change
+            getCurrentSystemDateTime();
+            // update RAM information on time change
+            getRamInformation();
+        }
+    };
+    /**
+     * Broadcast Receiver for Battery Information
+     */
+    private BroadcastReceiver battery_info_receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
 
+            boolean isPresent = intent.getBooleanExtra(IS_BATTERY_PRESENT, false);
+            if (isPresent) {
+
+                // Calculate Battery Temperature (currently unused)
+                int temperature = intent.getIntExtra(BATTERY_TEMPERATURE, 0);
+                double temperatureInDouble = temperature * BATTERY_TEMPERATURE_CONVERSION_UNIT;
+                int batteryTemperature = (int) temperatureInDouble;
+
+                // Calculate Battery Charging Level
+                int level = intent.getIntExtra(BATTERY_LEVEL, 0);
+                int scale = intent.getIntExtra(BATTERY_SCALE, 0);
+                float percentage = level / (float) scale;
+                int batteryLevel = (int) ((percentage) * 100);
+                lockbatteryArcProgress.setSuffixText(getString(R.string.percentage_symbol));
+                lockbatteryArcProgress.setProgress(batteryLevel);
+                String batteryLevelString = batteryLevel + getString(R.string.percentage_symbol);
+                lockBatteryLevelTextView.setText(batteryLevelString);
+
+                if (isChargerConnected(context)) {
+                    lockbatteryChargingStatusTextView.setText(R.string.charging);
+                    lockbatteryChargingStatusTextView.setVisibility(View.VISIBLE);
+                } else {
+                    lockbatteryChargingStatusTextView.setText(R.string.discharging);
+                    lockbatteryChargingStatusTextView.setVisibility(View.VISIBLE);
+                }
+
+                try {
+                    getCurrentSystemDateTime();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    };
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -78,7 +127,6 @@ public class LockScreenWidgetService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         return START_STICKY;
     }
-
 
     @Override
     public void onCreate() {
@@ -159,7 +207,7 @@ public class LockScreenWidgetService extends Service {
         }
 
         // keep the widget hidden initially
-        widgetLayout.setVisibility(View.GONE);
+        /*widgetLayout.setVisibility(View.GONE);*/
         // add Widget to Lock Screen
         windowManager.addView(widgetLayout, params);
         isWidgetAdded = true;
@@ -182,7 +230,7 @@ public class LockScreenWidgetService extends Service {
                 else
                     // keep widget hidden if keyguard is not secure (Swipe to Unlock set for Lock Screen)
                 {
-                    widgetLayout.setVisibility(View.GONE);
+                    /*widgetLayout.setVisibility(View.GONE);*/
                     LogUtil.d(TAG, "Widget => setVisibility(GONE)");
                 }
 
@@ -192,7 +240,7 @@ public class LockScreenWidgetService extends Service {
             public void onAdLoadFailed(InMobiBanner inMobiBanner, InMobiAdRequestStatus inMobiAdRequestStatus) {
                 Log.e(TAG, "onAdLoadFailed => 1496930154754 =>" + inMobiAdRequestStatus.getMessage());
                 // hide widget when ad load fails (new ad widget is created everytime screen if turned off (when keyguard is secure))
-                widgetLayout.setVisibility(View.GONE);
+                /*widgetLayout.setVisibility(View.GONE);*/
                 LogUtil.d(TAG, "Widget => setVisibility(GONE)");
             }
 
@@ -229,7 +277,6 @@ public class LockScreenWidgetService extends Service {
             }
         });
     }
-
 
     /**
      * Get Device RAM information - used RAM percentage.
@@ -300,58 +347,28 @@ public class LockScreenWidgetService extends Service {
         return false;
     }
 
-    private BroadcastReceiver timeChangeReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            //update time value on time change
-            getCurrentSystemDateTime();
-            // update RAM information on time change
-            getRamInformation();
-        }
-    };
-    /**
-     * Broadcast Receiver for Battery Information
-     */
-    private BroadcastReceiver battery_info_receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            boolean isPresent = intent.getBooleanExtra(IS_BATTERY_PRESENT, false);
-            if (isPresent) {
-
-                // Calculate Battery Temperature (currently unused)
-                int temperature = intent.getIntExtra(BATTERY_TEMPERATURE, 0);
-                double temperatureInDouble = temperature * BATTERY_TEMPERATURE_CONVERSION_UNIT;
-                int batteryTemperature = (int) temperatureInDouble;
-
-                // Calculate Battery Charging Level
-                int level = intent.getIntExtra(BATTERY_LEVEL, 0);
-                int scale = intent.getIntExtra(BATTERY_SCALE, 0);
-                float percentage = level / (float) scale;
-                int batteryLevel = (int) ((percentage) * 100);
-                lockbatteryArcProgress.setSuffixText(getString(R.string.percentage_symbol));
-                lockbatteryArcProgress.setProgress(batteryLevel);
-                String batteryLevelString = batteryLevel + getString(R.string.percentage_symbol);
-                lockBatteryLevelTextView.setText(batteryLevelString);
-
-                if (isChargerConnected(context)) {
-                    lockbatteryChargingStatusTextView.setText(R.string.charging);
-                    lockbatteryChargingStatusTextView.setVisibility(View.VISIBLE);
-                } else {
-                    lockbatteryChargingStatusTextView.setText(R.string.discharging);
-                    lockbatteryChargingStatusTextView.setVisibility(View.VISIBLE);
-                }
-
-                try {
-                    getCurrentSystemDateTime();
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
+    @Override
+    public void onDestroy() {
+        try {
+            //unregister all registered receivers
+            if (mReceiver != null) {
+                unregisterReceiver(mReceiver);
             }
+            if (battery_info_receiver != null)
+                unregisterReceiver(battery_info_receiver);
+            if (timeChangeReceiver != null)
+                unregisterReceiver(timeChangeReceiver);
+            //remove view if it is showing and the service is destroyed
+            if (isWidgetAdded) {
+                windowManager.removeViewImmediate(widgetLayout);
+                isWidgetAdded = false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    };
+        Log.e(TAG, "onDestroy()");
+        super.onDestroy();
+    }
 
     /**
      * Broadcast Receiver for Device Awake Status (Lock Screen Unlocked or not).
@@ -374,31 +391,6 @@ public class LockScreenWidgetService extends Service {
             e.printStackTrace();
             }
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        try {
-            //unregister all registered receivers
-            if (mReceiver != null) {
-                unregisterReceiver(mReceiver);
-            }
-            if (battery_info_receiver != null)
-                unregisterReceiver(battery_info_receiver);
-            if(timeChangeReceiver != null)
-                unregisterReceiver(timeChangeReceiver);
-            //remove view if it is showing and the service is destroyed
-            if (isWidgetAdded) {
-                windowManager.removeViewImmediate(widgetLayout);
-                isWidgetAdded = false;
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        Log.e(TAG, "onDestroy()");
-        super.onDestroy();
     }
 
 }

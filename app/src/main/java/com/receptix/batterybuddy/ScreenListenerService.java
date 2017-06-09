@@ -15,21 +15,17 @@ import android.util.Log;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
-import com.receptix.batterybuddy.activities.BatteryAdActivity;
 import com.receptix.batterybuddy.activities.LockAdsActivity;
 import com.receptix.batterybuddy.helper.InternetUtils;
 import com.receptix.batterybuddy.helper.LogUtil;
 import com.receptix.batterybuddy.helper.MCrypt;
 import com.receptix.batterybuddy.helper.UserSessionManager;
 
-import java.util.Date;
-
 import static com.receptix.batterybuddy.helper.Constants.JsonProperties.AUTH_KEY;
 import static com.receptix.batterybuddy.helper.Constants.JsonProperties.DATA;
 import static com.receptix.batterybuddy.helper.Constants.JsonProperties.DEVICE_ID;
 import static com.receptix.batterybuddy.helper.Constants.Params.APP_NAME;
 import static com.receptix.batterybuddy.helper.Constants.Params.FCM_TOKEN;
-import static com.receptix.batterybuddy.helper.Constants.Params.SCREEN_LOCK_ADS_TIMER_VALUE_MINUTES;
 import static com.receptix.batterybuddy.helper.Constants.Urls.URL_TRACKING_OZOCK_INSTALLED;
 import static com.receptix.batterybuddy.helper.Constants.Urls.URL_UPDATE_FCM_TOKEN;
 
@@ -40,11 +36,9 @@ import static com.receptix.batterybuddy.helper.Constants.Urls.URL_UPDATE_FCM_TOK
 public class ScreenListenerService extends Service {
 
     private static final String TAG = ScreenListenerService.class.getSimpleName() ;
+    private static final int SCREEN_SHOW_DELAY = 300;
     private UserSessionManager userSessionManager;
     private String userDeviceId, authorizationKey = "";
-    private static final int SCREEN_SHOW_DELAY = 300;
-
-
     private BroadcastReceiver mScreenStateBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(final Context context, Intent intent) {
@@ -95,7 +89,8 @@ public class ScreenListenerService extends Service {
                     {
                         // open LockAdsActivity
                         Intent i = new Intent(context, LockAdsActivity.class);
-                        i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                         context.startActivity(i);
                     }
                 }
