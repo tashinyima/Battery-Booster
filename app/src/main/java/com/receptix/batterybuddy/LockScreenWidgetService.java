@@ -207,7 +207,7 @@ public class LockScreenWidgetService extends Service {
         }
 
         // keep the widget hidden initially
-        /*widgetLayout.setVisibility(View.GONE);*/
+        widgetLayout.setVisibility(View.GONE);
         // add Widget to Lock Screen
         windowManager.addView(widgetLayout, params);
         isWidgetAdded = true;
@@ -230,7 +230,7 @@ public class LockScreenWidgetService extends Service {
                 else
                     // keep widget hidden if keyguard is not secure (Swipe to Unlock set for Lock Screen)
                 {
-                    /*widgetLayout.setVisibility(View.GONE);*/
+                    widgetLayout.setVisibility(View.GONE);
                     LogUtil.d(TAG, "Widget => setVisibility(GONE)");
                 }
 
@@ -240,7 +240,7 @@ public class LockScreenWidgetService extends Service {
             public void onAdLoadFailed(InMobiBanner inMobiBanner, InMobiAdRequestStatus inMobiAdRequestStatus) {
                 Log.e(TAG, "onAdLoadFailed => 1496930154754 =>" + inMobiAdRequestStatus.getMessage());
                 // hide widget when ad load fails (new ad widget is created everytime screen if turned off (when keyguard is secure))
-                /*widgetLayout.setVisibility(View.GONE);*/
+                widgetLayout.setVisibility(View.GONE);
                 LogUtil.d(TAG, "Widget => setVisibility(GONE)");
             }
 

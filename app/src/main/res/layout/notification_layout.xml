@@ -37,11 +37,13 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
         android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
         android:background="@drawable/optimizerbuttonbgcolor"
+        android:padding="@dimen/small_margin"
         android:text="@string/optimize"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:textSize="@dimen/small_text_size" />
 
 
 </RelativeLayout>
