@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.os.BatteryManager;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -29,6 +30,10 @@ import com.inmobi.ads.InMobiBanner;
 import com.inmobi.sdk.InMobiSdk;
 import com.receptix.batterybuddy.helper.LogUtil;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -54,12 +59,16 @@ public class LockScreenWidgetService extends Service {
     Context context;
     int USED_RAM_PERCENTAGE_THRESHOLD = 70;
     InMobiBanner inMobiBanner;
-    ArcProgress lockbatteryArcProgress;
+
     TextView lockBatteryLevelTextView;
     TextView lockbatteryChargingStatusTextView;
     TextView textview_time, textView_date;
     TextView textView_closeLockScreenWidget;
+
     ArcProgress lockramArcProgress;
+    ArcProgress lockbatteryArcProgress;
+    ArcProgress lockCpuArcProgress;
+
     LinearLayout widgetLayout;
     WindowManager.LayoutParams params;
     private BroadcastReceiver mReceiver;
@@ -73,6 +82,8 @@ public class LockScreenWidgetService extends Service {
             getCurrentSystemDateTime();
             // update RAM information on time change
             getRamInformation();
+            // update CPU Usage Information
+            getCpuUsageInfo();
         }
     };
     /**
@@ -107,12 +118,6 @@ public class LockScreenWidgetService extends Service {
                     lockbatteryChargingStatusTextView.setText(R.string.discharging);
                     lockbatteryChargingStatusTextView.setVisibility(View.VISIBLE);
                 }
-
-                try {
-                    getCurrentSystemDateTime();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             }
         }
     };
@@ -139,17 +144,18 @@ public class LockScreenWidgetService extends Service {
         myActivityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
 
         // Inflate Widget Layout from XML File
-        windowManager = (WindowManager)getSystemService(WINDOW_SERVICE);
+        windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         LayoutInflater layoutInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         widgetLayout = (LinearLayout) layoutInflater.inflate(R.layout.widget_lock_ads, null);
         // find Views By ID
         lockbatteryArcProgress = (ArcProgress) widgetLayout.findViewById(R.id.lockbatteryArcProgress);
         lockBatteryLevelTextView = (TextView) widgetLayout.findViewById(R.id.lockBatteryLevelTextView);
-        lockbatteryChargingStatusTextView =  (TextView) widgetLayout.findViewById(R.id.lockbatteryChargingStatusTextView);
+        lockbatteryChargingStatusTextView = (TextView) widgetLayout.findViewById(R.id.lockbatteryChargingStatusTextView);
         lockramArcProgress = (ArcProgress) widgetLayout.findViewById(R.id.lockramArcProgress);
         textview_time = (TextView) widgetLayout.findViewById(R.id.textview_time);
         textView_date = (TextView) widgetLayout.findViewById(R.id.textview_date);
         textView_closeLockScreenWidget = (TextView) widgetLayout.findViewById(R.id.close_lock_screen_popup);
+        lockCpuArcProgress = (ArcProgress) widgetLayout.findViewById(R.id.lockCpuArcProgress);
 
         //set parameters for the Widget layout (manually set height to 800 pixels)
         params = new WindowManager.LayoutParams(
@@ -172,13 +178,11 @@ public class LockScreenWidgetService extends Service {
 
         // Register receiver for determining screen off and if user is present
         try {
-        mReceiver = new LockScreenStateReceiver();
-        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
-        filter.addAction(Intent.ACTION_USER_PRESENT);
-        registerReceiver(mReceiver, filter);
-        }
-        catch (Exception e)
-        {
+            mReceiver = new LockScreenStateReceiver();
+            IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
+            filter.addAction(Intent.ACTION_USER_PRESENT);
+            registerReceiver(mReceiver, filter);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -189,25 +193,24 @@ public class LockScreenWidgetService extends Service {
             intentfilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
             if (timeChangeReceiver != null)
                 registerReceiver(timeChangeReceiver, intentfilter);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         // Get Information to be displayed on the Widget
         try {
-        getBatteryInformation();
-        getCurrentSystemDateTime();
-        getRamInformation();
-        }
-        catch (Exception e)
-        {
+            getBatteryInformation();
+            getCurrentSystemDateTime();
+            getRamInformation();
+            getCpuUsageInfo();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         // keep the widget hidden initially
-        widgetLayout.setVisibility(View.GONE);
+        if (!BuildConfig.DEBUG)
+            widgetLayout.setVisibility(View.GONE);
+
         // add Widget to Lock Screen
         windowManager.addView(widgetLayout, params);
         isWidgetAdded = true;
@@ -222,15 +225,15 @@ public class LockScreenWidgetService extends Service {
                 Log.e(TAG, "inMobiBanner.onAdLoadSucceeded 1496930154754");
 
                 // Show Widget only if a PIN, pattern or password is set or a SIM card is locked (after successful ad loading).
-                boolean isKeyguardEnabled = ((KeyguardManager)getSystemService(Context.KEYGUARD_SERVICE)).isKeyguardSecure();
+                boolean isKeyguardEnabled = ((KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE)).isKeyguardSecure();
                 if (isKeyguardEnabled) {
                     widgetLayout.setVisibility(View.VISIBLE);
                     LogUtil.d(TAG, "Widget => setVisibility(VISIBLE)");
-                }
-                else
-                    // keep widget hidden if keyguard is not secure (Swipe to Unlock set for Lock Screen)
+                } else
+                // keep widget hidden if keyguard is not secure (Swipe to Unlock set for Lock Screen)
                 {
-                    widgetLayout.setVisibility(View.GONE);
+                    if (!BuildConfig.DEBUG)
+                        widgetLayout.setVisibility(View.GONE);
                     LogUtil.d(TAG, "Widget => setVisibility(GONE)");
                 }
 
@@ -240,7 +243,9 @@ public class LockScreenWidgetService extends Service {
             public void onAdLoadFailed(InMobiBanner inMobiBanner, InMobiAdRequestStatus inMobiAdRequestStatus) {
                 Log.e(TAG, "onAdLoadFailed => 1496930154754 =>" + inMobiAdRequestStatus.getMessage());
                 // hide widget when ad load fails (new ad widget is created everytime screen if turned off (when keyguard is secure))
-                widgetLayout.setVisibility(View.GONE);
+                if (!BuildConfig.DEBUG)
+                    widgetLayout.setVisibility(View.GONE);
+
                 LogUtil.d(TAG, "Widget => setVisibility(GONE)");
             }
 
@@ -278,32 +283,98 @@ public class LockScreenWidgetService extends Service {
         });
     }
 
+
+    private void getCpuUsageInfo() {
+        try {
+            StringBuffer sb = new StringBuffer();
+            sb.append("abi: ").append(Build.CPU_ABI).append("\n");
+            if (new File("/proc/stat").exists()) {
+                try {
+                    BufferedReader br = new BufferedReader(
+                            new FileReader(new File("/proc/stat")));
+                    String aLine;
+                    while ((aLine = br.readLine()) != null) {
+                        sb.append(aLine + "\n");
+                    }
+                    if (br != null) {
+                        br.close();
+                    }
+                } catch (IOException e) {
+                    //set default progress as 40%
+                    lockCpuArcProgress.setProgress(40);
+                    e.printStackTrace();
+                }
+            }
+            Log.d(TAG, sb.toString());
+            String[] lines = sb.toString().split("\n");
+            String cpuLine = "";
+            for (int i = 0; i < lines.length; i++) {
+                if (lines[i].contains("cpu "))
+                    cpuLine = lines[i];
+            }
+
+            //now that we have obtained individual values, we separate them out
+            String[] values = cpuLine.split(" ");
+            String idleValue = "";
+            int totalCpuTime = 0;
+            for (int x = 1; x < values.length; x++) {
+                Log.e("value[" + x + "]", values[x]);
+                if (!values[x].isEmpty()) {
+                    int currentCpuTime = Integer.parseInt(values[x].trim());
+                    totalCpuTime += currentCpuTime;
+                    if (x == 5)
+                        idleValue = values[x];
+                }
+
+            }
+
+            // sum up all the columns in the 1st line "cpu" : ( user + nice + system + idle + iowait + irq + softirq )
+            // this will yield 100% of CPU time
+            Log.e("totalCpuTime", totalCpuTime + "");
+            //calculate the average percentage of total 'idle' out of 100% of CPU time :
+            // ( user + nice + system + idle + iowait + irq + softirq ) = 100%
+            // ( idle ) = X %
+            int idleTime = Integer.parseInt(idleValue.trim());
+            Log.e("idleTime", idleTime + "");
+            // hence
+            // average idle percentage X % = ( idle * 100 ) / ( user + nice + system + idle + iowait + irq + softirq )
+            float avgIdlePercetage = (idleTime * 100) / (totalCpuTime);
+            Log.e("Average Idle Percentage", avgIdlePercetage + " %");
+            int averageUsagePercentage = (int) (100 - avgIdlePercetage);
+            Log.e("CPU Usage", averageUsagePercentage + " %");
+            lockCpuArcProgress.setProgress(averageUsagePercentage);
+        } catch (Exception e) {
+            //set default progress as 40%
+            lockCpuArcProgress.setProgress(40);
+            e.printStackTrace();
+        }
+    }
+
+
     /**
      * Get Device RAM information - used RAM percentage.
      */
     private void getRamInformation() {
         try {
-        ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();
-        myActivityManager.getMemoryInfo(memInfo);
-        long availableDeviceMemory = memInfo.availMem;
-        long totalDeviceMemory = memInfo.totalMem;
+            ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();
+            myActivityManager.getMemoryInfo(memInfo);
+            long availableDeviceMemory = memInfo.availMem;
+            long totalDeviceMemory = memInfo.totalMem;
 
-        long usedDeviceMemory = totalDeviceMemory - availableDeviceMemory;
-        double ratio = usedDeviceMemory / (double) totalDeviceMemory;
-        double percentage = ratio * 100;
-        int usedRamPercentage = (int) percentage;
-        if (usedRamPercentage > USED_RAM_PERCENTAGE_THRESHOLD) {
-            lockramArcProgress.setProgress(usedRamPercentage);
-            lockramArcProgress.setFinishedStrokeColor(ContextCompat.getColor(context, R.color.red));
-            lockramArcProgress.setTextColor(ContextCompat.getColor(context, R.color.red));
-        } else {
-            lockramArcProgress.setProgress(usedRamPercentage);
-        }
+            long usedDeviceMemory = totalDeviceMemory - availableDeviceMemory;
+            double ratio = usedDeviceMemory / (double) totalDeviceMemory;
+            double percentage = ratio * 100;
+            int usedRamPercentage = (int) percentage;
+            if (usedRamPercentage > USED_RAM_PERCENTAGE_THRESHOLD) {
+                lockramArcProgress.setProgress(usedRamPercentage);
+                lockramArcProgress.setFinishedStrokeColor(ContextCompat.getColor(context, R.color.red));
+                lockramArcProgress.setTextColor(ContextCompat.getColor(context, R.color.red));
+            } else {
+                lockramArcProgress.setProgress(usedRamPercentage);
+            }
 
-        LogUtil.d(TAG, "MEM=" + String.valueOf(availableDeviceMemory) + "Total Ram=" + String.valueOf(totalDeviceMemory) + "Percentage=" + usedRamPercentage);
-        }
-        catch (Exception e)
-        {
+            LogUtil.d(TAG, "MEM=" + String.valueOf(availableDeviceMemory) + "Total Ram=" + String.valueOf(totalDeviceMemory) + "Percentage=" + usedRamPercentage);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -325,12 +396,10 @@ public class LockScreenWidgetService extends Service {
 
     private void getBatteryInformation() {
         try {
-        IntentFilter intentfilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        if (battery_info_receiver != null)
-            registerReceiver(battery_info_receiver, intentfilter);
-        }
-        catch (Exception e)
-        {
+            IntentFilter intentfilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+            if (battery_info_receiver != null)
+                registerReceiver(battery_info_receiver, intentfilter);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -385,10 +454,8 @@ public class LockScreenWidgetService extends Service {
                         isWidgetAdded = false;
                     }
                 }
-            }
-            catch (Exception e)
-            {
-            e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

@@ -139,13 +139,12 @@
                 android:layout_marginRight="@dimen/small_margin"
                 android:layout_marginTop="@dimen/x_large_margin"
                 android:orientation="horizontal"
-                android:padding="10dp"
-                android:weightSum="300">
+                android:padding="10dp">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="100"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -171,7 +170,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:layout_weight="100"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -194,10 +193,11 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/layout_cpu_usage"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:layout_weight="100"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:orientation="vertical">
 

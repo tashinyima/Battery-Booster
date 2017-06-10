@@ -64,6 +64,8 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
             getCurrentSystemDateTime();
             // update RAM information on time change
             getRamInformation();
+            //update CPU Usage
+            getCpuUsageInfo();
         }
     };
     private BroadcastReceiver battery_info_receiver = new BroadcastReceiver() {
