@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.BatteryManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,10 @@ import com.receptix.batterybuddy.helper.LogUtil;
 import com.receptix.batterybuddy.helper.UserSessionManager;
 import com.romainpiel.shimmer.Shimmer;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -52,6 +57,48 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
     int USED_RAM_PERCENTAGE_THRESHOLD = 70;
     InMobiBanner inMobiBanner;
     boolean locked = false;
+    private BroadcastReceiver timeChangeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //update time value on time change
+            getCurrentSystemDateTime();
+            // update RAM information on time change
+            getRamInformation();
+        }
+    };
+    private BroadcastReceiver battery_info_receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            boolean isPresent = intent.getBooleanExtra(IS_BATTERY_PRESENT, false);
+            if (isPresent) {
+
+                // Calculate Battery Temperature (currently unused)
+                int temperature = intent.getIntExtra(BATTERY_TEMPERATURE, 0);
+                double temperatureInDouble = temperature * BATTERY_TEMPERATURE_CONVERSION_UNIT;
+                int batteryTemperature = (int) temperatureInDouble;
+
+                // Calculate Battery Charging Level
+                int level = intent.getIntExtra(BATTERY_LEVEL, 0);
+                int scale = intent.getIntExtra(BATTERY_SCALE, 0);
+                float percentage = level / (float) scale;
+                int batteryLevel = (int) ((percentage) * 100);
+                binding.lockbatteryArcProgress.setSuffixText(getString(R.string.percentage_symbol));
+                binding.lockbatteryArcProgress.setProgress(batteryLevel);
+                String batteryLevelString = batteryLevel + getString(R.string.percentage_symbol);
+                binding.lockBatteryLevelTextView.setText(batteryLevelString);
+
+                if (isChargerConnected(context)) {
+                    binding.lockbatteryChargingStatusTextView.setText(R.string.charging);
+                    binding.lockbatteryChargingStatusTextView.setVisibility(View.VISIBLE);
+                } else {
+                    binding.lockbatteryChargingStatusTextView.setText(R.string.discharging);
+                    binding.lockbatteryChargingStatusTextView.setVisibility(View.INVISIBLE);
+                }
+            }
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +165,7 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
         getBatteryInformation();
         getCurrentSystemDateTime();
         getRamInformation();
+        getCpuUsageInfo();
 
         // Register Time Change Receiver
         try {
@@ -188,6 +236,72 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
             LockAdsActivity.this.registerReceiver(battery_info_receiver, intentfilter);
     }
 
+    private void getCpuUsageInfo() {
+        try {
+            StringBuffer sb = new StringBuffer();
+            sb.append("abi: ").append(Build.CPU_ABI).append("\n");
+            if (new File("/proc/stat").exists()) {
+                try {
+                    BufferedReader br = new BufferedReader(
+                            new FileReader(new File("/proc/stat")));
+                    String aLine;
+                    while ((aLine = br.readLine()) != null) {
+                        sb.append(aLine + "\n");
+                    }
+                    if (br != null) {
+                        br.close();
+                    }
+                } catch (IOException e) {
+                    //set default progress as 40%
+                    binding.lockCpuArcProgress.setProgress(40);
+                    e.printStackTrace();
+                }
+            }
+            Log.d(TAG, sb.toString());
+            String[] lines = sb.toString().split("\n");
+            String cpuLine = "";
+            for (int i = 0; i < lines.length; i++) {
+                if (lines[i].contains("cpu "))
+                    cpuLine = lines[i];
+            }
+
+            //now that we have obtained individual values, we separate them out
+            String[] values = cpuLine.split(" ");
+            String idleValue = "";
+            int totalCpuTime = 0;
+            for (int x = 1; x < values.length; x++) {
+                Log.e("value[" + x + "]", values[x]);
+                if (!values[x].isEmpty()) {
+                    int currentCpuTime = Integer.parseInt(values[x].trim());
+                    totalCpuTime += currentCpuTime;
+                    if (x == 5)
+                        idleValue = values[x];
+                }
+
+            }
+
+            // sum up all the columns in the 1st line "cpu" : ( user + nice + system + idle + iowait + irq + softirq )
+            // this will yield 100% of CPU time
+            Log.e("totalCpuTime", totalCpuTime + "");
+            //calculate the average percentage of total 'idle' out of 100% of CPU time :
+            // ( user + nice + system + idle + iowait + irq + softirq ) = 100%
+            // ( idle ) = X %
+            int idleTime = Integer.parseInt(idleValue.trim());
+            Log.e("idleTime", idleTime + "");
+            // hence
+            // average idle percentage X % = ( idle * 100 ) / ( user + nice + system + idle + iowait + irq + softirq )
+            float avgIdlePercetage = (idleTime * 100) / (totalCpuTime);
+            Log.e("Average Idle Percentage", avgIdlePercetage + " %");
+            int averageUsagePercentage = (int) (100 - avgIdlePercetage);
+            Log.e("CPU Usage", averageUsagePercentage + " %");
+            binding.lockCpuArcProgress.setProgress(averageUsagePercentage);
+        } catch (Exception e) {
+            //set default progress as 40%
+            binding.lockCpuArcProgress.setProgress(40);
+            e.printStackTrace();
+        }
+    }
+
     private boolean isChargerConnected(Context context) {
         if (context != null) {
             Intent intent = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
@@ -199,51 +313,6 @@ public class LockAdsActivity extends AppCompatActivity implements View.OnClickLi
         }
         return false;
     }
-
-
-    private BroadcastReceiver timeChangeReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            //update time value on time change
-            getCurrentSystemDateTime();
-            // update RAM information on time change
-            getRamInformation();
-        }
-    };
-
-    private BroadcastReceiver battery_info_receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            boolean isPresent = intent.getBooleanExtra(IS_BATTERY_PRESENT, false);
-            if (isPresent) {
-
-                // Calculate Battery Temperature (currently unused)
-                int temperature = intent.getIntExtra(BATTERY_TEMPERATURE, 0);
-                double temperatureInDouble = temperature * BATTERY_TEMPERATURE_CONVERSION_UNIT;
-                int batteryTemperature = (int) temperatureInDouble;
-
-                // Calculate Battery Charging Level
-                int level = intent.getIntExtra(BATTERY_LEVEL, 0);
-                int scale = intent.getIntExtra(BATTERY_SCALE, 0);
-                float percentage = level / (float) scale;
-                int batteryLevel = (int) ((percentage) * 100);
-                binding.lockbatteryArcProgress.setSuffixText(getString(R.string.percentage_symbol));
-                binding.lockbatteryArcProgress.setProgress(batteryLevel);
-                String batteryLevelString = batteryLevel + getString(R.string.percentage_symbol);
-                binding.lockBatteryLevelTextView.setText(batteryLevelString);
-
-                if (isChargerConnected(context)) {
-                    binding.lockbatteryChargingStatusTextView.setText(R.string.charging);
-                    binding.lockbatteryChargingStatusTextView.setVisibility(View.VISIBLE);
-                } else {
-                    binding.lockbatteryChargingStatusTextView.setText(R.string.discharging);
-                    binding.lockbatteryChargingStatusTextView.setVisibility(View.INVISIBLE);
-                }
-            }
-
-        }
-    };
 
     @Override
     public void onClick(View v) {

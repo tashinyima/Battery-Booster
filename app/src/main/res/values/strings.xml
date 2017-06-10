@@ -280,4 +280,5 @@ The app has a very simple interface with the option to optimize your battery usa
     </string>
     <string name="open">OPEN</string>
     <string name="swipe_to_dismiss">Swipe to Dismiss</string>
+    <string name="cpu_arc_text">CPU</string>
 </resources>
