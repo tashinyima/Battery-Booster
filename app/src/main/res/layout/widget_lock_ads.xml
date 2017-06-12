@@ -133,9 +133,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/medium_margin"
                 android:orientation="horizontal"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp">
+                android:paddingLeft="@dimen/small_margin"
+                android:paddingRight="@dimen/small_margin">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -146,7 +147,7 @@
 
                     <com.github.lzyzsd.circleprogress.ArcProgress
                         android:id="@+id/lockbatteryArcProgress"
-                        style="@style/ArcProgressLayout"
+                        style="@style/ArcProgressLayout_Widget"
                         app:arc_finished_color="@color/colorGreen"
                         app:arc_suffix_text_size="10dp"
                         app:arc_text_color="@color/white"
@@ -172,7 +173,7 @@
 
                     <com.github.lzyzsd.circleprogress.ArcProgress
                         android:id="@+id/lockramArcProgress"
-                        style="@style/ArcProgressLayout"
+                        style="@style/ArcProgressLayout_Widget"
                         app:arc_finished_color="@color/colorGreen"
                         app:arc_suffix_text_size="10dp"
                         app:arc_text_color="@color/white"
@@ -199,7 +200,7 @@
 
                     <com.github.lzyzsd.circleprogress.ArcProgress
                         android:id="@+id/lockCpuArcProgress"
-                        style="@style/ArcProgressLayout"
+                        style="@style/ArcProgressLayout_Widget"
                         app:arc_finished_color="@color/colorGreen"
                         app:arc_suffix_text_size="10dp"
                         app:arc_text_color="@color/white"
